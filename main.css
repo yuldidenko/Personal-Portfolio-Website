@@ -86,6 +86,28 @@ h1 {
   margin: 0;
   height: 100vh;
   z-index: 0;
+  --progress: 0;
+  --fly-factor: 1.4;
+}
+
+/* Floating background particle layer (bg-shards.js). Sits below the
+   portrait svg (z-index 1) and the nav (z-index 10) so it never blocks
+   either; overflow is clipped here rather than on .hero-screen so the
+   portrait's own fly-out disassembly can still travel past the edges. */
+.bg-shards {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 900px; /* gives the shards' rotateX/rotateY tilt real depth */
+}
+
+.bg-shard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
 }
 
 .hero-screen svg {
@@ -94,6 +116,7 @@ h1 {
   width: 100vw;
   height: 100vh;
   z-index: 1;
+  perspective: 900px; /* same tilt depth for the falling portrait fragments */
 }
 
 .container svg {
@@ -103,6 +126,10 @@ h1 {
   display: flex;
   justify-content: center;
   margin-top: -18rem;
+  /* SVGs clip to their viewBox by default; the floaty paths inside animate
+     past that boundary (translateY/rotate), so without this their lowest
+     point of travel gets cut off at the bottom edge. */
+  overflow: visible;
 }
 
 .container svg:nth-of-type(2) {
@@ -110,11 +137,35 @@ h1 {
   margin-top: 5rem;
 }
 
+/* "Who am I" decorative shapes: gentle up/down bob plus a slight rocking
+   rotation, like small boats drifting on the sea. Each path carries its
+   own --float-amp/--rock-amp/--float-dur/--float-delay inline so the four
+   shapes drift out of sync with each other rather than moving as one. */
+.floaty {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: floatBob var(--float-dur, 4.5s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  will-change: transform;
+}
+
+@keyframes floatBob {
+  0% {
+    transform: translateY(calc(var(--float-amp, 8px) * -1)) rotate(calc(var(--rock-amp, 3deg) * -1));
+  }
+  50% {
+    transform: translateY(var(--float-amp, 8px)) rotate(var(--rock-amp, 3deg));
+  }
+  100% {
+    transform: translateY(calc(var(--float-amp, 8px) * -1)) rotate(calc(var(--rock-amp, 3deg) * -1));
+  }
+}
+
 [id^="part"],
 [id^="shard"] {
   opacity: 0;
   transform: translate(var(--x), var(--y)) scale(0.5) rotate(var(--r));
-  animation: moveToCenter 2s ease-out forwards;
+  animation: moveToCenter 1.45s ease-out forwards;
 }
 
 @keyframes moveToCenter {
@@ -124,9 +175,45 @@ h1 {
   }
 }
 
-.hero-screen.assemble [id^="part"] {
-  animation: assemble 3s ease-in forwards;
-  transform: translate(var(--x), var(--y)) scale(0.5) rotate(var(--r));
+/* Scroll-driven disassembly: takes over only after the load-time entrance
+   animation has finished (class added by hero-scroll.js). Reuses each
+   part's own --x/--y/--r so disassembly is an exact reverse of assembly. */
+/* Explosion burst: --bx/--by/--br (set by hero-scroll.js from each part's
+   own distance/direction from the portrait's center) replace --x/--y/--r
+   here so scrolling scatters every piece radially outward from the middle
+   of the image, like a burst, rather than reversing its original
+   arbitrary load-in flight path. */
+.hero-screen.scroll-active [id^="part"],
+.hero-screen.scroll-active [id^="shard"] {
+  animation: none;
+  opacity: calc(1 - var(--progress));
+  transform: translate(
+      calc(var(--bx) * var(--progress) * var(--fly-factor)),
+      calc(var(--by) * var(--progress) * var(--fly-factor))
+    )
+    scale(calc(1 - 0.7 * var(--progress))) rotate(calc(var(--br) * var(--progress)));
+}
+
+/* Gentle wind sway for hair strands, added by hair-wind.js only after the
+   load-time entrance animation finishes. Uses the standalone `rotate`
+   property (not the `transform` shorthand) so it composes on top of the
+   existing translate/scale/rotate transform instead of overriding it. */
+@keyframes windSway {
+  0% { rotate: calc(var(--sway-amp, 1.2deg) * -1); }
+  22% { rotate: calc(var(--sway-amp, 1.2deg) * 0.45); }
+  50% { rotate: var(--sway-amp, 1.2deg); }
+  74% { rotate: calc(var(--sway-amp, 1.2deg) * -0.3); }
+  100% { rotate: calc(var(--sway-amp, 1.2deg) * -1); }
+}
+
+.hair-sway {
+  transform-box: fill-box;
+  will-change: rotate;
+}
+
+.hero-screen.wind-active .hair-sway {
+  animation: windSway var(--sway-dur, 4s) ease-in-out infinite;
+  animation-delay: var(--sway-delay, 0s);
 }
 
 .container,
@@ -204,17 +291,26 @@ footer {
   font-family: "MarbyPro-Bold", sans-serif;
   font-weight: 700;
   color: #1f1f1f;
-  height: 68px;
+  width: 200px;
+  height: 50px;
   border-width: 0 0 2px 2px;
   border-style: solid;
   border-color: #1f1f1f;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .button:hover {
   text-decoration: none;
-  color: #1f1f1f;
+  color: rgb(31, 31, 31);
   background-color: #ffd000;
-  transition: all ease-in-out 0.5;
+}
+
+.button:hover::before {
+  transform: scaleY(1);
+}
+
+.button:hover::after {
+  transform: scaleX(1);
 }
 
 .navigation {
@@ -292,17 +388,43 @@ h3 {
 }
 
 .education h3,
+.cont-education h3,
+.work h3,
+.hobbies h3,
+.languages h3 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.education h3,
 .cont-education h3 {
   background-color: #edebdb;
 }
 
+.work h3,
+.hobbies h3 {
+  background-color: #bcd4e1;
+}
+
 .education,
-.cont-education {
+.cont-education,
+.work,
+.hobbies,
+.languages {
   display: flex;
   flex-direction: column;
-  background-color: #edebdb;
-  padding: 2rem;
+  padding: 16px;
   padding-top: 0;
+}
+
+.education,
+.cont-education {
+  background-color: #edebdb;
+}
+
+.work,
+.hobbies {
+  background-color: #bcd4e1;
 }
 
 .column-1,
@@ -320,15 +442,16 @@ h3 {
 
 .column-1 {
   grid-column: 1 / 5;
+  gap: 1.5rem;
 }
 
 .column-2 {
-  grid-column: 5 / 8;
+  grid-column: 5 / 9;
   gap: 1.5rem;
 }
 
 .column-3 {
-  grid-column: 8 / 13;
+  grid-column: 9 / 13;
   gap: 1.5rem;
 }
 
@@ -348,43 +471,24 @@ h3 {
   align-self: center;
 }
 
-.hobbies p {
-  background-color: #bcd4e1;
-  padding: 0.8rem 2rem;
-}
-
-.hobbies h3,
-.work h3 {
-  padding-left: 2rem;
-  background-color: #bcd4e1;
-}
-
 .hobbies p:last-child,
 .cont-education .autolayout:last-of-type p,
 .education .autolayout:last-of-type p,
 .education h3,
 .languages h3,
 .languages p:last-child,
-.cont-education h3 {
+.cont-education h3,
+.work h3,
+.hobbies h3 {
   margin-bottom: 0;
 }
 
-.work .autolayout {
-  background-color: #bcd4e1;
-  padding: 0 2rem;
-}
-
-.work p {
-  margin: 0.5rem 0 0.5rem 0;
-}
-
-.work p:first-child,
-.work p:last-child {
-  margin: 1rem 0;
-}
-
 .iframe {
-  background-color: #005971;
+  background-color: #1F1F1F;
+}
+
+.iframe iframe {
+  display: block;
 }
 
 .gif img {
@@ -393,8 +497,10 @@ h3 {
 
 .languages {
   background-color: #d7b79b;
-  padding: 2rem;
-  padding-top: 0;
+  flex: 1;
+}
+
+.hobbies {
   flex: 1;
 }
 
@@ -406,22 +512,35 @@ video {
   width: 100%;
 }
 
+.cont-education p,
+.education p,
+.work p,
+.hobbies p,
 .languages p {
-  margin-bottom: 1.5rem;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
-.cont-education p {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+.hobbies p,
+.languages p {
+  padding-bottom: 8px;
 }
 
 .cont-education .autolayout,
-.work .autolayout {
+.education .autolayout,
+.work .autolayout,
+.hobbies p,
+.languages p {
   border-bottom: 1px solid #ffffff;
 }
 
-.cont-education .autolayout:last-child {
+.cont-education .autolayout:last-child,
+.education .autolayout:last-child,
+.work .autolayout:last-child,
+.hobbies p:last-child,
+.languages p:last-child {
   border: 0;
+  padding-bottom: 0;
 }
 
 .name-2 {
@@ -459,25 +578,46 @@ video {
 }
 
 .image {
-  flex-grow: 1;
+  flex: 1 1 50%;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   position: relative;
   cursor: pointer;
 }
 
-.image:hover img {
-  transform: scale(1.1);
-}
-
 .text {
-  flex-grow: 1;
+  flex: 1 1 50%;
 }
 
 .image img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
-  transition: transform 1s ease;
+}
+
+/* Cover shatter: the cover image is sliced into a grid of cells (built
+   by project-cover-shatter.js), each split into two irregular polygon
+   shards along a randomly placed crack (not a clean corner-to-corner
+   diagonal) - both showing the same background slice, so the jagged
+   crack between them reads as broken glass rather than a clean square
+   grid, echoing the shard fragments on the hero portrait. At rest the
+   shards sit at zero offset and reassemble into the normal cover
+   image; on mousemove, each shard reacts independently to its own
+   centroid distance from the cursor and is pushed radially away from
+   it (see applyPush in the JS), as if the pointer is shoving the
+   fragments aside, and eases back to rest on mouseleave via the
+   transition below. */
+.shatter-tiles {
+  position: absolute;
+  inset: 0;
+}
+
+.shatter-shard {
+  position: absolute;
+  background-repeat: no-repeat;
+  transform: translate(0px, 0px) rotate(0deg);
+  will-change: transform;
+  transition: transform 0.35s ease-out;
 }
 
 .numbers {
@@ -692,14 +832,13 @@ button:focus {
 
 .send-button {
   display: flex;
-  flex-shrink: 0;
+  flex: 0 0 200px;
   align-items: center;
   justify-content: center;
   background-color: #ffae00;
   font-family: "MarbyPro-Bold", sans-serif;
   font-weight: 700;
   color: #1f1f1f;
-  width: 164px;
   height: 50px;
   border-width: 0 0 2px 2px;
   border-style: solid;
@@ -713,8 +852,20 @@ button:focus {
   transition: all ease-in-out 0.5;
 }
 
+.form-status {
+  grid-column: 1 / -1;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.form-status.success {
+  color: #4eae67;
+}
+
 .input-group {
   display: flex;
+  flex: 1;
 }
 
 .input-group input {
@@ -1009,15 +1160,15 @@ button:focus {
   }
 
   .cont-education .autolayout{
-    margin-bottom: 1rem;
+    margin-bottom: 8px;
   }
-  
+
   .cont-education .autolayout:last-of-type {
     margin-bottom: 0;
   }
 
   .cont-education .autolayout .date p {
-    margin: 0 0 1rem 0;
+    margin: 0 0 8px 0;
   }
 
   .cont-education .autolayout:last-of-type .date p:last-child {
@@ -1025,15 +1176,15 @@ button:focus {
   }
 
   .cont-education .autolayout .event p:first-of-type {
-    margin: 0 0 1rem 0;
+    margin: 0 0 8px 0;
   }
 
   .education .autolayout:last-of-type .event p:first-child {
-    margin-bottom: 1rem;
+    margin-bottom: 8px;
   }
 
   .work .autolayout .date p {
-    margin: 0 0 1rem 0;
+    margin: 0 0 8px 0;
   }
 
   
