@@ -63,15 +63,26 @@ window.addEventListener('DOMContentLoaded', () => {
   // Read each part's real animation-delay/duration so we know exactly when
   // the load-time assembly animation finishes, without hardcoding a value
   // that could drift out of sync with the CSS/markup.
-  let assemblyEndMs = 0;
-  parts.forEach((part) => {
-    const cs = getComputedStyle(part);
-    const delay = parseFloat(cs.animationDelay) || 0;
-    const duration = parseFloat(cs.animationDuration) || 0;
-    assemblyEndMs = Math.max(assemblyEndMs, (delay + duration) * 1000);
-  });
+  //
+  // Computed once and cached on window (see bg-shards.js, which runs first,
+  // before bg-svg-shards.js resets 8 elements' animation to 'none' and
+  // zeroes their computed animation-delay/duration as a side effect).
+  // Recomputing independently here - this script runs after that reset -
+  // would undercount the true max and flip assemblyDone slightly early.
+  if (typeof window.__portraitAssemblyEndMs !== 'number') {
+    let computed = 0;
+    parts.forEach((part) => {
+      const cs = getComputedStyle(part);
+      const delay = parseFloat(cs.animationDelay) || 0;
+      const duration = parseFloat(cs.animationDuration) || 0;
+      computed = Math.max(computed, (delay + duration) * 1000);
+    });
+    window.__portraitAssemblyEndMs = computed;
+  }
+  const assemblyEndMs = window.__portraitAssemblyEndMs;
 
   let assemblyDone = false;
+  let scrollActiveApplied = false;
   let displayedProgress = 0;
   let rafId = null;
 
@@ -100,6 +111,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function requestTick() {
     if (!assemblyDone || rafId !== null) return;
+    if (!scrollActiveApplied) {
+      // Hand every part over from its load-time CSS animation to this
+      // scroll-driven formula only once the user actually scrolls, instead
+      // of unconditionally on a fixed timer right as assembly finishes.
+      // Flipping ~300 elements off their animation simultaneously at that
+      // exact instant - alongside the wind-sway and background-fall
+      // effects starting - risked a visible repaint flicker even though
+      // the computed opacity/transform matched.
+      //
+      // displayedProgress deliberately stays at its initial 0 here rather
+      // than snapping to targetProgress(): this handler is now driven BY a
+      // real 'scroll' event (unlike the old fixed-timer version), and if
+      // the user scrolled far during the gated entrance - scroll events are
+      // ignored entirely until assemblyDone - that event's target can
+      // already be a long way from 0. Snapping straight to it instantly
+      // blew the portrait apart in a single frame (hair, being farthest
+      // from center, flies hardest and reads as "deleted"). Leaving it at
+      // 0 lets the normal eased tick() loop below catch up smoothly over a
+      // few frames instead, however large the jump.
+      scrollActiveApplied = true;
+      hero.classList.add('scroll-active');
+    }
     rafId = requestAnimationFrame(tick);
   }
 
@@ -108,10 +141,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(() => {
     assemblyDone = true;
-    hero.classList.add('scroll-active');
-    // Sync instantly the first time in case the user already scrolled
-    // during the entrance animation; every update after this is eased.
-    displayedProgress = targetProgress();
-    hero.style.setProperty('--progress', displayedProgress.toFixed(4));
   }, assemblyEndMs + 50);
 });

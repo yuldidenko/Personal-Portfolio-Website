@@ -206,7 +206,21 @@ h1 {
   100% { rotate: calc(var(--sway-amp, 1.2deg) * -1); }
 }
 
+/* .hero-screen.wind-active .hair-sway (below) sets `animation: windSway`,
+   which - being the same `animation` shorthand [id^="part"] uses for
+   moveToCenter, and more specific - fully replaces that entrance animation
+   rather than layering on top of it. That drops the "forwards" fill and
+   would leave opacity/transform to fall back to their un-animated base
+   values (opacity: 0, off-screen position) the instant wind-active is
+   added. Declaring the assembled resting state here (same specificity as
+   [id^="part"], but later in the cascade so it wins) keeps every hair
+   strand visible once that swap happens - matching, not fighting, the
+   entrance animation's own end state, so nothing visibly changes. This
+   still loses to .hero-screen.scroll-active [id^="part"] below (higher
+   specificity), so scroll can still take hair over for the burst. */
 .hair-sway {
+  opacity: 1;
+  transform: none;
   transform-box: fill-box;
   will-change: rotate;
 }
@@ -934,9 +948,15 @@ button:focus {
     align-items: center;
   }
 
-  .image,
+  .image {
+    flex: none;
+    width: 100%;
+  }
+
   video,
   .gif {
+    flex: none;
+    width: 100%;
     max-width: 500px;
   }
 }
@@ -1027,6 +1047,7 @@ button:focus {
   .button,
   .send-button {
     grid-column: 1 / -1;
+    flex: none;
     width: 100%;
     height: 48px;
   }

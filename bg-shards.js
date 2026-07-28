@@ -12,13 +12,26 @@ window.addEventListener('DOMContentLoaded', () => {
   // real animation-delay/duration (same method hero-scroll.js uses) so
   // this stays in sync if that timing ever changes - and so it fires at the
   // same moment as hair-wind.js's wind-sway trigger.
-  let assemblyEndMs = 0;
-  document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
-    const cs = getComputedStyle(part);
-    const delay = parseFloat(cs.animationDelay) || 0;
-    const duration = parseFloat(cs.animationDuration) || 0;
-    assemblyEndMs = Math.max(assemblyEndMs, (delay + duration) * 1000);
-  });
+  //
+  // Computed once and cached on window: this script runs first (see the
+  // <script> order in index.html), before bg-svg-shards.js resets 8 of
+  // these elements' animation to 'none' (which zeroes their computed
+  // animation-delay/duration as a side effect of the shorthand reset). Any
+  // script that recomputes this AFTER that mutation would undercount the
+  // true max and start touching still-mid-flight elements early - caching
+  // the first (correct, pre-mutation) result here means every script reads
+  // the same true value regardless of when it happens to run.
+  if (typeof window.__portraitAssemblyEndMs !== 'number') {
+    let computed = 0;
+    document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
+      const cs = getComputedStyle(part);
+      const delay = parseFloat(cs.animationDelay) || 0;
+      const duration = parseFloat(cs.animationDuration) || 0;
+      computed = Math.max(computed, (delay + duration) * 1000);
+    });
+    window.__portraitAssemblyEndMs = computed;
+  }
+  const assemblyEndMs = window.__portraitAssemblyEndMs;
   const fallStartMs = assemblyEndMs;
   const startTime = performance.now();
 
@@ -171,6 +184,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const el = document.createElement('div');
     el.className = 'bg-shard';
     el.style.opacity = '0'; // hidden until fallStartMs, when tick() starts driving real opacity
+    // Left as a real CSS transition (not a JS-computed ramp) so the initial
+    // fade-in is driven by the compositor: it plays out correctly even if
+    // the main thread is briefly busy (several other scripts fire at this
+    // same instant) and the first post-threshold tick() lands late - a
+    // JS-timed ramp would just collapse to a hard pop-in in that case.
+    el.style.transition = 'opacity 0.4s ease-out';
     container.appendChild(el);
 
     return resetShard({ el, size: 0, side });

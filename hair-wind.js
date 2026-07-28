@@ -181,16 +181,43 @@ window.addEventListener('DOMContentLoaded', () => {
   // rotates each shard around its own center, not some far-off viewBox
   // point) after the entrance transform has already settled to identity -
   // so this never visibly alters the load-time assembly swoop.
-  let assemblyEndMs = 0;
-  document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
-    const cs = getComputedStyle(part);
-    const delay = parseFloat(cs.animationDelay) || 0;
-    const duration = parseFloat(cs.animationDuration) || 0;
-    assemblyEndMs = Math.max(assemblyEndMs, (delay + duration) * 1000);
-  });
+  //
+  // Computed once and cached on window (see bg-shards.js, which runs
+  // first, before bg-svg-shards.js resets 8 elements' animation to 'none'
+  // and zeroes their computed animation-delay/duration as a side effect).
+  // This script runs after that reset, so recomputing independently here
+  // undercounted the true max by ~70ms in practice - just enough that a
+  // handful of straggling elements (hair strands among them) hadn't
+  // actually reached their identity transform yet when transform-box got
+  // switched to fill-box below, snapping them to the wrong position
+  // instantly ("hair disappearing" right after assembly). Reusing the
+  // shared, pre-mutation value fixes that at the source.
+  if (typeof window.__portraitAssemblyEndMs !== 'number') {
+    let computed = 0;
+    document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
+      const cs = getComputedStyle(part);
+      const delay = parseFloat(cs.animationDelay) || 0;
+      const duration = parseFloat(cs.animationDuration) || 0;
+      computed = Math.max(computed, (delay + duration) * 1000);
+    });
+    window.__portraitAssemblyEndMs = computed;
+  }
+  const assemblyEndMs = window.__portraitAssemblyEndMs;
 
-  setTimeout(() => {
-    hairPaths.forEach((el) => {
+  // Split into small batches across a few animation frames rather than one
+  // synchronous pass over all ~150 strands - on top of everything else
+  // that's already scheduled for this exact instant (bg-shards.js and
+  // bg-svg-shards.js both start their fall loop here too), one giant
+  // synchronous style/class mutation could still cost a visible frame even
+  // though each individual write is compositor-only. wind-active is only
+  // added once every strand is prepared, so the sway itself still starts
+  // as a single, coherent moment - this just spreads the setup cost out.
+  const BATCH_SIZE = 40;
+
+  function prepareBatch(startIndex) {
+    const end = Math.min(startIndex + BATCH_SIZE, hairPaths.length);
+    for (let i = startIndex; i < end; i++) {
+      const el = hairPaths[i];
       let bbox;
       try {
         bbox = el.getBBox();
@@ -205,8 +232,22 @@ window.addEventListener('DOMContentLoaded', () => {
       el.style.setProperty('--sway-amp', (rand(0.7, 1.6) * distFactor).toFixed(2) + 'deg');
       el.style.setProperty('--sway-dur', rand(3.2, 5.6).toFixed(2) + 's');
       el.style.setProperty('--sway-delay', rand(0, 4.5).toFixed(2) + 's');
+      // .hair-sway itself (main.css) declares the assembled resting
+      // opacity/transform, so windSway replacing the entrance animation
+      // below doesn't drop the strand back to its off-screen start state.
+      // Deliberately NOT set as inline style here: inline style would beat
+      // even .hero-screen.scroll-active [id^="part"]'s higher-specificity
+      // rule, permanently blocking hair from taking part in the scroll
+      // burst - the CSS class rule can still be outranked by scroll-active
+      // the way this inline version couldn't.
       el.classList.add('hair-sway');
-    });
-    hero.classList.add('wind-active');
-  }, assemblyEndMs);
+    }
+    if (end < hairPaths.length) {
+      requestAnimationFrame(() => prepareBatch(end));
+    } else {
+      hero.classList.add('wind-active');
+    }
+  }
+
+  setTimeout(() => prepareBatch(0), assemblyEndMs);
 });

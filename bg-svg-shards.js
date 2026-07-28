@@ -34,13 +34,25 @@ window.addEventListener('DOMContentLoaded', () => {
   // real animation-delay/duration (same method hero-scroll.js uses) so
   // this stays in sync if that timing ever changes - and so it fires at the
   // same moment as hair-wind.js's wind-sway trigger.
-  let assemblyEndMs = 0;
-  document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
-    const cs = getComputedStyle(part);
-    const delay = parseFloat(cs.animationDelay) || 0;
-    const duration = parseFloat(cs.animationDuration) || 0;
-    assemblyEndMs = Math.max(assemblyEndMs, (delay + duration) * 1000);
-  });
+  //
+  // Computed once and cached on window (see bg-shards.js, which runs first
+  // and does this same caching): this script is about to reset 8 elements'
+  // animation to 'none' below, which zeroes their computed animation-delay/
+  // duration as a side effect - recomputing the max fresh here would still
+  // be correct since that reset happens after this read, but reusing the
+  // shared cache keeps every script (including ones that run after this
+  // mutation) reading the same true, pre-mutation value.
+  if (typeof window.__portraitAssemblyEndMs !== 'number') {
+    let computed = 0;
+    document.querySelectorAll('[id^="part"], [id^="shard"]').forEach((part) => {
+      const cs = getComputedStyle(part);
+      const delay = parseFloat(cs.animationDelay) || 0;
+      const duration = parseFloat(cs.animationDuration) || 0;
+      computed = Math.max(computed, (delay + duration) * 1000);
+    });
+    window.__portraitAssemblyEndMs = computed;
+  }
+  const assemblyEndMs = window.__portraitAssemblyEndMs;
   const fallStartMs = assemblyEndMs;
   const startTime = performance.now();
 
@@ -166,6 +178,13 @@ window.addEventListener('DOMContentLoaded', () => {
     el.style.transformBox = 'fill-box';
     el.style.transformOrigin = '50% 50%';
     el.style.willChange = 'transform';
+    // Left as a real CSS transition (not a JS-computed ramp) so the initial
+    // fade-in from opacity 0 is driven by the compositor: it plays out
+    // correctly even if the main thread is briefly busy (several other
+    // scripts fire at this same instant) and the first post-threshold
+    // tick() lands late - a JS-timed ramp would just collapse to a hard
+    // pop-in in that case.
+    el.style.transition = 'opacity 0.4s ease-out';
     // One of these paths (id="part259", fill="#E7D893") carries a
     // pre-existing stroke="black" in the markup - invisible while static
     // in the portrait, but a visible dark outline once it's animating on
