@@ -1331,6 +1331,15 @@ button:focus-visible {
   width: 30px;
   height: 20px;
   margin: 2rem;
+  /* Now a real <button> (for keyboard focus + Enter/Space activation and
+     screen-reader semantics) instead of a plain div - appearance/padding/
+     background reset here so it still renders as bare spans rather than
+     picking up the browser's default button chrome and the site-wide
+     button rule's own padding. */
+  padding: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .burger-icon span {

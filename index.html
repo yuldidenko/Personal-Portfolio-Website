@@ -13,12 +13,18 @@
 
     <section class="hero-screen">
       <div class="navigation">
-        <div class="burger-icon">
+        <button
+          type="button"
+          class="burger-icon"
+          aria-label="Menu"
+          aria-expanded="false"
+          aria-controls="primary-navigation"
+        >
           <span></span>
           <span></span>
           <span></span>
-        </div>
-        <ul>
+        </button>
+        <ul id="primary-navigation">
           <li><a href="#who-am-i">Who am I?</a></li>
           <li><a href="#my-way">My way</a></li>
           <li><a href="#approach">Approach</a></li>
@@ -2487,11 +2493,11 @@
     <section class="canvas">
       <div class="controls">
         <button type="button" id="fill-button" class="icon-control" title="Fill">
-          <img src="./media/iconoir_fill-color.svg" alt="Колір" />
+          <img src="./media/iconoir_fill-color.svg" alt="Fill icon" />
         </button>
 
         <div class="linewidth-control">
-          <button type="button" class="icon-control" title="Line" data-tool="pencil">
+          <button type="button" class="icon-control" title="Line" data-tool="pencil" aria-haspopup="true" aria-expanded="false">
             <img src="./media/solar_pen-linear.svg" alt="Pen icon" />
           </button>
 
@@ -2516,7 +2522,7 @@
         </button>
 
         <div class="eraser-control">
-          <button type="button" id="eraser-button" class="icon-control" title="Eraser">
+          <button type="button" id="eraser-button" class="icon-control" title="Eraser" aria-haspopup="true" aria-expanded="false">
             <img src="./media/iconoir_erase.svg" alt="Eraser" />
           </button>
 
@@ -2544,7 +2550,7 @@
              this trigger's icon is static artwork, same as every other
              tool button. -->
         <div class="color-control">
-          <button type="button" id="color-picker-button" class="icon-control" title="Color">
+          <button type="button" id="color-picker-button" class="icon-control" title="Color" aria-haspopup="true" aria-expanded="false">
             <img src="./media/Color dot.svg" alt="Color" />
           </button>
 
@@ -2587,7 +2593,7 @@
           </div>
         </div>
 
-        <button id="delete-button" class="icon-control" title="Delete">
+        <button type="button" id="delete-button" class="icon-control" title="Delete">
           <img src="./media/icon_delete.svg" alt="Delete icon" />
         </button>
       </div>
@@ -2602,7 +2608,7 @@
       <div class="input-group">
         <input type="email" id="email" placeholder="your email" />
       </div>
-      <button class="send-button">Send</button>
+      <button type="button" class="send-button">Send</button>
     </div>
     <p class="form-status"></p>
 

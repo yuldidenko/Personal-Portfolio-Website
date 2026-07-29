@@ -95,13 +95,24 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Every popover (Line's, Eraser's, and Color's) opens/closes through
+  // this one helper, which keeps its trigger button's aria-expanded in
+  // sync alongside the visual .active class - a single source of truth
+  // instead of each of the ~15 open/close call sites below (tool clicks
+  // closing each other's popovers, the outside-click handler, etc.) having
+  // to remember to update both.
+  function setPaletteOpen(palette, trigger, open) {
+    palette.classList.toggle('active', open);
+    trigger.setAttribute('aria-expanded', String(open));
+  }
+
   // Color trigger: opens/closes the swatch popover like Line/Eraser's own
   // triggers do. Deliberately never calls selectTool() - opening the color
   // popover doesn't pick a tool.
   colorBtn.addEventListener('click', () => {
-    colorPalette.classList.toggle('active');
-    lineWidthPalette.classList.remove('active');
-    eraserPalette.classList.remove('active');
+    setPaletteOpen(colorPalette, colorBtn, !colorPalette.classList.contains('active'));
+    setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+    setPaletteOpen(eraserPalette, eraserBtn, false);
   });
 
   // Picking a swatch sets currentColor, updates which one shows as
@@ -123,15 +134,15 @@ window.addEventListener('DOMContentLoaded', () => {
     drawing = false;
     isErasing = false;
     selectTool(fillBtn);
-    lineWidthPalette.classList.remove('active');
-    eraserPalette.classList.remove('active');
-    colorPalette.classList.remove('active');
+    setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+    setPaletteOpen(eraserPalette, eraserBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false);
   });
 
   lineWidthControlLabel.addEventListener('click', () => {
-    lineWidthPalette.classList.toggle('active');
-    eraserPalette.classList.remove('active');
-    colorPalette.classList.remove('active');
+    setPaletteOpen(lineWidthPalette, lineWidthControlLabel, !lineWidthPalette.classList.contains('active'));
+    setPaletteOpen(eraserPalette, eraserBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false);
     isErasing = false;
     selectTool(lineWidthControlLabel);
   });
@@ -149,17 +160,17 @@ window.addEventListener('DOMContentLoaded', () => {
   textBtn.addEventListener('click', () => {
     isErasing = false;
     selectTool(textBtn);
-    lineWidthPalette.classList.remove('active');
-    eraserPalette.classList.remove('active');
-    colorPalette.classList.remove('active');
+    setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+    setPaletteOpen(eraserPalette, eraserBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false);
   });
 
   eraserBtn.addEventListener('click', () => {
     isErasing = true;
     selectTool(eraserBtn);
-    eraserPalette.classList.toggle('active');
-    lineWidthPalette.classList.remove('active');
-    colorPalette.classList.remove('active');
+    setPaletteOpen(eraserPalette, eraserBtn, !eraserPalette.classList.contains('active'));
+    setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+    setPaletteOpen(colorPalette, colorBtn, false);
   });
 
   eraserWidthSlider.addEventListener('input', () => {
@@ -189,8 +200,8 @@ window.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       isErasing = false;
       selectTool(textBtn);
-      lineWidthPalette.classList.remove('active');
-      eraserPalette.classList.remove('active');
+      setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+      setPaletteOpen(eraserPalette, eraserBtn, false);
       startTextFrame(e.clientX, e.clientY, existingItem);
       return;
     }
@@ -234,8 +245,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const touch = e.touches[0];
       isErasing = false;
       selectTool(textBtn);
-      lineWidthPalette.classList.remove('active');
-      eraserPalette.classList.remove('active');
+      setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
+      setPaletteOpen(eraserPalette, eraserBtn, false);
       startTextFrame(touch.clientX, touch.clientY, existingItem);
       return;
     }
@@ -652,15 +663,15 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (event) => {
     if (!lineWidthControlLabel.contains(event.target) &&
       !lineWidthPalette.contains(event.target)) {
-      lineWidthPalette.classList.remove('active');
+      setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
     }
 
     if (!eraserControl.contains(event.target)) {
-      eraserPalette.classList.remove('active');
+      setPaletteOpen(eraserPalette, eraserBtn, false);
     }
 
     if (!colorControl.contains(event.target)) {
-      colorPalette.classList.remove('active');
+      setPaletteOpen(colorPalette, colorBtn, false);
     }
 
     // Clicking anywhere outside the whole canvas widget (toolbar + drawing
