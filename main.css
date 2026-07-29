@@ -1238,6 +1238,13 @@ button:focus-visible {
   .form-container {
     grid-column: 1 / -1;
     flex-direction: column;
+    /* Base rule's align-items: center sizes flex children to their own
+       content width along the cross axis - fine when the axis was
+       horizontal, but once flex-direction flips to column here the cross
+       axis becomes horizontal width, so .input-group (unlike .send-button,
+       which has its own explicit width: 100% below) was shrinking to fit
+       its placeholder text instead of spanning full width like the button. */
+    align-items: stretch;
   }
 
   .canvas {
