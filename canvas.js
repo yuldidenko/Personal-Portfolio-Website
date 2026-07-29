@@ -418,6 +418,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.removeEventListener('mousemove', onDragMove);
       document.removeEventListener('mouseup', onDragEnd);
       document.removeEventListener('mousedown', handleOutsideClick, true);
+      document.removeEventListener('touchstart', handleOutsideClick, true);
       document.removeEventListener('keydown', handleEscape);
     }
 
@@ -425,6 +426,16 @@ window.addEventListener('DOMContentLoaded', () => {
     function commit() {
       if (committed) return;
       committed = true;
+      // Deselecting Text here (rather than leaving it selected indefinitely)
+      // is what stops committing one frame from immediately spawning
+      // another: canvas's mousedown/touchstart handlers start a new frame
+      // whenever Text is the active tool, so without this a tap outside
+      // just to dismiss the frame was itself read as "place the next one
+      // here," making the tool impossible to exit short of picking a
+      // different tool. Explicitly clicking Text (or another tool) button
+      // still reselects it normally afterward - that click's own handler
+      // runs after this one and sets its own tool active.
+      selectTool(null);
       const text = content.textContent;
       // If this was reopened from an existing item, its old pixels were
       // already cleared the moment it was reopened (see above) - nothing
@@ -469,6 +480,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function cancel() {
       committed = true;
+      // Same reasoning as commit() - Escape should exit text mode cleanly
+      // too, not leave Text selected and ready to spawn another frame.
+      selectTool(null);
       // An existing item's pixels were already cleared when it was
       // reopened, so backing out has to actually redraw them - simply
       // putting the item back in the array (without also redrawing) would
@@ -540,12 +554,25 @@ window.addEventListener('DOMContentLoaded', () => {
     // Clicking anywhere outside the frame (including a fresh click on the
     // canvas to start a new text frame elsewhere) commits this one. Capture
     // phase so it runs before that fresh click's own mousedown handler.
+    //
+    // Also bound to touchstart (not just mousedown): on mobile, a tap that
+    // lands back on the canvas is handled entirely by canvas's own
+    // touchstart listener, which calls preventDefault() when Text is still
+    // the active tool - that suppresses the synthetic mousedown/click a
+    // real tap would otherwise dispatch, so a mousedown-only listener here
+    // would never see that tap and this frame would never commit, leaving
+    // it (and all its listeners) orphaned while a new frame spawns on top
+    // of it. Capture-phase touchstart runs before canvas's own (bubbling)
+    // touchstart handler, so this still commits the old frame first, then
+    // the tap goes on to start a fresh one - the same ordering the
+    // mousedown case already relies on.
     function handleOutsideClick(ev) {
       if (!frame.contains(ev.target)) {
         commit();
       }
     }
     document.addEventListener('mousedown', handleOutsideClick, true);
+    document.addEventListener('touchstart', handleOutsideClick, true);
   }
 
   function draw(e) {

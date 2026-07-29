@@ -845,7 +845,7 @@ button {
      buttons - each already 40x40 via .color-option, so the popover just
      needs to lay them out and give them a little breathing room. */
   flex-direction: row;
-  gap: 4px;
+  gap: 8px;
   padding: 8px;
 }
 
@@ -951,6 +951,15 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Mirrors the trigger icon's own look (media/Color dot.svg): a rounded
+     black frame + white ring around the color, rather than a flat square -
+     border-box keeps both bands inset within the existing 40x40 box (the
+     swatch's own background-color, set inline per button, still shows
+     through the untouched center) instead of growing the footprint. */
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 3px solid #1f1f1f;
+  box-shadow: inset 0 0 0 3px #ffffff;
 }
 
 .color-option.active {
@@ -1265,6 +1274,53 @@ button:focus-visible {
   .eraser-control button,
   .color-control button {
     margin: 0;
+  }
+
+  /* #delete-button's own margin-top: auto (base rule) is what separates it
+     from the other tools in the desktop column layout - it has no effect
+     once .controls switches to a row here, so Delete was landing right
+     next to Color with the same 16px gap as every other tool. Swapping to
+     margin-left: auto keeps it pinned to the row's far end instead. */
+  #delete-button {
+    margin-top: 0;
+    margin-left: auto;
+  }
+
+  /* On the mobile row toolbar, popovers opening to the side (left: 100%)
+     push far enough right that they run off screen - the color palette's
+     own row of 5 swatches makes that worse. Opening downward and centered
+     on the trigger instead keeps the whole popover within the viewport
+     regardless of where its button sits in the row, and stacking the
+     swatches in a column keeps the popover no wider than a single swatch. */
+  .linewidth-palette,
+  .eraser-palette,
+  .color-palette {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+  }
+
+  .color-palette {
+    flex-direction: column;
+  }
+
+  /* The thickness sliders were a 200px-wide horizontal row - on the mobile
+     row toolbar that's the same "wide popover" overflow risk the palette
+     had. Rotating to a vertical track (bottom = min, top = max, the
+     standard vertical-slider convention) keeps the popover's footprint
+     narrow instead of wide. */
+  .thickness-slider-row {
+    width: auto;
+    height: 150px;
+    padding: 16px 12px;
+  }
+
+  .thickness-slider {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 8px;
+    height: 100%;
   }
 
   .description {
