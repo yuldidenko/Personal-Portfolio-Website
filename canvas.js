@@ -97,20 +97,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Every popover (Line's, Eraser's, and Color's) opens/closes through
   // this one helper, which keeps its trigger button's aria-expanded in
-  // sync alongside the visual .active class - a single source of truth
-  // instead of each of the ~15 open/close call sites below (tool clicks
-  // closing each other's popovers, the outside-click handler, etc.) having
-  // to remember to update both.
-  function setPaletteOpen(palette, trigger, open) {
+  // sync - a single source of truth instead of each of the ~15 open/close
+  // call sites below (tool clicks closing each other's popovers, the
+  // outside-click handler, etc.) having to remember to update it.
+  //
+  // syncActiveClass additionally toggles the trigger's own grey .active
+  // (selected) look to match the popover's open state - only passed for
+  // Color, whose button has no other source of that look (Line/Eraser
+  // already get it from selectTool() marking them the selected tool,
+  // independently of whether their own popover happens to be open).
+  function setPaletteOpen(palette, trigger, open, syncActiveClass) {
     palette.classList.toggle('active', open);
     trigger.setAttribute('aria-expanded', String(open));
+    if (syncActiveClass) {
+      trigger.classList.toggle('active', open);
+    }
   }
 
   // Color trigger: opens/closes the swatch popover like Line/Eraser's own
   // triggers do. Deliberately never calls selectTool() - opening the color
-  // popover doesn't pick a tool.
+  // popover doesn't pick a tool - so its own grey "selected" look is tied
+  // directly to whether its popover is open instead.
   colorBtn.addEventListener('click', () => {
-    setPaletteOpen(colorPalette, colorBtn, !colorPalette.classList.contains('active'));
+    setPaletteOpen(colorPalette, colorBtn, !colorPalette.classList.contains('active'), true);
     setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
     setPaletteOpen(eraserPalette, eraserBtn, false);
   });
@@ -136,13 +145,13 @@ window.addEventListener('DOMContentLoaded', () => {
     selectTool(fillBtn);
     setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
     setPaletteOpen(eraserPalette, eraserBtn, false);
-    setPaletteOpen(colorPalette, colorBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false, true);
   });
 
   lineWidthControlLabel.addEventListener('click', () => {
     setPaletteOpen(lineWidthPalette, lineWidthControlLabel, !lineWidthPalette.classList.contains('active'));
     setPaletteOpen(eraserPalette, eraserBtn, false);
-    setPaletteOpen(colorPalette, colorBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false, true);
     isErasing = false;
     selectTool(lineWidthControlLabel);
   });
@@ -162,7 +171,7 @@ window.addEventListener('DOMContentLoaded', () => {
     selectTool(textBtn);
     setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
     setPaletteOpen(eraserPalette, eraserBtn, false);
-    setPaletteOpen(colorPalette, colorBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false, true);
   });
 
   eraserBtn.addEventListener('click', () => {
@@ -170,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
     selectTool(eraserBtn);
     setPaletteOpen(eraserPalette, eraserBtn, !eraserPalette.classList.contains('active'));
     setPaletteOpen(lineWidthPalette, lineWidthControlLabel, false);
-    setPaletteOpen(colorPalette, colorBtn, false);
+    setPaletteOpen(colorPalette, colorBtn, false, true);
   });
 
   eraserWidthSlider.addEventListener('input', () => {
@@ -671,7 +680,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!colorControl.contains(event.target)) {
-      setPaletteOpen(colorPalette, colorBtn, false);
+      setPaletteOpen(colorPalette, colorBtn, false, true);
     }
 
     // Clicking anywhere outside the whole canvas widget (toolbar + drawing
