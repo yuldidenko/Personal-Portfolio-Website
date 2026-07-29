@@ -4,15 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web Portfolio</title>
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="main.css" />
   </head>
 
   <body>
-    <div class="cursor-dot"></div>
+    <div class="cursor-dot"><img src="./media/arrow-up-right.svg" alt="" class="cursor-arrow" /></div>
     <div class="cursor-outline"></div>
 
     <section class="hero-screen">
@@ -2490,56 +2486,106 @@
 
     <section class="canvas">
       <div class="controls">
+        <button type="button" id="fill-button" class="icon-control" title="Fill">
+          <img src="./media/iconoir_fill-color.svg" alt="Колір" />
+        </button>
+
+        <div class="linewidth-control">
+          <button type="button" class="icon-control" title="Line" data-tool="pencil">
+            <img src="./media/solar_pen-linear.svg" alt="Pen icon" />
+          </button>
+
+          <div class="linewidth-palette">
+            <div class="thickness-slider-row">
+              <input
+                type="range"
+                class="thickness-slider"
+                id="line-width-slider"
+                min="1"
+                max="15"
+                step="1"
+                value="3"
+                aria-label="Line thickness"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="text-button" class="icon-control" title="Text">
+          <img src="./media/text-icon.svg" alt="Text icon" />
+        </button>
+
+        <div class="eraser-control">
+          <button type="button" id="eraser-button" class="icon-control" title="Eraser">
+            <img src="./media/iconoir_erase.svg" alt="Eraser" />
+          </button>
+
+          <div class="eraser-palette">
+            <div class="thickness-slider-row">
+              <input
+                type="range"
+                class="thickness-slider"
+                id="eraser-width-slider"
+                min="5"
+                max="60"
+                step="1"
+                value="15"
+                aria-label="Eraser thickness"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Applies to Fill, Line, and Text (not Eraser/Delete, which have
+             no color of their own). Workflow is color-first: open this,
+             pick a swatch, then pick which tool uses it - so picking a
+             swatch never toggles a tool's selected state itself. The
+             popover's own active-swatch ring shows which color is picked;
+             this trigger's icon is static artwork, same as every other
+             tool button. -->
         <div class="color-control">
-          <label class="icon-control" title="Choose color">
-            <img src="./media/iconoir_fill-color.svg" alt="Колір" />
-          </label>
+          <button type="button" id="color-picker-button" class="icon-control" title="Color">
+            <img src="./media/Color dot.svg" alt="Color" />
+          </button>
+
           <div class="color-palette">
-            <div
+            <button
+              type="button"
+              class="color-option active"
+              style="background-color: #000000"
+              data-color="#000000"
+              aria-label="Color: Black"
+            ></button>
+            <button
+              type="button"
               class="color-option"
               style="background-color: #31a0cd"
               data-color="#31A0CD"
-            ></div>
-            <div
+              aria-label="Color: Blue"
+            ></button>
+            <button
+              type="button"
               class="color-option"
               style="background-color: #346b4c"
               data-color="#346B4C"
-            ></div>
-            <div
+              aria-label="Color: Green"
+            ></button>
+            <button
+              type="button"
               class="color-option"
               style="background-color: #db572e"
               data-color="#DB572E"
-            ></div>
-            <div
+              aria-label="Color: Orange"
+            ></button>
+            <button
+              type="button"
               class="color-option"
               style="background-color: #ebc93d"
               data-color="#EBC93D"
-            ></div>
-            <div
-              class="color-option"
-              style="background-color: #000000"
-              data-color="#000000"
-            ></div>
+              aria-label="Color: Yellow"
+            ></button>
           </div>
         </div>
-
-        <div class="linewidth-control">
-          <label class="icon-control" title="Line width" data-tool="pencil">
-            <img src="./media/solar_pen-linear.svg" alt="Pen icon" />
-          </label>
-          
-          <div class="linewidth-palette">
-            <div class="linewidth-option" data-width="1">1</div>
-            <div class="linewidth-option" data-width="3">3</div>
-            <div class="linewidth-option" data-width="5">5</div>
-            <div class="linewidth-option" data-width="8">8</div>
-            <div class="linewidth-option" data-width="12">12</div>
-          </div>
-        </div>
-
-        <button id="eraser-button" class="icon-control" title="Eraser">
-          <img src="./media/iconoir_erase.svg" alt="Eraser" />
-        </button>
 
         <button id="delete-button" class="icon-control" title="Delete">
           <img src="./media/icon_delete.svg" alt="Delete icon" />

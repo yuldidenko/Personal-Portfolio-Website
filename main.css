@@ -8,33 +8,83 @@
   scroll-behavior: smooth;
 }
 
+body {
+  /* The site never declared its own line-height anywhere - this was
+     actually coming from the (unused, since-removed) Bootstrap stylesheet's
+     Reboot defaults. Restoring the same value directly here keeps the
+     text's visual rhythm as it was, without pulling the framework back in. */
+  line-height: 1.5;
+}
+
+p {
+  /* Same story as line-height above: plain <p> tags (e.g. the project
+     description paragraphs) had no spacing of their own between them and
+     were relying on Bootstrap's default p margin. Sections that already
+     declare their own explicit p margin (.cont-education p, .hobbies p,
+     etc.) are more specific and still win over this. */
+  margin-bottom: 1rem;
+}
+
 .cursor-dot {
-  width: 16px;
-  height: 16px;
+  /* Sized at the badge's full 40px diameter and held at that box size
+     always - only `transform: scale()` animates between the resting dot
+     and the expanded badge, so growing into the badge never touches
+     width/height (layout properties) and stays compositor-only. 40px
+     gives the 16px arrow icon comfortable padding on all sides. */
+  width: 40px;
+  height: 40px;
   background-color: #f0d42d;
   position: fixed;
   top: 0;
   left: 0;
-  transform: translate(-50%, -50%);
   border-radius: 50%;
   z-index: 20;
   pointer-events: none;
-  transition: width 0.5s, height 0.5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition: transform 0.3s ease;
+}
+
+.cursor-dot.cursor-view {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cursor-arrow {
+  width: 16px;
+  height: 16px;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cursor-dot.cursor-view .cursor-arrow {
+  opacity: 1;
 }
 
 .cursor-outline {
-  width: 40px;
-  height: 40px;
+  /* Same fixed-box/transform-scale technique as .cursor-dot: held at its
+     full 64px ring size always, scaled down to the resting 40px outline
+     so growing on hover only touches transform. Stays 12px bigger in
+     radius than the badge at every scale so the ring still encircles the
+     yellow badge instead of being covered by it. */
+  width: 64px;
+  height: 64px;
   border: 2px solid #31a0cd;
   background-color: rgba(49, 160, 205, 0.3);
   position: fixed;
   top: 0;
   left: 0;
-  transform: translate(-50%, -50%);
   border-radius: 50%;
   z-index: 18;
   pointer-events: none;
-  transition: 0.2s;
+  transform: translate(-50%, -50%) scale(0.625);
+  transition: transform 0.3s ease;
+}
+
+.cursor-outline.cursor-view-active {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 @font-face {
@@ -310,6 +360,7 @@ footer {
   border-width: 0 0 2px 2px;
   border-style: solid;
   border-color: #1f1f1f;
+  text-decoration: none;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -390,6 +441,19 @@ footer {
 .navigation ul li a:hover {
   text-decoration: none;
   color: #f0d42d;
+}
+
+.navigation ul li a:focus-visible {
+  /* -webkit-focus-ring-color is the actual native blue (rgb(0,95,204)) -
+     plain `outline: auto` alone resolves its color to currentColor (white
+     here), not that blue, so it has to be named explicitly to truly match
+     the browser's own default ring (the same one seen, unstyled, on the
+     video controls and the name/email inputs). Inset (negative) offset
+     keeps it fully inside the link's own box regardless of the parent
+     <li>'s overflow: hidden, so it can never get clipped - a positive
+     offset would draw part of it outside that box and risk disappearing. */
+  outline: -webkit-focus-ring-color auto 1px;
+  outline-offset: -3px;
 }
 
 h3 {
@@ -596,7 +660,7 @@ video {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   position: relative;
-  cursor: pointer;
+  cursor: none;
 }
 
 .text {
@@ -649,6 +713,9 @@ video {
 .subheader {
   font-family: "MabryPro-Bold";
   font-weight: 700;
+  /* Matches the gap the Education section gets between its own header and
+     content, via .cont-education/.education h3's padding-bottom: 16px. */
+  margin-bottom: 16px;
 }
 
 .tags {
@@ -683,11 +750,15 @@ footer p {
   grid-column: 1 / 2;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 16px;
   align-items: center;
   padding: 0.5rem 0.5rem;
   background-color: #ffffff;
-  justify-content: space-between;
+  /* Was space-between (spreading every child across the full column
+     height); now the toolbar + color picker sit packed together at a
+     fixed 16px gap starting from the top, and #delete-button's own
+     margin-top: auto is what pushes it down to the bottom instead. */
+  justify-content: flex-start;
 }
 
 .icon-control {
@@ -699,18 +770,27 @@ footer p {
   width: 40px;
   height: 40px;
   justify-content: center;
+  transition: background-color 0.15s ease;
+}
+
+.icon-control:hover {
+  background-color: #ececec;
+}
+
+.icon-control.active {
+  background-color: #d4d4d4;
 }
 
 .icon-control img {
+  /* Fixed size (rather than width/height: 100%) so the icon's own size
+     stays consistent regardless of any future button resize -
+     .icon-control's flex centering keeps it centered in the box either
+     way. Exactly fills the available space once the button's own 5px
+     padding is subtracted (40px button - 5px*2 padding = 30px). */
   display: inline-block;
-  transition: transform 0.2s;
   object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
-.icon-control img:hover {
-  transform: scale(1.1);
+  width: 30px;
+  height: 30px;
 }
 
 canvas {
@@ -729,27 +809,18 @@ button {
   border: 0;
 }
 
-input[type="range"] {
-  width: auto;
-}
-
-input[type="color"],
-input[type="range"] {
-  position: absolute;
-  left: -9999px;
-  opacity: 0;
-}
-
-.color-control,
-.linewidth-control {
+.linewidth-control,
+.eraser-control,
+.color-control {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.color-palette,
-.linewidth-palette {
+.linewidth-palette,
+.eraser-palette,
+.color-palette {
   position: absolute;
   top: 0;
   left: 100%;
@@ -757,25 +828,121 @@ input[type="range"] {
   background-color: #ffffff;
   border: 1px solid #1f1f1f;
   display: none;
-  flex-direction: row;
+  flex-direction: column;
   gap: 0;
   padding: 0;
   z-index: 10;
 }
 
-.linewidth-palette {
-  flex-direction: row;
-  padding: 0;
-  gap: 0;
-}
-
-.color-palette.active,
-.linewidth-palette.active {
+.linewidth-palette.active,
+.eraser-palette.active,
+.color-palette.active {
   display: flex;
 }
 
-.color-option,
-.linewidth-option {
+.color-palette {
+  /* Unlike the slider popovers (one wide row), this is a row of swatch
+     buttons - each already 40x40 via .color-option, so the popover just
+     needs to lay them out and give them a little breathing room. */
+  flex-direction: row;
+  gap: 4px;
+  padding: 8px;
+}
+
+.thickness-slider-row {
+  display: flex;
+  align-items: center;
+  /* Fill/Line/Text now share one global color picker below the main
+     toolbar instead of each tool having its own - so this popover only
+     ever holds the thickness slider. 200px is just a comfortable width
+     for it. */
+  width: 200px;
+  padding: 12px 16px;
+}
+
+.thickness-slider {
+  width: 100%;
+  /* Recolors the native track fill/thumb to the site's ink black instead
+     of the browser's default blue, without hand-rolling per-vendor
+     ::-webkit-slider-thumb/::-moz-range-thumb rules. */
+  accent-color: #1f1f1f;
+  cursor: pointer;
+}
+
+.text-frame {
+  /* Fixed (not absolute) so it can float directly over the click point
+     using viewport coordinates, with no positioned ancestor required.
+     Everywhere inside this border but outside .text-frame-content is the
+     drag handle (cursor: move), overriding the site-wide cursor: none.
+     Styled after Figma's own selection outline: a solid blue border plus
+     small corner handles, reading as "this is a movable container"
+     rather than a plain text box. */
+  position: fixed;
+  z-index: 20;
+  border: 1px solid #0d99ff;
+  background-color: transparent;
+  padding: 12px;
+  cursor: move;
+}
+
+.text-frame-content {
+  min-width: 24px;
+  min-height: 1.2em;
+  font-family: "MabryPro-Regular", sans-serif;
+  line-height: 1.2;
+  white-space: pre;
+  outline: none;
+  cursor: text;
+}
+
+.text-frame-handle {
+  /* Purely decorative (Figma-style corner dots signaling "container"),
+     not functional resize handles - pointer-events: none lets clicks pass
+     straight through to .text-frame underneath, so the existing "mousedown
+     lands on the frame itself" drag-detection doesn't need to know these
+     exist. */
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border: 1.5px solid #0d99ff;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.text-frame-handle.top-left {
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.text-frame-handle.top-right {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+.text-frame-handle.bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
+}
+
+.text-frame-handle.bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
+}
+
+.color-option {
+  /* Now a real <button> (for native Tab focus + Enter/Space activation)
+     instead of a plain div - appearance/padding/background reset here so
+     it still renders as a flat, borderless swatch rather than picking up
+     the browser's default button chrome. */
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  background: transparent;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -786,13 +953,61 @@ input[type="range"] {
   align-items: center;
 }
 
-.linewidth-option:hover {
-  background-color: #f0d42d;
+.color-option.active {
+  /* The swatch's own background already fills the button, so "selected"
+     needs a ring outside it rather than any fill/border change. */
+  outline: 2px solid #1f1f1f;
+  outline-offset: 2px;
 }
 
-button:focus {
-  outline: 2px dotted #346b4c;
-  outline-offset: 2px;
+/* Site-wide focus indicator: the browser's own native focus ring (the
+   same one already visible, unstyled, on the video controls and the
+   name/email inputs) for every link/button, rather than a custom
+   color/style - shown only for keyboard use (:focus-visible), not mouse
+   clicks. -webkit-focus-ring-color is that true native blue
+   (rgb(0,95,204)); plain `outline: auto` alone would resolve its color to
+   currentColor instead (e.g. white on the nav), not this blue. More
+   specific rules below override the offset only where the element's own
+   context needs it (e.g. an ancestor that clips an outset ring, or busy
+   imagery needing extra contrast), never the ring's own color/style. */
+a:focus-visible,
+button:focus-visible {
+  outline: -webkit-focus-ring-color auto 1px;
+}
+
+/* The project cover <a> itself renders at 0x0 (project-cover-shatter.js
+   replaces its <img> with an absolutely-positioned .shatter-tiles layer,
+   so the anchor has no in-flow content to size around) - the generic
+   rule above would otherwise draw a tiny, confusing ring around that
+   zero-size point. The real, visible ring is added on .image below via
+   :has(), which targets the actual sized/clipped box instead. */
+.project-card .image a:focus-visible {
+  outline: none;
+}
+
+/* A dedicated overlay layer, not a plain outline/box-shadow on .image
+   itself: .shatter-tiles (the shard grid built by project-cover-shatter.js)
+   is an opaque absolutely-positioned child that fully covers .image, and
+   an auto-stacked child like that paints over its parent's own
+   background/box-shadow/outline - so a ring drawn on .image directly gets
+   silently hidden underneath it. Giving this its own explicit z-index
+   above .shatter-tiles' (auto) guarantees it stays visible. */
+.project-card .image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: none;
+}
+
+.project-card .image:has(a:focus-visible)::after {
+  display: block;
+  /* Inset so it can't be clipped by .image's own overflow: hidden - no
+     extra box-shadow/halo here, just the plain native ring, so it never
+     doubles up as two concentric rings. */
+  outline: -webkit-focus-ring-color auto 1px;
+  outline-offset: -6px;
 }
 
 #delete-button {
@@ -883,6 +1098,11 @@ button:focus {
 }
 
 .input-group input {
+  /* Explicit height rather than relying on padding + line-height: <input>
+     doesn't inherit line-height from body the way regular text does, so
+     its padding-based natural height doesn't reliably match .send-button's
+     own explicit 50px - pinning it directly keeps them aligned regardless. */
+  height: 50px;
   padding: 12px 16px;
   border: 1px solid #1f1f1f;
   font-size: 1rem;
@@ -1034,8 +1254,9 @@ button:focus {
     flex-direction: row;
   }
 
-  .linewidth-control label,
-  .color-control label {
+  .linewidth-control button,
+  .eraser-control button,
+  .color-control button {
     margin: 0;
   }
 
@@ -1049,6 +1270,10 @@ button:focus {
     grid-column: 1 / -1;
     flex: none;
     width: 100%;
+    height: 48px;
+  }
+
+  .input-group input {
     height: 48px;
   }
 
