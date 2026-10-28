@@ -948,6 +948,7 @@ footer p {
 }
 
 .icon-control {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1004,6 +1005,43 @@ footer p {
   }
 }
 
+/* Touch screens have no hover, so a tap plays the same gesture once
+   (canvas.js adds .tool-tap on press). Fill and Color, which tilt/turn
+   and hold on desktop hover, get a there-and-back version here. */
+@media (hover: none) {
+  #fill-button.tool-tap img {
+    animation: toolPourTap 550ms var(--ease-out);
+  }
+  .linewidth-control .icon-control.tool-tap img {
+    transform-origin: 20% 80%;
+    animation: toolScribble 550ms var(--ease-out);
+  }
+  #text-button.tool-tap img {
+    animation: toolHop 500ms var(--ease-out);
+  }
+  #eraser-button.tool-tap img {
+    animation: toolRub 550ms var(--ease-in-out);
+  }
+  #color-picker-button.tool-tap img {
+    animation: toolSpinTap 550ms var(--ease-spring);
+  }
+  #delete-button.tool-tap img {
+    transform-origin: 50% 90%;
+    animation: toolShake 500ms var(--ease-out);
+  }
+}
+
+@keyframes toolPourTap {
+  0%, 100% { transform: rotate(0deg); }
+  45% { transform: rotate(-24deg); }
+}
+
+@keyframes toolSpinTap {
+  0% { transform: rotate(0deg) scale(1); }
+  60% { transform: rotate(90deg) scale(1.1); }
+  100% { transform: rotate(90deg) scale(1); }
+}
+
 @keyframes toolScribble {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   25% { transform: translate(2px, -2px) rotate(-10deg); }
@@ -1031,8 +1069,26 @@ footer p {
   70% { transform: rotate(-4deg); }
 }
 
-.icon-control.active {
-  background-color: #d4d4d4;
+/* Selected tool (or open Color popover): a small yellow dot under the
+   icon instead of a grey plate - the same marker on desktop and touch,
+   and in the site's own accent colour. It pops in with a spring. */
+.icon-control::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background-color: #ffae00;
+  transform: scale(0);
+  transition: transform var(--dur-base) var(--ease-spring);
+  pointer-events: none;
+}
+
+.icon-control.active::after {
+  transform: scale(1);
 }
 
 .icon-control img {
@@ -1319,7 +1375,9 @@ button:focus-visible {
   display: flex;
   gap: 1.5rem;
   margin-top: 0.5rem;
-  align-items: center;
+  /* Top-aligned: each input carries a reserved error line underneath,
+     so the inputs and the Send button line up along their top edges. */
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -1393,7 +1451,24 @@ button:focus-visible {
 
 .input-group {
   display: flex;
+  flex-direction: column;
   flex: 1;
+}
+
+/* Validation message directly under its own field. The line is always
+   reserved (min-height), so an error appearing never pushes the layout
+   around. */
+.field-error {
+  min-height: 1.5em;
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #ff8a65;
+}
+
+.input-group input[aria-invalid="true"] {
+  border-color: #ff8a65;
+  box-shadow: inset 0 0 0 1px #ff8a65;
 }
 
 .input-group input {
@@ -1550,6 +1625,9 @@ button:focus-visible {
        which has its own explicit width: 100% below) was shrinking to fit
        its placeholder text instead of spanning full width like the button. */
     align-items: stretch;
+    /* Each input already carries its reserved error line, so the stack
+       needs less extra gap than the side-by-side desktop row. */
+    gap: 0.5rem;
   }
 
   .canvas {

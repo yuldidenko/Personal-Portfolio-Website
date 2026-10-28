@@ -52,6 +52,22 @@ window.addEventListener("DOMContentLoaded", () => {
     status.classList.toggle("success", !!isSuccess);
   }
 
+  const nameError = document.getElementById("name-error");
+  const emailError = document.getElementById("email-error");
+
+  // Field-level errors: shown under the field they belong to, marked on
+  // the input (aria-invalid) and cleared as soon as the user edits it.
+  function setFieldError(input, errorEl, text) {
+    if (errorEl) errorEl.textContent = text || "";
+    if (text) {
+      input.setAttribute("aria-invalid", "true");
+    } else {
+      input.removeAttribute("aria-invalid");
+    }
+  }
+  nameInput.addEventListener("input", () => setFieldError(nameInput, nameError, ""));
+  emailInput.addEventListener("input", () => setFieldError(emailInput, emailError, ""));
+
   function isValidEmail(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
@@ -76,12 +92,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
 
-    if (!name) {
-      setStatus("Please enter your name.");
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setStatus("Please enter a valid email.");
+    setStatus("");
+    const nameOk = !!name;
+    const emailOk = isValidEmail(email);
+    setFieldError(nameInput, nameError, nameOk ? "" : "Please enter your name.");
+    setFieldError(
+      emailInput,
+      emailError,
+      emailOk ? "" : email ? "Please enter a valid email." : "Please enter your email."
+    );
+    if (!nameOk || !emailOk) {
+      // Move focus to the first field that needs fixing.
+      (nameOk ? emailInput : nameInput).focus();
       return;
     }
 

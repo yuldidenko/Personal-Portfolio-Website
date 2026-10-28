@@ -2737,7 +2737,9 @@
           autocomplete="name"
           autocapitalize="words"
           enterkeyhint="next"
+          aria-describedby="name-error"
         />
+        <p class="field-error" id="name-error" aria-live="polite"></p>
       </div>
       <div class="input-group">
         <input
@@ -2751,7 +2753,9 @@
           autocapitalize="off"
           spellcheck="false"
           enterkeyhint="send"
+          aria-describedby="email-error"
         />
+        <p class="field-error" id="email-error" aria-live="polite"></p>
       </div>
       <button type="button" class="send-button"
         ><span class="button-label"

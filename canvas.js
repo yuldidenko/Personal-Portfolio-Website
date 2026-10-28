@@ -92,8 +92,22 @@ window.addEventListener('DOMContentLoaded', () => {
   function selectTool(selectedBtn) {
     toolButtons.forEach((btn) => {
       btn.classList.toggle('active', btn === selectedBtn);
+      // Screen readers hear which tool is selected (the yellow dot is
+      // purely visual).
+      btn.setAttribute('aria-pressed', String(btn === selectedBtn));
     });
   }
+
+  // Touch has no hover: a tap on any tool replays its icon gesture once
+  // (the animations live in main.css under @media (hover: none)).
+  document.querySelectorAll('.controls .icon-control').forEach((btn) => {
+    btn.addEventListener('pointerdown', () => {
+      btn.classList.remove('tool-tap');
+      void btn.offsetWidth; // restart the animation on repeated taps
+      btn.classList.add('tool-tap');
+    });
+    btn.addEventListener('animationend', () => btn.classList.remove('tool-tap'));
+  });
 
   // Every popover (Line's, Eraser's, and Color's) opens/closes through
   // this one helper, which keeps its trigger button's aria-expanded in
@@ -101,8 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // call sites below (tool clicks closing each other's popovers, the
   // outside-click handler, etc.) having to remember to update it.
   //
-  // syncActiveClass additionally toggles the trigger's own grey .active
-  // (selected) look to match the popover's open state - only passed for
+  // syncActiveClass additionally toggles the trigger's own .active
+  // (selected - yellow dot) look to match the popover's open state - only passed for
   // Color, whose button has no other source of that look (Line/Eraser
   // already get it from selectTool() marking them the selected tool,
   // independently of whether their own popover happens to be open).
