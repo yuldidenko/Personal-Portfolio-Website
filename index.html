@@ -2728,10 +2728,30 @@
 
     <div class="form-container">
       <div class="input-group">
-        <input type="text" id="name" placeholder="your name" />
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="your name"
+          aria-label="Your name"
+          autocomplete="name"
+          autocapitalize="words"
+          enterkeyhint="next"
+        />
       </div>
       <div class="input-group">
-        <input type="email" id="email" placeholder="your email" />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="your email"
+          aria-label="Your email"
+          autocomplete="email"
+          inputmode="email"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="send"
+        />
       </div>
       <button type="button" class="send-button"
         ><span class="button-label"

@@ -31,6 +31,21 @@ window.addEventListener("DOMContentLoaded", () => {
   const status = document.querySelector(".form-status");
   if (!canvas || !sendButton || !nameInput || !emailInput) return;
 
+  // Enter moves name -> email, and sends from the email field (matching
+  // the enterkeyhint="next"/"send" labels on mobile keyboards).
+  nameInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      emailInput.focus();
+    }
+  });
+  emailInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !sendButton.disabled) {
+      e.preventDefault();
+      sendButton.click();
+    }
+  });
+
   function setStatus(text, isSuccess) {
     if (!status) return;
     status.textContent = text;
