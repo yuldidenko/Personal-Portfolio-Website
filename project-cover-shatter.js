@@ -56,10 +56,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const src = imgEl.getAttribute("src");
     const container = document.createElement("div");
     container.className = "shatter-tiles";
-    imgEl.replaceWith(container);
+    const base = document.createElement("div");
+    base.className = "shatter-base";
+    imgEl.replaceWith(base, container);
 
+    // Covers sit far below the fold, so their (large) images are only
+    // requested once the card is about to scroll into view.
     const source = new Image();
-    source.src = src;
+    const startLoading = () => {
+      base.style.backgroundImage = `url(${src})`;
+      source.src = src;
+    };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            io.disconnect();
+            startLoading();
+          }
+        },
+        { rootMargin: "600px 0px" }
+      );
+      io.observe(wrapper);
+    } else {
+      startLoading();
+    }
 
     let cols = 0;
     let rows = 0;
@@ -126,6 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const tileW = boxW / cols;
       const tileH = boxH / rows;
 
+      base.style.backgroundSize = `${coverW}px ${coverH}px`;
+      base.style.backgroundPosition = `${-cropX}px ${-cropY}px`;
+
       shards.forEach((s) => {
         const left = s.col * tileW;
         const top = s.row * tileH;
@@ -140,11 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    if (source.complete) {
-      layout();
-    } else {
-      source.addEventListener("load", layout);
-    }
+    source.addEventListener("load", layout);
     new ResizeObserver(layout).observe(wrapper);
 
     // Cursor-reactive shatter: shards near the pointer are pushed radially
@@ -184,12 +204,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const resetShards = () => {
+      wrapper.classList.remove("is-shattering");
       shards.forEach((s) => {
         s.el.style.transform = "translate(0px, 0px) rotate(0deg)";
       });
     };
 
     wrapper.addEventListener("mousemove", (e) => {
+      wrapper.classList.add("is-shattering");
       const rect = wrapper.getBoundingClientRect();
       pendingX = e.clientX - rect.left;
       pendingY = e.clientY - rect.top;

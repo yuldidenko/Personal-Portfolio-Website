@@ -3,7 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web Portfolio</title>
+    <title>Yuliia Didenko — UI/UX Designer</title>
+    <meta
+      name="description"
+      content="Yuliia Didenko is a UI/UX designer in Switzerland designing B2B fintech platforms and mobile apps — Factora, Amygdala, Cultural Planet and Good Food."
+    />
+    <meta name="theme-color" content="#1f1f1f" />
+    <link rel="icon" href="./media/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./media/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Yuliia Didenko — UI/UX Designer" />
+    <meta
+      property="og:description"
+      content="B2B fintech platforms and mobile apps, designed around real business and user needs."
+    />
+    <!-- Social networks need an absolute URL here: replace "./" with the
+         site's full address (e.g. https://yourdomain.com/) once it's live. -->
+    <meta property="og:image" content="./media/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="main.css" />
   </head>
 
@@ -1915,7 +1936,12 @@
         />
       </svg>
 
-      <a href="#lets-talk" class="button">Meet me</a>
+      <a href="#lets-talk" class="button"
+        ><span class="button-label"
+          ><span class="sr-only">Meet me</span
+          ><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0">M</span></span><span class="roll-char"><span style="--i: 1">e</span></span><span class="roll-char"><span style="--i: 2">e</span></span><span class="roll-char"><span style="--i: 3">t</span></span><span class="roll-char"><span style="--i: 4">&nbsp;</span></span><span class="roll-char"><span style="--i: 5">m</span></span><span class="roll-char"><span style="--i: 6">e</span></span></span></span
+        ></a
+      >
 
       <svg
         fill="none"
@@ -2017,8 +2043,18 @@
       </div>
 
       <div class="column-2">
-        <video controls autoplay muted playsinline loop>
-          <source src="./media/spring-dream.mov" type="video/mp4" />
+        <video
+          controls
+          muted
+          playsinline
+          loop
+          preload="none"
+          data-autoplay
+          width="720"
+          height="1228"
+          poster="./media/spring-dream-poster.webp"
+        >
+          <source src="./media/spring-dream.mp4" type="video/mp4" />
         </video>
 
         <div class="iframe">
@@ -2026,7 +2062,7 @@
         </div>
 
         <div class="gif">
-          <img src="./media/art.gif" alt="Yuliia's artworks gits" />
+          <img src="./media/art.webp" alt="Yuliia painting outdoors, and her finished artworks" width="628" height="720" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -2105,7 +2141,7 @@
       </div>
     </section>
 
-    <section id="my-way" class="my-way-tablet">
+    <section id="my-way-mobile" class="my-way-tablet">
       <h2 class="name-2">My way</h2>
 
       <div class="column-1-tablet">
@@ -2256,12 +2292,22 @@
       </div>
 
       <div class="column-2-tablet">
-        <video controls autoplay muted playsinline loop>
-          <source src="./media/spring-dream.mov" type="video/mp4" />
+        <video
+          controls
+          muted
+          playsinline
+          loop
+          preload="none"
+          data-autoplay
+          width="720"
+          height="1228"
+          poster="./media/spring-dream-poster.webp"
+        >
+          <source src="./media/spring-dream.mp4" type="video/mp4" />
         </video>
 
         <div class="gif">
-          <img src="./media/art.gif" alt="Yuliia's artworks gits" />
+          <img src="./media/art.webp" alt="Yuliia painting outdoors, and her finished artworks" width="628" height="720" loading="lazy" decoding="async" />
         </div>
 
         <div class="hobbies">
@@ -2279,7 +2325,7 @@
       <h2 class="name-2">Approach</h2>
 
       <div class="wrapper-1">
-        <img src="./media/diving-deep.svg" alt="Illustration" />
+        <img src="./media/diving-deep.svg" alt="" loading="lazy" decoding="async" />
         <p>
           Before starting work, I like to dive deep into the project, uncover
           its values and needs, empathize, and highlight key strengths and
@@ -2289,7 +2335,7 @@
       </div>
 
       <div class="wrapper-2">
-        <img src="./media/bead-weaving.svg" alt="Illustration" />
+        <img src="./media/bead-weaving.svg" alt="" loading="lazy" decoding="async" />
         <p>
           I am absolutely a team player. I take pride in working alongside
           like-minded talents and growing together with them. To me, teamwork is
@@ -2299,7 +2345,7 @@
       </div>
 
       <div class="wrapper-3">
-        <img src="./media/positive-vibes.svg" alt="Illustration" />
+        <img src="./media/positive-vibes.svg" alt="" loading="lazy" decoding="async" />
         <p>
           I am naturally a very positive person, and I think I succeeded in
           saving this childlike ability to find joy in small things along with
@@ -2309,7 +2355,7 @@
       </div>
 
       <div class="wrapper-4">
-        <img src="./media/plant-growing.svg" alt="Illustration" />
+        <img src="./media/plant-growing.svg" alt="" loading="lazy" decoding="async" />
         <p>
           I perceive every challenge as an opportunity to grow, develop, find
           new solutions, and ensure long-term sustainability. Each obstacle for
@@ -2323,19 +2369,66 @@
       <h2 class="name-2">Projects</h2>
 
       <div class="project-card">
+        <div class="text">
+          <div class="numbers">
+            <p>01</p>
+            <p>/04</p>
+          </div>
+
+          <p class="subheader">Factora</p>
+          <p>
+            A B2B platform that helps Swiss IT companies close cash flow gaps
+            by selling unpaid invoices directly to partner banks through
+            factoring.
+          </p>
+
+          <p>
+            Factora brings invoices, transactions and bank partners into one
+            workspace. Finance managers can track every project and its
+            invoices, issue new invoices for services, and receive dynamic AI
+            alerts about potential payment delays or changes in a partner
+            company's financial health. They can analyze payment timelines and
+            cash flow, and compare factoring offers from different banks to
+            choose the most profitable option for each partner company. A
+            built-in AI assistant helps streamline daily work, find information
+            quickly and suggest effective financial management practices.
+          </p>
+
+          <p>
+            Built on a Figma variables–based design system covering every
+            component state.
+          </p>
+
+          <div class="tags">
+            <p>Fintech</p>
+            <p>B2B web platform</p>
+            <p>AI assistant</p>
+            <p>Financial analytics</p>
+          </div>
+        </div>
+        <div class="image">
+          <a
+            href="https://www.behance.net/gallery/256661201/Factora-invoice-factoring-platform"
+            target="_blank"
+            ><img src="./media/factora-cover.webp" alt="Factora dashboard — invoices, revenue structure and top partners" width="1600" height="1246"
+          /></a>
+        </div>
+      </div>
+
+      <div class="project-card">
         <div class="image">
           <a
             href="https://www.behance.net/gallery/232259027/Amygdala-Mood-Tracker-App-UXUI-Design"
             target="_blank"
           >
-            <img src="./media/Amygdala.png" alt="Project cover"
+            <img src="./media/amygdala-cover.webp" alt="Amygdala project cover" width="1600" height="951"
           /></a>
         </div>
 
         <div class="text">
           <div class="numbers">
-            <p>01</p>
-            <p>/03</p>
+            <p>02</p>
+            <p>/04</p>
           </div>
 
           <p class="subheader">Amygdala</p>
@@ -2366,9 +2459,10 @@
           </p>
 
           <div class="tags">
-            <p>Mobile design</p>
-            <p>User experience</p>
-            <p>User interface</p>
+            <p>Mental health</p>
+            <p>Mobile app</p>
+            <p>Gamification</p>
+            <p>Echo AI diary</p>
           </div>
         </div>
       </div>
@@ -2376,41 +2470,47 @@
       <div class="project-card">
         <div class="text">
           <div class="numbers">
-            <p>02</p>
-            <p>/03</p>
+            <p>03</p>
+            <p>/04</p>
           </div>
 
           <p class="subheader">Cultural Planet app</p>
           <p>
-            It's a mobile application that helps users marvelously organize
-            their cultural time. Based on a personalized approach, catering to
-            unique interests. It allows users to find events, discover venues,
-            buy tickets, leave reviews, add to favorites, earn discounts, and
-            flexibly adjust notifications.
+            Cultural Planet is a mobile app that helps young adults (25–35)
+            plan their cultural life — from discovering an event to buying the
+            ticket — in one place.
           </p>
 
           <p>
-            A built-in online wallet, rewards program, advanced map search, and
-            flexible notifications were developed, allowing Cultural Planet to
-            differentiate itself from competitors.
+            Events are scattered across venue sites, ticket platforms and
+            social feeds, so people miss what matches their interests and
+            juggle several apps just to go out.
           </p>
 
           <p>
-            The app design specifically targets young adults aged 25-35, making
-            the use process interactive and enjoyable.
+            A personalized feed and advanced map search surface events and
+            venues by interest. Users buy tickets with a built-in wallet, save
+            favorites, leave reviews and fine-tune notifications, while a
+            rewards program turns every visit into discounts.
+          </p>
+
+          <p>
+            The wallet and rewards loop became the app’s key differentiator
+            from competitors — and a reason to come back after every event.
           </p>
 
           <div class="tags">
-            <p>Mobile design</p>
-            <p>User experience</p>
-            <p>User interface</p>
+            <p>Events</p>
+            <p>Mobile app</p>
+            <p>Rewards program</p>
+            <p>Built-in online wallet</p>
           </div>
         </div>
         <div class="image">
           <a
             href="https://www.behance.net/gallery/193502999/Open-the-Door-to-the-World-of-Events"
             target="_blank"
-            ><img src="./media/Cultural-Planet.png" alt="Project cover"
+            ><img src="./media/cultural-planet-cover.webp" alt="Cultural Planet project cover" width="1600" height="900"
           /></a>
         </div>
       </div>
@@ -2421,41 +2521,46 @@
             href="https://www.behance.net/gallery/200685645/GOOD-FOOD-table-reservation-and-food-delivery-app"
             target="_blank"
           >
-            <img src="./media/Good-Food.png" alt="Project cover"
+            <img src="./media/good-food-cover.webp" alt="Good Food project cover" width="1600" height="1331"
           /></a>
         </div>
 
         <div class="text">
           <div class="numbers">
-            <p>03</p>
-            <p>/03</p>
+            <p>04</p>
+            <p>/04</p>
           </div>
 
           <p class="subheader">Good Food app</p>
           <p>
-            The Good Food app was created to unify all dining needs in one
-            place, making the ordering process easier, faster, and more
-            convenient.
+            Good Food brings every dining need into one app — finding a place,
+            booking a table and ordering food for delivery or pick-up.
           </p>
 
           <p>
-            Users can search for restaurants, bars, pubs, cafes, pizzerias, and
-            more using the interactive map, filters, and special app offers.
-            They can read detailed restaurant pages, browse reviews, check menus
-            and allergen info, leave feedback, and book a table—all within the
-            app.
+            Diners switch between separate apps to choose a restaurant, check
+            the menu, reserve and order, losing details like allergens or how
+            to split the bill along the way.
           </p>
 
           <p>
-            Good Food empowers people to order food for delivery or pick-up,
-            pre-order their meals, track delivery status, share bills with
-            friends, and create group orders with ease.
+            An interactive map with filters and special offers helps users
+            find restaurants, bars and cafés. Venue pages bring menus,
+            allergen info and reviews together, so deciding and booking happen
+            in the same place.
+          </p>
+
+          <p>
+            Pre-orders, live delivery tracking, bill splitting and group
+            orders turn a multi-app routine into one faster, more convenient
+            flow.
           </p>
 
           <div class="tags">
-            <p>Mobile design</p>
-            <p>User experience</p>
-            <p>User interface</p>
+            <p>Food delivery</p>
+            <p>Mobile app</p>
+            <p>Group orders</p>
+            <p>Table booking</p>
           </div>
         </div>
       </div>
@@ -2473,7 +2578,7 @@
     </p>
 
     <div class="top-message">
-      Draw a picture to me or reach out via
+      Draw me a picture or reach out via
       <a href="mailto:yuliia.didenko.mir@gmail.com">Email</a>,
       <a
         href="https://www.linkedin.com/in/yuliia-didenko/"
@@ -2608,7 +2713,12 @@
       <div class="input-group">
         <input type="email" id="email" placeholder="your email" />
       </div>
-      <button type="button" class="send-button">Send</button>
+      <button type="button" class="send-button"
+        ><span class="button-label"
+          ><span class="sr-only">Send</span
+          ><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0">S</span></span><span class="roll-char"><span style="--i: 1">e</span></span><span class="roll-char"><span style="--i: 2">n</span></span><span class="roll-char"><span style="--i: 3">d</span></span></span></span
+        ></button
+      >
     </div>
     <p class="form-status"></p>
 
@@ -2621,5 +2731,7 @@
     <script src="hero-scroll.js"></script>
     <script src="hair-wind.js"></script>
     <script src="project-cover-shatter.js"></script>
+    <script src="video-autoplay.js"></script>
+    <script src="motion.js"></script>
   </footer>
 </html>

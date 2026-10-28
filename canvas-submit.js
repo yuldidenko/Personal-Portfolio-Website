@@ -70,8 +70,13 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const originalLabel = sendButton.textContent;
+    // The label is markup (rolling letters + a screen-reader copy), so
+    // it is saved and restored as HTML, not plain text.
+    const originalLabel = sendButton.innerHTML;
     sendButton.disabled = true;
+    sendButton.classList.add("is-loading");
+    sendButton.setAttribute("aria-busy", "true");
+    sendButton.textContent = "Sending…";
     setStatus("Sending...");
 
     emailjs
@@ -82,14 +87,23 @@ window.addEventListener("DOMContentLoaded", () => {
       })
       .then(() => {
         setStatus("✓ Received! Thanks for the artwork.", true);
-        sendButton.disabled = false;
-        sendButton.textContent = originalLabel;
+        sendButton.classList.remove("is-loading");
+        sendButton.removeAttribute("aria-busy");
+        sendButton.classList.add("is-success");
+        sendButton.textContent = "Sent ✓";
+        setTimeout(() => {
+          sendButton.classList.remove("is-success");
+          sendButton.disabled = false;
+          sendButton.innerHTML = originalLabel;
+        }, 2500);
       })
       .catch((err) => {
         console.error("EmailJS send failed:", err);
         setStatus("Something went wrong - please try again.");
+        sendButton.classList.remove("is-loading");
+        sendButton.removeAttribute("aria-busy");
         sendButton.disabled = false;
-        sendButton.textContent = originalLabel;
+        sendButton.innerHTML = originalLabel;
       });
   });
 });

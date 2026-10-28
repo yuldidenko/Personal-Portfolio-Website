@@ -2,6 +2,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const hero = document.querySelector('.hero-screen');
   const parts = hero ? hero.querySelectorAll('[id^="part"], [id^="shard"]') : [];
   if (!hero || !parts.length) return;
+  // The scroll-linked burst moves the whole portrait across the screen;
+  // with reduced motion the portrait simply stays assembled.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   // Portrait's own center, in the SVG's viewBox/user-unit space (viewBox is
   // "0 0 2683 3408"), used below as the explosion's origin so every part

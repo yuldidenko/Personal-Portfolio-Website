@@ -1,6 +1,9 @@
 window.addEventListener('DOMContentLoaded', () => {
   const hero = document.querySelector('.hero-screen');
   if (!hero) return;
+  // Falling shards are pure decoration - skipped entirely for visitors
+  // who ask their OS for reduced motion.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const COLORS = ['#B04830', '#AF5B37', '#CDA03B', '#C09B67', '#E4D9B4', '#316A88', '#097DB0', '#2F6F52'];
   const SIZE_SCALE = 3; // bolder, more readable fragments

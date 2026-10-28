@@ -1,3 +1,17 @@
+/* Motion tokens - one easing/duration vocabulary for the whole site.
+   ease-out: fast start, soft landing (for anything entering or reacting
+   to the user). spring: slight overshoot, for things snapping back into
+   place. Durations stay short: UI should answer, not perform. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+  --press-scale: 0.97;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -44,7 +58,9 @@ p {
   align-items: center;
   justify-content: center;
   transform: translate(-50%, -50%) scale(0.4);
-  transition: transform 0.3s ease;
+  opacity: 0;
+  transition: transform var(--dur-base) var(--ease-spring),
+    opacity var(--dur-fast) ease;
 }
 
 .cursor-dot.cursor-view {
@@ -56,7 +72,7 @@ p {
   height: 16px;
   display: block;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--dur-fast) ease;
 }
 
 .cursor-dot.cursor-view .cursor-arrow {
@@ -80,7 +96,26 @@ p {
   z-index: 18;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.625);
-  transition: transform 0.3s ease;
+  opacity: 0;
+  transition: transform var(--dur-slow) var(--ease-spring),
+    opacity var(--dur-fast) ease;
+}
+
+/* Hidden until the pointer actually moves (cursor.js), so the custom
+   cursor never sits parked in the top-left corner on load, and hidden
+   again whenever the pointer leaves the window. */
+.cursor-dot.is-visible,
+.cursor-outline.is-visible {
+  opacity: 1;
+}
+
+/* Pressing anywhere gives the cursor a small squeeze - tactile feedback
+   that the click registered. */
+.cursor-dot.is-pressed {
+  transform: translate(-50%, -50%) scale(0.3);
+}
+.cursor-dot.cursor-view.is-pressed {
+  transform: translate(-50%, -50%) scale(0.9);
 }
 
 .cursor-outline.cursor-view-active {
@@ -89,35 +124,45 @@ p {
 
 @font-face {
   font-family: "tan-pearl";
-  src: url("./fonts/tan-pearl.otf") format("opentype");
+  src: url("./fonts/tan-pearl.woff2") format("woff2"),
+    url("./fonts/tan-pearl.otf") format("opentype");
+  font-display: swap;
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "MabryPro-Light";
-  src: url("./fonts/MabryPro-Light.ttf") format("truetype");
+  src: url("./fonts/MabryPro-Light.woff2") format("woff2"),
+    url("./fonts/MabryPro-Light.ttf") format("truetype");
+  font-display: swap;
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: "MabryPro-Regular";
-  src: url("./fonts/MabryPro-Regular.ttf") format("truetype");
+  src: url("./fonts/MabryPro-Regular.woff2") format("woff2"),
+    url("./fonts/MabryPro-Regular.ttf") format("truetype");
+  font-display: swap;
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: "MabryPro-Medium";
-  src: url("./fonts/MabryPro-Medium.ttf") format("truetype");
+  src: url("./fonts/MabryPro-Medium.woff2") format("woff2"),
+    url("./fonts/MabryPro-Medium.ttf") format("truetype");
+  font-display: swap;
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "MabryPro-Bold";
-  src: url("./fonts/MabryPro-Bold.ttf") format("truetype");
+  src: url("./fonts/MabryPro-Bold.woff2") format("woff2"),
+    url("./fonts/MabryPro-Bold.ttf") format("truetype");
+  font-display: swap;
   font-weight: 700;
   font-style: normal;
 }
@@ -340,7 +385,7 @@ footer {
 .description {
   grid-column: 5 / 13;
   font-size: 2rem;
-  font-family: "MarbyPro-Light", sans-serif;
+  font-family: "MabryPro-Light", sans-serif;
   font-weight: 300;
   padding-bottom: 4rem;
   margin: 0;
@@ -352,30 +397,91 @@ footer {
   align-items: center;
   justify-content: center;
   background-color: #ffae00;
-  font-family: "MarbyPro-Bold", sans-serif;
+  font-family: "MabryPro-Bold", sans-serif;
   font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5;
   color: #1f1f1f;
   width: 200px;
   height: 50px;
-  border-width: 0 0 2px 2px;
-  border-style: solid;
-  border-color: #1f1f1f;
+  padding: 0;
+  border: 0;
   text-decoration: none;
-  transition: background-color 0.3s ease-in-out;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+/* The global `* { font-size: 16px }` reset would otherwise shrink the
+   label back down. */
+.button span,
+.send-button span {
+  font: inherit;
+}
+
+.button-label {
+  position: relative;
+  display: inline-block;
+}
+
+/* Slot-machine roll on hover: each letter is a one-line window
+   (overflow: hidden) holding the letter plus an identical copy drawn
+   one line below it via text-shadow. On hover the letter slides up a
+   line, so the copy rolls into place; letters start ~35ms apart
+   (--i), which gives the drum-like ripple. Only transform animates. */
+.roll {
+  display: inline-flex;
+}
+
+.roll-char {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.5em;
+  line-height: 1.5;
+  vertical-align: top;
+}
+
+.roll-char > span {
+  display: inline-block;
+  text-shadow: 0 1.5em currentColor;
+  transition: transform 600ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 35ms);
+}
+
+.button:hover .roll-char > span,
+.button:focus-visible .roll-char > span,
+.send-button:hover:not(:disabled) .roll-char > span,
+.send-button:focus-visible:not(:disabled) .roll-char > span {
+  transform: translateY(-1.5em);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover .roll-char > span,
+  .button:focus-visible .roll-char > span,
+  .send-button:hover .roll-char > span,
+  .send-button:focus-visible .roll-char > span {
+    transform: none;
+  }
+}
+
+.button:active,
+.send-button:active:not(:disabled) {
+  transform: scale(var(--press-scale));
 }
 
 .button:hover {
   text-decoration: none;
   color: rgb(31, 31, 31);
-  background-color: #ffd000;
-}
-
-.button:hover::before {
-  transform: scaleY(1);
-}
-
-.button:hover::after {
-  transform: scaleX(1);
 }
 
 .navigation {
@@ -398,8 +504,8 @@ footer {
 .navigation ul li a {
   display: flex;
   padding: 0.5rem 1rem;
+  font-family: "MabryPro-Bold";
   font-weight: 700;
-  font-style: bold;
   color: #ffffff;
   text-decoration: none;
 }
@@ -416,26 +522,36 @@ footer {
 .navigation ul li a {
   display: flex;
   padding: 0.5rem 1rem;
+  font-family: "MabryPro-Bold";
   font-weight: 700;
-  font-style: bold;
   color: #ffffff;
   text-decoration: none;
   position: relative;
 }
 
+/* Underline draws in from the left on hover and exits to the right on
+   leave - transform: scaleX instead of animating width, so it never
+   triggers layout. */
 .navigation ul li a::before {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 0;
+  width: 100%;
   height: 1px;
   background-color: #f0d42d;
-  transition: width 0.3s ease-in-out;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--dur-base) var(--ease-out);
 }
 
 .navigation ul li a:hover::before {
-  width: 100%;
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.navigation ul li a {
+  transition: color var(--dur-fast) ease;
 }
 
 .navigation ul li a:hover {
@@ -571,6 +687,9 @@ h3 {
 
 .gif img {
   width: 100%;
+  /* width/height attributes in the markup reserve the space before the
+     image loads (no layout jump); height:auto keeps the real ratio. */
+  height: auto;
 }
 
 .languages {
@@ -588,6 +707,25 @@ h3 {
 
 video {
   width: 100%;
+  height: auto;
+}
+
+/* Gilded picture frame around the My way video and artwork gif.
+   9-slice border-image: the corners keep their exact ornament, while
+   the edges repeat ("round") the carved pattern to whatever length each
+   media box needs - so the same frame wraps the wider video and the
+   shorter gif without stretching the ornament. Slice values are the
+   frame's measured thickness in the source image (top right bottom
+   left, in px); border-width sets how thick it renders on screen. */
+.my-way video,
+.my-way-tablet video,
+.my-way .gif img,
+.my-way-tablet .gif img {
+  display: block;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: clamp(14px, 1.6vw, 24px);
+  border-image: url("./media/picture-frame.webp") 104 103 105 105 round;
 }
 
 .cont-education p,
@@ -624,6 +762,9 @@ video {
 .name-2 {
   grid-column: 1 / 13;
   font-family: "tan-pearl";
+  /* Tan Pearl ships a single (400) weight; h2's default bold made the
+     browser fake a heavier cut, smearing its hairline contrast. */
+  font-weight: 400;
   font-size: 3.8rem;
   padding-bottom: 4rem;
   margin: 0;
@@ -685,9 +826,26 @@ video {
    it (see applyPush in the JS), as if the pointer is shoving the
    fragments aside, and eases back to rest on mouseleave via the
    transition below. */
-.shatter-tiles {
+.shatter-tiles,
+.shatter-base {
   position: absolute;
   inset: 0;
+}
+
+/* The intact cover, painted under the shards. Sub-pixel tile edges and
+   clip-path anti-aliasing leave hairline seams between shards at rest;
+   with the whole image underneath, those seams show the same pixels and
+   disappear. It fades out while the cover is being shattered (so real
+   cracks open onto the card) and back in once the shards have settled. */
+.shatter-base {
+  background-repeat: no-repeat;
+  transition: opacity 0.2s ease 0.5s;
+}
+
+.image.is-shattering .shatter-base {
+  opacity: 0;
+  transition-delay: 0s;
+  transition-duration: 0.1s;
 }
 
 .shatter-shard {
@@ -695,7 +853,13 @@ video {
   background-repeat: no-repeat;
   transform: translate(0px, 0px) rotate(0deg);
   will-change: transform;
-  transition: transform 0.35s ease-out;
+  /* Release: shards spring back into place with a little overshoot. */
+  transition: transform 600ms var(--ease-spring);
+}
+
+/* While the pointer is pushing them, shards track it quickly instead. */
+.image.is-shattering .shatter-shard {
+  transition: transform 180ms var(--ease-out);
 }
 
 .numbers {
@@ -720,11 +884,13 @@ video {
 
 .tags {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: 1.5rem;
 }
 
 .tags p {
+  white-space: nowrap;
   padding: 0.5rem 1rem;
   border: 1px solid #1f1f1f;
   border-radius: 2rem;
@@ -770,7 +936,12 @@ footer p {
   width: 40px;
   height: 40px;
   justify-content: center;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.icon-control:active {
+  transform: scale(0.92);
 }
 
 .icon-control:hover {
@@ -838,6 +1009,17 @@ button {
 .eraser-palette.active,
 .color-palette.active {
   display: flex;
+  transform-origin: top left;
+  animation: popoverIn var(--dur-base) var(--ease-out);
+}
+
+/* Uses the standalone opacity/scale properties so it layers over each
+   popover's own positioning transform instead of replacing it. */
+@keyframes popoverIn {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
 }
 
 .color-palette {
@@ -1027,7 +1209,7 @@ button:focus-visible {
   grid-column: 5 / 13;
   font-size: 1rem;
   color: #ffffff;
-  font-family: "MarbyPro-Light", sans-serif;
+  font-family: "MabryPro-Light", sans-serif;
   font-weight: 300;
   margin: 0;
 }
@@ -1045,10 +1227,16 @@ button:focus-visible {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 0;
+  width: 100%;
   height: 1px;
   background-color: #f0d42d;
-  transition: width 0.3s ease-in-out;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.top-message a {
+  transition: color var(--dur-fast) ease;
 }
 
 .top-message a:hover {
@@ -1056,7 +1244,8 @@ button:focus-visible {
 }
 
 .top-message a:hover::before {
-  width: 100%;
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .form-container {
@@ -1074,20 +1263,55 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   background-color: #ffae00;
-  font-family: "MarbyPro-Bold", sans-serif;
+  font-family: "MabryPro-Bold", sans-serif;
   font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5;
   color: #1f1f1f;
   height: 50px;
-  border-width: 0 0 2px 2px;
-  border-style: solid;
-  border-color: #1f1f1f;
+  border: 0;
+  transition: background-color var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) ease;
+}
+
+.send-button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* While the drawing is uploading: a thin bar sweeps under the label. */
+.send-button.is-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.send-button.is-loading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #1f1f1f;
+  transform-origin: left center;
+  animation: sendProgress 1.1s var(--ease-in-out) infinite;
+}
+
+@keyframes sendProgress {
+  0% { transform: scaleX(0); transform-origin: left center; }
+  50% { transform: scaleX(1); transform-origin: left center; }
+  50.1% { transform-origin: right center; }
+  100% { transform: scaleX(0); transform-origin: right center; }
+}
+
+.send-button.is-success {
+  background-color: #b7d9a8;
+  opacity: 1;
 }
 
 .send-button:hover {
   text-decoration: none;
   color: #1f1f1f;
-  background-color: #ffd000;
-  transition: all ease-in-out 0.5;
 }
 
 .form-status {
@@ -1175,6 +1399,12 @@ button:focus-visible {
   .project-card {
     flex-direction: column;
     align-items: center;
+  }
+
+  /* Stacked layout: every card leads with its cover, whatever side the
+     cover sits on in the desktop zig-zag. */
+  .project-card .image {
+    order: -1;
   }
 
   .image {
@@ -1402,7 +1632,8 @@ button:focus-visible {
   background: #ffffff;
   height: 1px;
   width: 100%;
-  transition: all 0.3s ease;
+  transition: transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) ease;
   will-change: transform, opacity;
 }
 
@@ -1507,3 +1738,49 @@ button:focus-visible {
 
   
   }
+
+/* ---------- Scroll reveal ----------
+   Sections ease up into place as they enter the viewport (motion.js adds
+   .reveal-ready to <html> and .is-revealed to each item). Without JS -
+   or with reduced motion - nothing is ever hidden. Children reveal one
+   after another via --reveal-index, set by motion.js. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out);
+  transition-delay: calc(var(--reveal-index, 0) * 80ms);
+}
+
+.reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Infinite decorative loops pause while scrolled out of view. */
+.is-offscreen,
+.is-offscreen * {
+  animation-play-state: paused !important;
+}
+
+/* ---------- Reduced motion ----------
+   Visitors who ask their OS for less motion get the finished state of
+   every animation immediately and no looping movement. The JS effects
+   (falling shards, wind, scroll burst, video autoplay) check the same
+   media query and stay off. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .floaty,
+  .hair-sway {
+    animation: none !important;
+  }
+}

@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
   const hero = document.querySelector('.hero-screen');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const svg = hero ? hero.querySelector('svg') : null;
   if (!hero || !svg) return;
 
