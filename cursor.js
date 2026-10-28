@@ -17,6 +17,22 @@ let outlineY = 0;
 let lastFrame = 0;
 let following = false;
 
+// Eye pupil: drifts toward the direction the pointer is travelling and
+// settles back to centre when it stops. Only rendered while the "View"
+// badge is open; stays centred for reduced-motion visitors.
+const eyeIris = document.querySelector(".cursor-eye-iris");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const PUPIL_MAX_X = 3.6;
+const PUPIL_MAX_Y = 2.2;
+let lastPointerX = 0;
+let lastPointerY = 0;
+let lookX = 0; // target, in eye units
+let lookY = 0;
+let pupilX = 0; // rendered
+let pupilY = 0;
+
+const clamp = (v, max) => Math.max(-max, Math.min(max, v));
+
 function followLoop(now) {
   const dt = lastFrame ? Math.min(64, now - lastFrame) : 16;
   lastFrame = now;
@@ -25,7 +41,20 @@ function followLoop(now) {
   outlineY += (pointerY - outlineY) * ease;
   cursorOutline.style.translate = `${outlineX.toFixed(2)}px ${outlineY.toFixed(2)}px`;
 
-  if (Math.abs(pointerX - outlineX) > 0.1 || Math.abs(pointerY - outlineY) > 0.1) {
+  // The look target decays toward centre, so the eye relaxes once the
+  // pointer rests; the pupil itself eases after the target.
+  const decay = Math.pow(0.88, dt / 16.67);
+  lookX *= decay;
+  lookY *= decay;
+  const follow = 1 - Math.pow(1 - 0.2, dt / 16.67);
+  pupilX += (lookX - pupilX) * follow;
+  pupilY += (lookY - pupilY) * follow;
+  if (eyeIris) {
+    eyeIris.style.transform = `translate(${pupilX.toFixed(2)}px, ${pupilY.toFixed(2)}px)`;
+  }
+  const eyeMoving = Math.abs(pupilX) > 0.02 || Math.abs(pupilY) > 0.02;
+
+  if (eyeMoving || Math.abs(pointerX - outlineX) > 0.1 || Math.abs(pointerY - outlineY) > 0.1) {
     requestAnimationFrame(followLoop);
   } else {
     following = false;
@@ -36,6 +65,15 @@ function followLoop(now) {
 function moveCursor(e) {
   pointerX = e.clientX;
   pointerY = e.clientY;
+
+  if (cursorDot.classList.contains("cursor-view") && !reduceMotion.matches) {
+    const dx = pointerX - lastPointerX;
+    const dy = pointerY - lastPointerY;
+    lookX = clamp(lookX + dx * 0.7, PUPIL_MAX_X);
+    lookY = clamp(lookY + dy * 0.7, PUPIL_MAX_Y);
+  }
+  lastPointerX = pointerX;
+  lastPointerY = pointerY;
 
   if (!cursorDot.classList.contains("is-visible")) {
     // First movement: start the outline on the pointer, not at 0,0.

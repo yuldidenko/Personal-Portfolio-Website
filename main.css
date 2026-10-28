@@ -59,7 +59,9 @@ p {
   justify-content: center;
   transform: translate(-50%, -50%) scale(0.4);
   opacity: 0;
-  transition: transform var(--dur-base) var(--ease-spring),
+  /* Slow, smooth grow/shrink between the resting dot and the "View"
+     badge, so the change of size is clearly visible both ways. */
+  transition: transform 600ms cubic-bezier(0.45, 0, 0.2, 1),
     opacity var(--dur-fast) ease;
 }
 
@@ -67,16 +69,25 @@ p {
   transform: translate(-50%, -50%) scale(1);
 }
 
-.cursor-arrow {
-  width: 16px;
-  height: 16px;
+/* The eye inside the "View" badge: hidden on the small resting dot,
+   it opens (fades in, lids scaling up from a slit) as the badge grows. */
+.cursor-eye {
+  width: 32px;
+  height: 32px;
   display: block;
   opacity: 0;
-  transition: opacity var(--dur-fast) ease;
+  transform: scaleY(0.2);
+  transition: opacity 300ms ease,
+    transform 500ms var(--ease-out);
 }
 
-.cursor-dot.cursor-view .cursor-arrow {
+.cursor-dot.cursor-view .cursor-eye {
   opacity: 1;
+  transform: scaleY(1);
+}
+
+.cursor-eye-iris {
+  will-change: transform;
 }
 
 .cursor-outline {
@@ -97,7 +108,7 @@ p {
   pointer-events: none;
   transform: translate(-50%, -50%) scale(0.625);
   opacity: 0;
-  transition: transform var(--dur-slow) var(--ease-spring),
+  transition: transform 750ms cubic-bezier(0.45, 0, 0.2, 1),
     opacity var(--dur-fast) ease;
 }
 
