@@ -413,7 +413,9 @@ footer {
 /* The global `* { font-size: 16px }` reset would otherwise shrink the
    label back down. */
 .button span,
-.send-button span {
+.send-button span,
+.navigation a span,
+.top-message a span {
   font: inherit;
 }
 
@@ -422,9 +424,10 @@ footer {
   display: inline-block;
 }
 
-/* Slot-machine roll on hover: each letter is a one-line window
-   (overflow: hidden) holding the letter plus an identical copy drawn
-   one line below it via text-shadow. On hover the letter slides up a
+/* Slot-machine roll on hover - the one hover language for every text
+   link and button on the site (nav, footer links, Meet me, Send): each letter is a one-line window
+   (overflow: hidden) holding the letter plus an identical copy placed
+   one line below it (::after). On hover the letter slides up a
    line, so the copy rolls into place; letters start ~35ms apart
    (--i), which gives the drum-like ripple. Only transform animates. */
 .roll {
@@ -441,13 +444,22 @@ footer {
 
 .roll-char > span {
   display: inline-block;
-  text-shadow: 0 1.5em currentColor;
+  position: relative;
   transition: transform 600ms var(--ease-out);
   transition-delay: calc(var(--i, 0) * 35ms);
 }
 
-.button:hover .roll-char > span,
-.button:focus-visible .roll-char > span,
+/* The copy that rolls in: a real glyph (not a text-shadow), so it keeps
+   every text style of the original - color, weight, text-stroke. */
+.roll-char > span::after {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 1.5em;
+}
+
+a:hover .roll-char > span,
+a:focus-visible .roll-char > span,
 .send-button:hover:not(:disabled) .roll-char > span,
 .send-button:focus-visible:not(:disabled) .roll-char > span {
   transform: translateY(-1.5em);
@@ -466,8 +478,8 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button:hover .roll-char > span,
-  .button:focus-visible .roll-char > span,
+  a:hover .roll-char > span,
+  a:focus-visible .roll-char > span,
   .send-button:hover .roll-char > span,
   .send-button:focus-visible .roll-char > span {
     transform: none;
@@ -498,14 +510,15 @@ footer {
   justify-content: space-between;
   width: 100%;
   list-style-type: none;
-  margin: 2rem 5rem 0 5rem;
+  margin: 1rem 5rem 0 5rem;
 }
 
 .navigation ul li a {
   display: flex;
   padding: 0.5rem 1rem;
-  font-family: "MabryPro-Bold";
-  font-weight: 700;
+  font-family: "tan-pearl";
+  font-weight: 400;
+  font-size: 1rem;
   color: #ffffff;
   text-decoration: none;
 }
@@ -522,32 +535,12 @@ footer {
 .navigation ul li a {
   display: flex;
   padding: 0.5rem 1rem;
-  font-family: "MabryPro-Bold";
-  font-weight: 700;
+  font-family: "tan-pearl";
+  font-weight: 400;
+  font-size: 1rem;
   color: #ffffff;
   text-decoration: none;
   position: relative;
-}
-
-/* Underline draws in from the left on hover and exits to the right on
-   leave - transform: scaleX instead of animating width, so it never
-   triggers layout. */
-.navigation ul li a::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #f0d42d;
-  transform: scaleX(0);
-  transform-origin: right center;
-  transition: transform var(--dur-base) var(--ease-out);
-}
-
-.navigation ul li a:hover::before {
-  transform: scaleX(1);
-  transform-origin: left center;
 }
 
 .navigation ul li a {
@@ -572,10 +565,14 @@ footer {
   outline-offset: -3px;
 }
 
+/* Section/block headings share the display serif with the page titles
+   and project names. Tan Pearl has a single 400 cut (no faux bold), and
+   kept at body size here. */
 h3 {
-  font-family: "MabryPro-Bold";
-  font-weight: 700;
+  font-family: "tan-pearl";
+  font-weight: 400;
   font-size: 1rem;
+  line-height: 1.2;
   margin-bottom: 1rem;
   background-color: #ebc93d;
   padding: 2rem 0;
@@ -874,9 +871,21 @@ video {
   font-size: 2rem;
 }
 
+/* Heavier serif headings. Tan Pearl has only one (400) weight, and
+   letting the browser synthesize bold smears its hairlines unevenly, so
+   the strokes are thickened with a thin outline in the text's own color
+   instead: an even, controllable weight gain on every letter. */
+h3,
+.subheader,
+.navigation ul li a {
+  -webkit-text-stroke: 1px currentColor;
+}
+
 .subheader {
-  font-family: "MabryPro-Bold";
-  font-weight: 700;
+  font-family: "tan-pearl";
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.2;
   /* Matches the gap the Education section gets between its own header and
      content, via .cont-education/.education h3's padding-bottom: 16px. */
   margin-bottom: 16px;
@@ -944,8 +953,71 @@ footer p {
   transform: scale(0.92);
 }
 
-.icon-control:hover {
-  background-color: #ececec;
+/* Hover no longer paints a grey plate behind the tool - the icon itself
+   reacts instead, each with a gesture that mimics what the tool does.
+   (The grey .active state below still marks the selected tool.) Only
+   transform animates; pointer devices only; off with reduced motion. */
+.icon-control img {
+  transform-origin: 50% 50%;
+  /* Stateful gestures (fill tilt, colour turn) ease in and spring back
+     out when the pointer leaves, instead of snapping. */
+  transition: transform 450ms var(--ease-spring);
+}
+
+@media (hover: hover) {
+  /* Fill: the bucket tips over as if pouring. */
+  #fill-button:hover img {
+    transform: rotate(-22deg);
+  }
+  /* Pencil: a quick scribble. */
+  .linewidth-control .icon-control:hover img {
+    transform-origin: 20% 80%;
+    animation: toolScribble 550ms var(--ease-out);
+  }
+  /* Text: the T hops up and lands. */
+  #text-button:hover img {
+    animation: toolHop 500ms var(--ease-out);
+  }
+  /* Eraser: rubs side to side. */
+  #eraser-button:hover img {
+    animation: toolRub 550ms var(--ease-in-out);
+  }
+  /* Color: the swatch turns a quarter and pops. */
+  #color-picker-button:hover img {
+    transform: rotate(90deg) scale(1.1);
+  }
+  /* Delete: the bin gives a little shake. */
+  #delete-button:hover img {
+    transform-origin: 50% 90%;
+    animation: toolShake 500ms var(--ease-out);
+  }
+}
+
+@keyframes toolScribble {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(2px, -2px) rotate(-10deg); }
+  50% { transform: translate(-1px, 1px) rotate(6deg); }
+  75% { transform: translate(1px, -1px) rotate(-4deg); }
+}
+
+@keyframes toolHop {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  35% { transform: translateY(-6px) scale(0.95, 1.05); }
+  70% { transform: translateY(0) scale(1.06, 0.94); }
+}
+
+@keyframes toolRub {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-6deg); }
+  50% { transform: translateX(3px) rotate(6deg); }
+  75% { transform: translateX(-2px) rotate(-3deg); }
+}
+
+@keyframes toolShake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  70% { transform: rotate(-4deg); }
 }
 
 .icon-control.active {
@@ -1222,19 +1294,6 @@ button:focus-visible {
   overflow: hidden;
 }
 
-.top-message a::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #f0d42d;
-  transform: scaleX(0);
-  transform-origin: right center;
-  transition: transform var(--dur-base) var(--ease-out);
-}
-
 .top-message a {
   transition: color var(--dur-fast) ease;
 }
@@ -1243,10 +1302,6 @@ button:focus-visible {
   color: #f0d42d;
 }
 
-.top-message a:hover::before {
-  transform: scaleX(1);
-  transform-origin: left center;
-}
 
 .form-container {
   grid-column: 6 / 13;
@@ -1744,16 +1799,34 @@ button:focus-visible {
    .reveal-ready to <html> and .is-revealed to each item). Without JS -
    or with reduced motion - nothing is ever hidden. Children reveal one
    after another via --reveal-index, set by motion.js. */
+/* Hiding is instant (no transition on the base state), so items never
+   visibly fade OUT when the page loads; only the reveal animates. */
 .reveal-ready [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out);
-  transition-delay: calc(var(--reveal-index, 0) * 80ms);
 }
 
 .reveal-ready [data-reveal].is-revealed {
   opacity: 1;
   transform: none;
+  transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out);
+  transition-delay: calc(var(--reveal-index, 0) * 80ms);
+}
+
+/* Approach columns rise from further below and roll in one after
+   another, like a drum turning: each column starts a clear beat (250ms)
+   after the previous one. Project cards use the same slow rise; they're
+   stacked, so each simply enters as it's scrolled to (no stagger). */
+.reveal-ready #approach [data-reveal],
+.reveal-ready #projects [data-reveal] {
+  transform: translateY(64px);
+}
+
+.reveal-ready #approach [data-reveal].is-revealed,
+.reveal-ready #projects [data-reveal].is-revealed {
+  transform: none;
+  transition: opacity 1100ms var(--ease-out), transform 1500ms var(--ease-out);
+  transition-delay: calc(var(--reveal-index, 0) * 250ms);
 }
 
 /* Infinite decorative loops pause while scrolled out of view. */
