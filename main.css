@@ -1480,7 +1480,11 @@ button:focus-visible {
   padding: 12px 16px;
   border: 1px solid #1f1f1f;
   font-size: 1rem;
-  flex: 1;
+  /* .input-group is a column (input + reserved error line), so the input
+     must not flex along that axis - otherwise flex overrides the explicit
+     height and the field shrinks below the Send button. Width comes from
+     width: 100%. */
+  flex: none;
   width: 100%;
 }
 
