@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factora — invoice factoring platform · Yuliia Didenko</title>
+    <meta
+      name="description"
+      content="Factora: an invoice management platform powered by factoring, built for IT companies to turn unpaid invoices into working capital. Product design by Yuliia Didenko."
+    />
+    <meta name="theme-color" content="#1f1f1f" />
+    <link rel="icon" href="./media/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./media/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./media/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Factora — invoice factoring platform" />
+    <meta property="og:description" content="Turning unpaid invoices into working capital for Swiss IT companies." />
+    <meta property="og:image" content="./media/factora-cover.webp" />
+    <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="case.css" />
+    <script>
+      // Arriving through the page curtain (transition.js): start covered.
+      try {
+        if (sessionStorage.getItem("curtain") === "1") {
+          sessionStorage.removeItem("curtain");
+          document.documentElement.classList.add("curtain-in", "vt-enter");
+          // Keep the curtain closed until the page is really ready - its
+          // fonts loaded and every script run - so it never opens on a
+          // half-built page (fallback serif, covers without their curtain).
+          var root = document.documentElement;
+          root.classList.add("curtain-hold");
+          var done = false;
+          var release = function () {
+            if (done) return;
+            done = true;
+            root.classList.remove("curtain-hold");
+            document.dispatchEvent(new Event("curtain:release"));
+          };
+          var dom = new Promise(function (r) {
+            document.addEventListener("DOMContentLoaded", r);
+          });
+          var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+          Promise.all([dom, fonts]).then(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(release); });
+          });
+          setTimeout(release, 2500); // never keep anyone waiting longer
+        }
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body class="case-page">
+    <div class="cursor-dot">
+      <!-- "View" eye, shown while the cursor is over a project cover. The
+           iris group follows the pointer's direction (cursor.js). -->
+      <svg class="cursor-eye" viewBox="0 0 26 26" width="32" height="32" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cursor-eye-shape">
+            <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" />
+          </clipPath>
+        </defs>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="#fff8ec" />
+        <g clip-path="url(#cursor-eye-shape)">
+          <g class="cursor-eye-iris">
+            <circle cx="13" cy="13" r="4.6" fill="#31a0cd" />
+            <circle cx="13" cy="13" r="2.1" fill="#1f1f1f" />
+            <circle cx="14.4" cy="11.6" r="0.9" fill="#fff8ec" />
+          </g>
+        </g>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="none" stroke="#1f1f1f" stroke-width="1" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="cursor-outline"></div>
+
+    <main class="case-main">
+      <header class="drum-intro">
+        <h1 class="case-title">Factora</h1>
+        <p class="drum-lead">
+          This is an invoice management platform powered by factoring, built
+          specifically for IT companies—allowing them to instantly convert
+          unpaid invoices into working capital by selling them directly to
+          banks, thereby eliminating cash flow gaps and accelerating business
+          growth.
+        </p>
+        <a class="case-behance" href="https://www.behance.net/gallery/256661201/Factora-invoice-factoring-platform" target="_blank" rel="noopener noreferrer"><span class="sr-only">View on Behance</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="V">V</span></span><span class="roll-char"><span style="--i: 1" data-c="i">i</span></span><span class="roll-char"><span style="--i: 2" data-c="e">e</span></span><span class="roll-char"><span style="--i: 3" data-c="w">w</span></span><span class="roll-char"><span style="--i: 4" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 5" data-c="o">o</span></span><span class="roll-char"><span style="--i: 6" data-c="n">n</span></span><span class="roll-char"><span style="--i: 7" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 8" data-c="B">B</span></span><span class="roll-char"><span style="--i: 9" data-c="e">e</span></span><span class="roll-char"><span style="--i: 10" data-c="h">h</span></span><span class="roll-char"><span style="--i: 11" data-c="a">a</span></span><span class="roll-char"><span style="--i: 12" data-c="n">n</span></span><span class="roll-char"><span style="--i: 13" data-c="c">c</span></span><span class="roll-char"><span style="--i: 14" data-c="e">e</span></span></span><span class="case-arrow" aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="drum" aria-label="Factora screens" style="--count: 16">
+        <div class="drum-stage">
+          <div class="drum-counter" aria-hidden="true">
+            <span class="drum-counter-window"><span class="drum-counter-strip"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span></span></span>
+            <span class="drum-counter-total">/16</span>
+          </div>
+          <div class="drum-wheel">
+        <figure class="drum-item" data-index="0">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/dashboard-2200.webp" aria-label="Open full size: Dashboard">
+              <img class="drum-screen" id="first-screen"
+                src="./media/factora-screens/dashboard-1400.webp"
+                srcset="./media/factora-screens/dashboard-800.webp 800w, ./media/factora-screens/dashboard-1400.webp 1400w, ./media/factora-screens/dashboard-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1650" fetchpriority="high" decoding="async"
+                alt="Dashboard: invoices, revenue structure, top partners and revenue target at a glance" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Dashboard</span>
+            <span class="drum-caption-text">The dashboard shows at a glance whether the business is financially healthy right now. Managers can analyze key financial metrics themselves using customizable widgets, or simply ask the AI for insights.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="1">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/invoices-2200.webp" aria-label="Open full size: Invoices">
+              <img class="drum-screen"
+                src="./media/factora-screens/invoices-1400.webp"
+                srcset="./media/factora-screens/invoices-800.webp 800w, ./media/factora-screens/invoices-1400.webp 1400w, ./media/factora-screens/invoices-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="Invoices table with factoring status, offers and due dates" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Invoices</span>
+            <span class="drum-caption-text">The Invoices screen serves as a comprehensive master ledger displaying all issued invoices linked to the company’s active projects. It provides a real-time picture of the company’s actual financial standing.</span>
+            <span class="drum-caption-text">Invoice status reflects whether the debtor has reviewed and confirmed the charge. Factoring status tracks the progress of selling that invoice to a bank.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="2">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/bank-offers-2200.webp" aria-label="Open full size: Available factoring offers">
+              <img class="drum-screen"
+                src="./media/factora-screens/bank-offers-1400.webp"
+                srcset="./media/factora-screens/bank-offers-800.webp 800w, ./media/factora-screens/bank-offers-1400.webp 1400w, ./media/factora-screens/bank-offers-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="Comparing factoring offers from partner banks, with AI advice on the best one" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Available factoring offers</span>
+            <span class="drum-caption-text">Managers can see exactly how many factoring offers are available for each invoice, explored in detail through a modal window.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="3">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/invoices-filters-2200.webp" aria-label="Open full size: Filters">
+              <img class="drum-screen"
+                src="./media/factora-screens/invoices-filters-1400.webp"
+                srcset="./media/factora-screens/invoices-filters-800.webp 800w, ./media/factora-screens/invoices-filters-1400.webp 1400w, ./media/factora-screens/invoices-filters-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="Invoice filters: grouped conditions, date range, currency and partner pickers" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Filters</span>
+            <span class="drum-caption-text">Advanced filters allow filtering invoices by multiple complex metrics, providing flexible retrieval and streamlining management in the business factoring sector by significantly narrowing down search scope.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="4">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/create-invoice-2200.webp" aria-label="Open full size: Invoice creation">
+              <img class="drum-screen"
+                src="./media/factora-screens/create-invoice-1400.webp"
+                srcset="./media/factora-screens/create-invoice-800.webp 800w, ./media/factora-screens/create-invoice-1400.webp 1400w, ./media/factora-screens/create-invoice-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="2062" loading="lazy" decoding="async"
+                alt="Creating an invoice: services, VAT and bank details" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Invoice creation</span>
+            <span class="drum-caption-text">The invoice creation workflow lets merchants draft, issue, and manage professional invoices designed for debtor review and subsequent financing.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="5">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/create-invoice-email-2200.webp" aria-label="Open full size: Sending an invoice">
+              <img class="drum-screen"
+                src="./media/factora-screens/create-invoice-email-1400.webp"
+                srcset="./media/factora-screens/create-invoice-email-800.webp 800w, ./media/factora-screens/create-invoice-email-1400.webp 1400w, ./media/factora-screens/create-invoice-email-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="2062" loading="lazy" decoding="async"
+                alt="Sending the invoice by email with an automatic payment reminder" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Sending an invoice</span>
+            <span class="drum-caption-text">Sending an invoice automatically attaches the full PDF and embeds a direct portal link, removing the manual overhead of file preparation. Additionally, managers can configure automated reminders ahead of the due date — addressing the reality that late payments are often simple oversights, making a timely nudge far more efficient than chasing overdue accounts.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="6">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/ai-assistant-2200.webp" aria-label="Open full size: AI assistant">
+              <img class="drum-screen"
+                src="./media/factora-screens/ai-assistant-1400.webp"
+                srcset="./media/factora-screens/ai-assistant-800.webp 800w, ./media/factora-screens/ai-assistant-1400.webp 1400w, ./media/factora-screens/ai-assistant-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="AI assistant welcome screen with suggested actions" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">AI assistant</span>
+            <span class="drum-caption-text">The AI assistant offers quick actions for the operations a finance manager performs most often — creating an invoice, checking for errors, forecasting cash flow — so a request is sent in one click instead of being typed out every time.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="7">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/ai-audit-2200.webp" aria-label="Open full size: AI audit">
+              <img class="drum-screen"
+                src="./media/factora-screens/ai-audit-1400.webp"
+                srcset="./media/factora-screens/ai-audit-800.webp 800w, ./media/factora-screens/ai-audit-1400.webp 1400w, ./media/factora-screens/ai-audit-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="AI assistant audit: invoices with errors that could delay bank funding" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">AI audit</span>
+            <span class="drum-caption-text">The AI assistant doesn’t just report the results of its analysis: it finds invoice errors that would delay bank funding and offers to fix them right inside the chat with a single Auto-fix button.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="8">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/ai-live-2200.webp" aria-label="Open full size: Voice mode">
+              <img class="drum-screen"
+                src="./media/factora-screens/ai-live-1400.webp"
+                srcset="./media/factora-screens/ai-live-800.webp 800w, ./media/factora-screens/ai-live-1400.webp 1400w, ./media/factora-screens/ai-live-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1688" loading="lazy" decoding="async"
+                alt="AI assistant in voice mode" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Voice mode</span>
+            <span class="drum-caption-text">Voice conversation speeds up discussing a complex task: managers talk it through with the AI assistant as they would with a colleague and reach a solution together, without typing.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="9">
+          <div class="drum-media">
+            <video class="drum-screen" muted loop playsinline preload="none"
+              poster="./media/factora-case/ai-sphere-poster.webp" width="1920" height="1234"
+              aria-label="The AI assistant's animated sphere">
+              <source src="./media/factora-case/ai-sphere.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">The sphere</span>
+            <span class="drum-caption-text">The AI sphere reacts to the voice and mimics human breathing, creating a sense of a living presence while talking to the artificial intelligence.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="10">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/partners-2200.webp" aria-label="Open full size: Partners risk matrix">
+              <img class="drum-screen"
+                src="./media/factora-screens/partners-1400.webp"
+                srcset="./media/factora-screens/partners-800.webp 800w, ./media/factora-screens/partners-1400.webp 1400w, ./media/factora-screens/partners-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="2528" loading="lazy" decoding="async"
+                alt="Partner matrix: reliability and active bank factoring terms" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Partners risk matrix</span>
+            <span class="drum-caption-text">Instead of manually comparing dozens of offers across different banks, managers can instantly spot the most cost-effective and fastest funding options for any debtor. Combined with AI-generated reallocation advice — which flags when shifting a partner’s invoices to a different bank would save money — this turns a comparison table into an active recommendation engine, not just a reference matrix.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="11">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/partner-ubs-2200.webp" aria-label="Open full size: UBS Group AG partner profile">
+              <img class="drum-screen"
+                src="./media/factora-screens/partner-ubs-1400.webp"
+                srcset="./media/factora-screens/partner-ubs-800.webp 800w, ./media/factora-screens/partner-ubs-1400.webp 1400w, ./media/factora-screens/partner-ubs-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1812" loading="lazy" decoding="async"
+                alt="Partner profile: UBS Group AG with factoring health and invoices" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">UBS Group AG · Partner profile</span>
+            <span class="drum-caption-text">The UBS Group AG partner profile is a detailed hub for a single partner: key information, linked invoices, terms of cooperation, the contract and contact details — all in one place.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="12">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/transactions-2200.webp" aria-label="Open full size: Transactions">
+              <img class="drum-screen"
+                src="./media/factora-screens/transactions-1400.webp"
+                srcset="./media/factora-screens/transactions-800.webp 800w, ./media/factora-screens/transactions-1400.webp 1400w, ./media/factora-screens/transactions-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1626" loading="lazy" decoding="async"
+                alt="Transactions: funded volume, fees and payouts per bank" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Transactions</span>
+            <span class="drum-caption-text">The Transactions screen shows how much of the invoiced revenue has actually become usable cash, and what is still stuck. Managers can download reports, send reminders, update payout destinations, or tag transactions in batch, since factoring managers routinely act on groups of transactions (e.g., “all transactions from Raiffeisen Switzerland this month”), not one at a time.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="13">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/projects-kanban-2200.webp" aria-label="Open full size: Projects board · Kanban">
+              <img class="drum-screen"
+                src="./media/factora-screens/projects-kanban-1400.webp"
+                srcset="./media/factora-screens/projects-kanban-800.webp 800w, ./media/factora-screens/projects-kanban-1400.webp 1400w, ./media/factora-screens/projects-kanban-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1564" loading="lazy" decoding="async"
+                alt="Projects board in Kanban view with funding progress" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Projects board · Kanban</span>
+            <span class="drum-caption-text">The Kanban view shows active projects from a financial perspective: which services the company provides, how many invoices have been issued, how much money has been received for each project, and where there are outstanding debts and unrealized revenue.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="14">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/projects-timeline-2200.webp" aria-label="Open full size: Projects board · Timeline">
+              <img class="drum-screen"
+                src="./media/factora-screens/projects-timeline-1400.webp"
+                srcset="./media/factora-screens/projects-timeline-800.webp 800w, ./media/factora-screens/projects-timeline-1400.webp 1400w, ./media/factora-screens/projects-timeline-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1564" loading="lazy" decoding="async"
+                alt="Projects board in Timeline view" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Projects board · Timeline</span>
+            <span class="drum-caption-text">Rather than treating project management and liquidity as separate silos, the Timeline view aligns project schedules directly with financial execution: it visualizes how long projects stretch across months and maps out real-time funding progress per project. By integrating funding ratios, debtor alignment, service scopes, and critical risk alerts into a single view, managers can instantly spot cash flow bottlenecks, track capital recovery for specific milestones, and take proactive action on delayed or declined invoices without switching contexts.</span>
+          </figcaption>
+        </figure>
+        <figure class="drum-item" data-index="15">
+          <div class="drum-media">
+            <button class="drum-zoom" type="button" data-cursor-view data-full="./media/factora-screens/analytics-2200.webp" aria-label="Open full size: Analytics">
+              <img class="drum-screen"
+                src="./media/factora-screens/analytics-1400.webp"
+                srcset="./media/factora-screens/analytics-800.webp 800w, ./media/factora-screens/analytics-1400.webp 1400w, ./media/factora-screens/analytics-2200.webp 2200w"
+                sizes="(max-width: 767px) calc(100vw - 4rem), 64vw"
+                width="2200" height="1980" loading="lazy" decoding="async"
+                alt="Analytics: payment behaviour, cash flow tracking and factoring efficiency" />
+            </button>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Analytics</span>
+            <span class="drum-caption-text">Payment behavior tracking helps analyze debtor reliability. The declined invoices breakdown pinpoints the root causes of invoice rejections. Cash flow tracking compares actual revenue against weekly and period targets, giving immediate visual feedback on financial health. Factoring efficiency evaluates net revenue yields against bank fees across financial partners, empowering managers to negotiate better terms and choose the most cost-effective funding channels.</span>
+          </figcaption>
+        </figure>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="case-foot" aria-label="Project navigation">
+      <a href="./index.html#projects" class="case-back"><span class="case-arrow" aria-hidden="true">←</span><span class="sr-only">All projects</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="A">A</span></span><span class="roll-char"><span style="--i: 1" data-c="l">l</span></span><span class="roll-char"><span style="--i: 2" data-c="l">l</span></span><span class="roll-char"><span style="--i: 3" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 4" data-c="p">p</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="o">o</span></span><span class="roll-char"><span style="--i: 7" data-c="j">j</span></span><span class="roll-char"><span style="--i: 8" data-c="e">e</span></span><span class="roll-char"><span style="--i: 9" data-c="c">c</span></span><span class="roll-char"><span style="--i: 10" data-c="t">t</span></span><span class="roll-char"><span style="--i: 11" data-c="s">s</span></span></span></a>
+      <a href="./amygdala.html" class="case-next">
+        <span class="case-next-label">Next project</span>
+        <span class="case-next-title"><span class="sr-only">Amygdala</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="A">A</span></span><span class="roll-char"><span style="--i: 1" data-c="m">m</span></span><span class="roll-char"><span style="--i: 2" data-c="y">y</span></span><span class="roll-char"><span style="--i: 3" data-c="g">g</span></span><span class="roll-char"><span style="--i: 4" data-c="d">d</span></span><span class="roll-char"><span style="--i: 5" data-c="a">a</span></span><span class="roll-char"><span style="--i: 6" data-c="l">l</span></span><span class="roll-char"><span style="--i: 7" data-c="a">a</span></span></span><span class="case-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </nav>
+
+    <dialog class="lightbox" aria-label="Full-size screen">
+      <button class="lightbox-close" type="button" aria-label="Close">×</button>
+      <img class="lightbox-img" alt="" />
+    </dialog>
+
+    <script src="./cursor.js"></script>
+    <script src="./case.js"></script>
+    <script src="./transition.js"></script>
+  </body>
+</html>

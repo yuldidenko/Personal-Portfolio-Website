@@ -122,7 +122,7 @@ if (!isTouchDevice()) {
   // Project covers link out to Behance - the cursor itself becomes the
   // "this is clickable" affordance (rather than a label overlaid on the
   // artwork) by expanding into a badge reading "View" while over one.
-  document.querySelectorAll(".project-card .image a").forEach((link) => {
+  document.querySelectorAll(".project-card .image a, [data-cursor-view]").forEach((link) => {
     link.addEventListener("mouseenter", () => {
       cursorDot.classList.add("cursor-view");
       cursorOutline.classList.add("cursor-view-active");

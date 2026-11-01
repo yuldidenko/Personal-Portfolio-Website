@@ -21,8 +21,17 @@ const EMAILJS_TEMPLATE_ID = "template_7qg0rze";
 const MAX_EXPORT_WIDTH = 700;
 
 window.addEventListener("DOMContentLoaded", () => {
-  if (typeof emailjs === "undefined") return;
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  // The e-mail library loads asynchronously (index.html), so it is set
+  // up the first time it's needed rather than on page load.
+  let emailReady = false;
+  const ensureEmail = () => {
+    if (typeof emailjs === "undefined") return false;
+    if (!emailReady) {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      emailReady = true;
+    }
+    return true;
+  };
 
   const canvas = document.getElementById("drawingCanvas");
   const sendButton = document.querySelector(".send-button");
@@ -109,6 +118,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // The label is markup (rolling letters + a screen-reader copy), so
     // it is saved and restored as HTML, not plain text.
+    if (!ensureEmail()) {
+      setStatus("Sending isn't available right now. Please try again in a moment.");
+      return;
+    }
     const originalLabel = sendButton.innerHTML;
     sendButton.disabled = true;
     sendButton.classList.add("is-loading");

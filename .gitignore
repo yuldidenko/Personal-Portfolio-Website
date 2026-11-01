@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Local tooling
+.claude/
+
+# Source exports and screen recordings (not used by the site)
+media/Amygdala/
+media/Cultural Planet/
+media/Factora/
+media/Good food screens/

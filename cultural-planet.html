@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cultural Planet — events app · Yuliia Didenko</title>
+    <meta
+      name="description"
+      content="Cultural Planet: a mobile app that helps young adults plan their cultural life, from discovering an event to buying the ticket. Product design by Yuliia Didenko."
+    />
+    <meta name="theme-color" content="#1f1f1f" />
+    <link rel="icon" href="./media/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./media/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./media/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Cultural Planet — events app" />
+    <meta property="og:description" content="Discover events, buy tickets and earn rewards — all in one app." />
+    <meta property="og:image" content="./media/cultural-planet-stage.webp" />
+    <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="case.css" />
+    <script>
+      // Arriving through the page curtain (transition.js): start covered.
+      try {
+        if (sessionStorage.getItem("curtain") === "1") {
+          sessionStorage.removeItem("curtain");
+          document.documentElement.classList.add("curtain-in", "vt-enter");
+          // Keep the curtain closed until the page is really ready - its
+          // fonts loaded and every script run - so it never opens on a
+          // half-built page (fallback serif, covers without their curtain).
+          var root = document.documentElement;
+          root.classList.add("curtain-hold");
+          var done = false;
+          var release = function () {
+            if (done) return;
+            done = true;
+            root.classList.remove("curtain-hold");
+            document.dispatchEvent(new Event("curtain:release"));
+          };
+          var dom = new Promise(function (r) {
+            document.addEventListener("DOMContentLoaded", r);
+          });
+          var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+          Promise.all([dom, fonts]).then(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(release); });
+          });
+          setTimeout(release, 2500); // never keep anyone waiting longer
+        }
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body class="case-page">
+    <div class="cursor-dot">
+      <!-- "View" eye, shown while the cursor is over a project cover. The
+           iris group follows the pointer's direction (cursor.js). -->
+      <svg class="cursor-eye" viewBox="0 0 26 26" width="32" height="32" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cursor-eye-shape">
+            <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" />
+          </clipPath>
+        <path id="belt0" d="M26.2 512.4 A474 474 0 0 1 49.2 353.5"/><path id="belt1" d="M62.1 318.6 A474 474 0 0 1 147.7 182.8"/><path id="belt2" d="M173.7 156.2 A474 474 0 0 1 307.2 67.0"/><path id="belt3" d="M341.8 53.2 A474 474 0 0 1 500.0 26.0"/></defs>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="#fff8ec" />
+        <g clip-path="url(#cursor-eye-shape)">
+          <g class="cursor-eye-iris">
+            <circle cx="13" cy="13" r="4.6" fill="#31a0cd" />
+            <circle cx="13" cy="13" r="2.1" fill="#1f1f1f" />
+            <circle cx="14.4" cy="11.6" r="0.9" fill="#fff8ec" />
+          </g>
+        </g>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="none" stroke="#1f1f1f" stroke-width="1" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="cursor-outline"></div>
+
+    <div class="case-bg" aria-hidden="true">
+      <svg class="case-bg-spin case-bg-system" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs><path id="o0" d="M516.0 383.1 A118 118 0 1 1 383.1 516.0"/><path id="o1" d="M595.5 630.8 A162 162 0 0 1 399.7 372.8"/><path id="o2" d="M297.1 464.2 A206 206 0 0 1 666.8 379.1"/><path id="o3" d="M708.2 361.6 A250 250 0 0 1 452.6 745.5"/><path id="o4" d="M425.5 795.8 A305 305 0 0 1 329.9 246.8"/><path id="o5" d="M328.2 189.4 A355 355 0 0 1 844.4 413.9"/><path id="o6" d="M882.0 625.1 A402 402 0 0 1 377.2 882.8"/><path id="o7" d="M94.7 686.2 A446 446 0 0 1 278.2 113.1"/><path id="o8" d="M366.6 34.7 A484 484 0 0 1 516.9 16.3"/><path id="o9" d="M529.9 16.9 A484 484 0 0 1 677.7 49.8"/><path id="o10" d="M645.9 38.5 A484 484 0 0 1 781.3 106.2"/><path id="o11" d="M760.3 92.0 A484 484 0 0 1 873.7 192.4"/><path id="o12" d="M873.7 192.4 A484 484 0 0 1 950.4 322.9"/></defs>
+        <circle cx="500" cy="500" r="50" fill="#A99BF0"/>
+        <g class="orbit" data-k="2.6"><circle cx="500.0" cy="382.0" r="6" fill="#D98BC0"/><text class="sys-text" dy="0.36em"><textPath href="#o0"><tspan fill="#D98BC0">MERCURY</tspan><tspan fill="#E9E7EE" class="sys-rest">  0.4 AU  0.4 ER  0.1 EV  0.1 EM  0.4 SG</tspan></textPath></text></g><g class="orbit" data-k="2.0"><circle cx="609.4" cy="619.4" r="8" fill="#F2A9CF"/><text class="sys-text" dy="0.36em"><textPath href="#o1"><tspan fill="#F2A9CF">VENUS</tspan><tspan fill="#E9E7EE" class="sys-rest">  0.7 AU  0.9 ER  0.9 EV  0.8 EM  0.9 SG</tspan></textPath></text></g><g class="orbit" data-k="1.6"><circle cx="294.8" cy="482.0" r="8" fill="#A9D8FF"/><text class="sys-text" dy="0.36em"><textPath href="#o2"><tspan fill="#A9D8FF">EARTH</tspan><tspan fill="#E9E7EE" class="sys-rest">  1 AU  1 ER  1 EV  1 EM  1 SG  1 MOON</tspan></textPath></text><path d="M304.1 563.7 A206 206 0 0 1 294.0 500.0" stroke="#A9D8FF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="1.3"><circle cx="698.3" cy="347.8" r="7" fill="#C9B8FF"/><text class="sys-text" dy="0.36em"><textPath href="#o3"><tspan fill="#C9B8FF">MARS</tspan><tspan fill="#E9E7EE" class="sys-rest">  1.5 AU  0.5 ER  0.2 EV  0.1 EM  0.4 SG  2 MOONS</tspan></textPath></text><path d="M642.0 294.2 A250 250 0 0 1 687.5 334.7" stroke="#C9B8FF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="1.0"><circle cx="447.0" cy="800.4" r="7" fill="#A9D8FF"/><circle cx="447.0" cy="800.4" r="12" stroke="#A9D8FF" stroke-width="1.6"/><text class="sys-text" dy="0.36em"><textPath href="#o4"><tspan fill="#A9D8FF">JUPITER</tspan><tspan fill="#E9E7EE" class="sys-rest">  5.2 AU  11.2 ER  1,321.3 EV  317.8 EM  2.5 SG  79 MOONS</tspan></textPath></text><path d="M747.2 678.7 A305 305 0 0 1 468.8 803.4" stroke="#A9D8FF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="0.8"><circle cx="309.3" cy="200.6" r="7" fill="#C9B8FF"/><circle cx="309.3" cy="200.6" r="12" stroke="#C9B8FF" stroke-width="1.6"/><text class="sys-text" dy="0.36em"><textPath href="#o5"><tspan fill="#C9B8FF">SATURN</tspan><tspan fill="#E9E7EE" class="sys-rest">  9.5 AU  9.4 ER  763.6 EV  95.1 EM  1.1 SG  82 MOONS</tspan></textPath></text><path d="M145.1 506.5 A355 355 0 0 1 291.1 213.0" stroke="#C9B8FF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="0.62"><circle cx="888.3" cy="604.0" r="7" fill="#D98BC0"/><circle cx="888.3" cy="604.0" r="12" stroke="#D98BC0" stroke-width="1.6"/><text class="sys-text" dy="0.36em"><textPath href="#o6"><tspan fill="#D98BC0">URANUS</tspan><tspan fill="#E9E7EE" class="sys-rest">  19.2 AU  4 ER  63.1 EV  14.5 EM  0.9 SG  27 MOONS</tspan></textPath></text><path d="M836.6 280.3 A402 402 0 0 1 893.4 582.6" stroke="#D98BC0" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="0.5"><circle cx="104.4" cy="705.9" r="7" fill="#F2A9CF"/><circle cx="104.4" cy="705.9" r="12" stroke="#F2A9CF" stroke-width="1.6"/><text class="sys-text" dy="0.36em"><textPath href="#o7"><tspan fill="#F2A9CF">NEPTUNE</tspan><tspan fill="#E9E7EE" class="sys-rest">  30.1 AU  3.9 ER  57.7 EV  17.1 EM  1.1 SG  14 MOONS</tspan></textPath></text><path d="M349.8 920.0 A446 446 0 0 1 115.0 725.2" stroke="#F2A9CF" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="0 11"/></g><g class="orbit" data-k="0.38"><path d="M80.8 258.0 A484 484 0 0 1 334.5 45.2" stroke="#E9E7EE" stroke-width="1" stroke-dasharray="6 5"/><text class="sys-text" dy="0.36em"><textPath href="#o8"><tspan fill="#E9E7EE">KUIPER BELT</tspan></textPath></text><circle cx="516.9" cy="16.3" r="5" stroke="#E9E7EE" stroke-width="1.4"/><text class="sys-text" dy="0.36em"><textPath href="#o9"><tspan fill="#E9E7EE">PLUTO</tspan></textPath></text><circle cx="633.4" cy="34.7" r="5" stroke="#E9E7EE" stroke-width="1.4"/><text class="sys-text" dy="0.36em"><textPath href="#o10"><tspan fill="#E9E7EE">HAUMEA</tspan></textPath></text><circle cx="749.3" cy="85.1" r="5" stroke="#E9E7EE" stroke-width="1.4"/><text class="sys-text" dy="0.36em"><textPath href="#o11"><tspan fill="#E9E7EE">MAKEMAKE</tspan></textPath></text><circle cx="865.3" cy="182.5" r="5" stroke="#E9E7EE" stroke-width="1.4"/><text class="sys-text" dy="0.36em"><textPath href="#o12"><tspan fill="#E9E7EE">ERIS</tspan></textPath></text></g>
+      </svg>
+    </div>
+
+    <main class="case-main">
+      <header class="drum-intro">
+        <h1 class="case-title">Cultural Planet</h1>
+        <p class="drum-lead">
+          This is a mobile app that helps young adults plan their cultural
+          life in one place — from discovering an event that matches their
+          interests to buying the ticket and earning rewards for every visit.
+        </p>
+        <a class="case-behance" href="https://www.behance.net/gallery/193502999/Open-the-Door-to-the-World-of-Events" target="_blank" rel="noopener noreferrer"><span class="sr-only">View on Behance</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="V">V</span></span><span class="roll-char"><span style="--i: 1" data-c="i">i</span></span><span class="roll-char"><span style="--i: 2" data-c="e">e</span></span><span class="roll-char"><span style="--i: 3" data-c="w">w</span></span><span class="roll-char"><span style="--i: 4" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 5" data-c="o">o</span></span><span class="roll-char"><span style="--i: 6" data-c="n">n</span></span><span class="roll-char"><span style="--i: 7" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 8" data-c="B">B</span></span><span class="roll-char"><span style="--i: 9" data-c="e">e</span></span><span class="roll-char"><span style="--i: 10" data-c="h">h</span></span><span class="roll-char"><span style="--i: 11" data-c="a">a</span></span><span class="roll-char"><span style="--i: 12" data-c="n">n</span></span><span class="roll-char"><span style="--i: 13" data-c="c">c</span></span><span class="roll-char"><span style="--i: 14" data-c="e">e</span></span></span><span class="case-arrow" aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="drum" data-spread="1.15" aria-label="Cultural Planet screens" style="--count: 7">
+        <div class="drum-stage">
+          <div class="drum-counter" aria-hidden="true">
+            <span class="drum-counter-window"><span class="drum-counter-strip"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span></span></span></span>
+            <span class="drum-counter-total">/07</span>
+          </div>
+          <div class="drum-wheel">
+        <figure class="drum-item drum-item--split" data-index="0">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" id="first-screen" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/onboarding-poster.webp?v=2" width="720" height="1470"
+              aria-label="Onboarding: intro screens, sign-up with inline validation, phone verification and confirmation">
+              <source src="./media/cultural-planet-screens/onboarding.mp4?v=2" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Onboarding — from first launch to a verified account</span>
+            <ul class="drum-caption-list">
+              <li>Three intro screens show what the app gives — events, venues, tickets — before asking users to sign up</li>
+              <li>Sign-up takes one tap with Google, Apple or Facebook, or a mobile number</li>
+              <li>Fields are validated as users type, so mistakes are fixed on the spot, not after pressing the button</li>
+              <li>Phone verification with a 5-digit code ends on a playful confirmation screen</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="1">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/personalization-poster.webp?v=2" width="720" height="1470"
+              aria-label="Choosing a city and interests, turning on notifications, then scrolling the personalized home feed">
+              <source src="./media/cultural-planet-screens/personalization.mp4?v=2" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Personalization — a feed built around each user</span>
+            <ul class="drum-caption-list">
+              <li>Users choose their city and interests once, and the whole app is tailored to them</li>
+              <li>Popular interests appear as chips, so choosing takes seconds instead of typing</li>
+              <li>I ask for notifications only after users have seen what they’ll be notified about</li>
+              <li>The home page personalizes offers based on users’ interests and viewing history, so everything on it feels relevant</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="2">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/search-poster.webp?v=3" width="720" height="1470"
+              aria-label="Detailed filters with categories, calendar, distance, language and price, then search results for this week">
+              <source src="./media/cultural-planet-screens/search.mp4?v=3" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Search — from quick chips to detailed filters</span>
+            <ul class="drum-caption-list">
+              <li>Category tiles with imagery make browsing feel like exploring, not filling in a form</li>
+              <li>Filters let users actively customize their results by distance, category, language, price, date and relevance — all in one sheet</li>
+              <li>The calendar opens only when users choose a custom range, so the form stays short for quick picks like Today or This weekend</li>
+              <li>One “View event results” button applies every filter at once — no separate confirm steps</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="3">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/map-poster.webp?v=2" width="720" height="1470"
+              aria-label="Map search: Zürich map with event pins, a tapped pin opens the event card, then the event page">
+              <source src="./media/cultural-planet-screens/map.mp4?v=2" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Map search — what’s on nearby</span>
+            <ul class="drum-caption-list">
+              <li>The map shows every event around the user as a pin, so they can plan by place, not only by date</li>
+              <li>The same quick chips — All, Today, Tomorrow, This week — filter the pins right on the map</li>
+              <li>Tapping a pin opens a compact event card with follow, website and call actions, without leaving the map</li>
+              <li>One more tap opens the full event page</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="4">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/event-poster.webp?v=2" width="720" height="1470"
+              aria-label="Event page with rating, attendees, location options and map, then the venue page with its details and upcoming events">
+              <source src="./media/cultural-planet-screens/event.mp4?v=2" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Event and venue — everything needed to decide</span>
+            <ul class="drum-caption-list">
+              <li>The event page answers the key questions up front — when, where, how much and who’s going</li>
+              <li>The “Get ticket” button sits right under the title, so users don’t have to scroll to act</li>
+              <li>The address opens in Apple or Google Maps in one tap, and the location is shown on the map right on the page</li>
+              <li>Venue pages show rating, facilities and contact options, and gather all upcoming events in one place</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="5">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/booking-poster.webp?v=3" width="720" height="1470"
+              aria-label="Booking with validated personal details and guests, checkout, successful payment and the ticket with its QR code">
+              <source src="./media/cultural-planet-screens/booking.mp4?v=3" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Booking — from details to ticket in one flow</span>
+            <ul class="drum-caption-list">
+              <li>Booking is a single screen: personal details, extra guests and a ticket summary</li>
+              <li>Each field confirms itself with a check mark, so users know the form is right before checkout</li>
+              <li>The tab bar is hidden during booking and payment, so nothing pulls users out of the flow before the ticket is theirs</li>
+              <li>After payment the ticket with its QR code is one tap away and can be sent by email or saved as an image</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="6">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/cultural-planet-screens/profile-poster.webp?v=3" width="720" height="1470"
+              aria-label="Tickets and notifications, profile with bio and favorites, the wallet with cards and payment history, rewards levels with an unlocked tier, and settings">
+              <source src="./media/cultural-planet-screens/profile.mp4?v=3" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Profile, wallet and rewards</span>
+            <ul class="drum-caption-list">
+              <li>The profile gathers tickets, following and favorites, with the bio editable in place</li>
+              <li>The built-in wallet keeps cards and payment history in the app</li>
+              <li>Cultural Planet rewards the passion for discovery: users collect points, unlock tiers and enjoy their rewards</li>
+              <li>Settings explain what deactivating or deleting the account means before users choose</li>
+            </ul>
+          </figcaption>
+        </figure>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="case-foot" aria-label="Project navigation">
+      <a href="./index.html#projects" class="case-back"><span class="case-arrow" aria-hidden="true">←</span><span class="sr-only">All projects</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="A">A</span></span><span class="roll-char"><span style="--i: 1" data-c="l">l</span></span><span class="roll-char"><span style="--i: 2" data-c="l">l</span></span><span class="roll-char"><span style="--i: 3" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 4" data-c="p">p</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="o">o</span></span><span class="roll-char"><span style="--i: 7" data-c="j">j</span></span><span class="roll-char"><span style="--i: 8" data-c="e">e</span></span><span class="roll-char"><span style="--i: 9" data-c="c">c</span></span><span class="roll-char"><span style="--i: 10" data-c="t">t</span></span><span class="roll-char"><span style="--i: 11" data-c="s">s</span></span></span></a>
+      <a href="./good-food.html" class="case-next">
+        <span class="case-next-label">Next project</span>
+        <span class="case-next-title"><span class="sr-only">Good Food</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="G">G</span></span><span class="roll-char"><span style="--i: 1" data-c="o">o</span></span><span class="roll-char"><span style="--i: 2" data-c="o">o</span></span><span class="roll-char"><span style="--i: 3" data-c="d">d</span></span><span class="roll-char"><span style="--i: 4" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 5" data-c="F">F</span></span><span class="roll-char"><span style="--i: 6" data-c="o">o</span></span><span class="roll-char"><span style="--i: 7" data-c="o">o</span></span><span class="roll-char"><span style="--i: 8" data-c="d">d</span></span></span><span class="case-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </nav>
+
+    <dialog class="lightbox" aria-label="Full-size screen">
+      <button class="lightbox-close" type="button" aria-label="Close">×</button>
+      <img class="lightbox-img" alt="" />
+    </dialog>
+
+    <script src="./cursor.js"></script>
+    <script src="./case.js"></script>
+    <script src="./transition.js"></script>
+  </body>
+</html>

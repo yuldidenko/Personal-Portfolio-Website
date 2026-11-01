@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Good Food — table booking and food delivery app · Yuliia Didenko</title>
+    <meta
+      name="description"
+      content="Good Food: a mobile app that brings every dining need into one place — finding a restaurant, booking a table, preordering and ordering food for delivery or pick-up. Product design by Yuliia Didenko."
+    />
+    <meta name="theme-color" content="#1f1f1f" />
+    <link rel="icon" href="./media/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./media/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./media/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Good Food — table booking and food delivery app" />
+    <meta property="og:description" content="Find a restaurant, book a table, preorder and order food — all in one app." />
+    <meta property="og:image" content="./media/good-food-stage.webp" />
+    <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="case.css" />
+    <script>
+      // Arriving through the page curtain (transition.js): start covered.
+      try {
+        if (sessionStorage.getItem("curtain") === "1") {
+          sessionStorage.removeItem("curtain");
+          document.documentElement.classList.add("curtain-in", "vt-enter");
+          // Keep the curtain closed until the page is really ready - its
+          // fonts loaded and every script run - so it never opens on a
+          // half-built page (fallback serif, covers without their curtain).
+          var root = document.documentElement;
+          root.classList.add("curtain-hold");
+          var done = false;
+          var release = function () {
+            if (done) return;
+            done = true;
+            root.classList.remove("curtain-hold");
+            document.dispatchEvent(new Event("curtain:release"));
+          };
+          var dom = new Promise(function (r) {
+            document.addEventListener("DOMContentLoaded", r);
+          });
+          var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+          Promise.all([dom, fonts]).then(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(release); });
+          });
+          setTimeout(release, 2500); // never keep anyone waiting longer
+        }
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body class="case-page">
+    <div class="cursor-dot">
+      <!-- "View" eye, shown while the cursor is over a project cover. The
+           iris group follows the pointer's direction (cursor.js). -->
+      <svg class="cursor-eye" viewBox="0 0 26 26" width="32" height="32" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cursor-eye-shape">
+            <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" />
+          </clipPath>
+        </defs>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="#fff8ec" />
+        <g clip-path="url(#cursor-eye-shape)">
+          <g class="cursor-eye-iris">
+            <circle cx="13" cy="13" r="4.6" fill="#31a0cd" />
+            <circle cx="13" cy="13" r="2.1" fill="#1f1f1f" />
+            <circle cx="14.4" cy="11.6" r="0.9" fill="#fff8ec" />
+          </g>
+        </g>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="none" stroke="#1f1f1f" stroke-width="1" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="cursor-outline"></div>
+
+
+    <div class="case-bg" aria-hidden="true">
+      <svg class="case-bg-cutlery" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs><path id="cut-arc" d="M150 500A350 350 0 0 0 850 500"/></defs>
+        <g class="cut-line" stroke="#F4ECE4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M-1600 560C-1300 600 -1000 540 -700 575C-450 604 -250 560 -30 588C40 598 92 556 140 572C178 585 182 545 163 547C142 549 156 594 205 566"/><path d="M795 566C838 548 852 594 872 588C895 581 884 547 869 551C852 556 878 602 940 590C1060 572 1180 552 1300 575C1520 616 1750 545 2000 580C2200 608 2400 565 2600 572"/>
+          <path d="M349.4 239.2C353.5 237.1 365.5 230.6 373.8 226.9C382.1 223.2 390.5 219.8 399.1 216.9C407.7 213.9 416.4 211.4 425.2 209.2C434.0 207.0 443.0 205.2 451.9 203.8C460.9 202.4 469.9 201.4 478.9 200.7C488.0 200.1 497.1 199.9 506.1 200.0C515.2 200.2 524.2 200.7 533.3 201.7C542.3 202.6 551.3 204.0 560.2 205.7C569.1 207.5 577.9 209.7 586.6 212.2C595.3 214.8 603.9 217.8 612.4 221.1C620.8 224.5 629.1 228.2 637.2 232.3C645.3 236.5 653.2 241.0 660.9 245.8C668.5 250.7 676.0 255.9 683.2 261.5C690.4 267.0 697.4 272.9 704.0 279.1C710.7 285.2 717.1 291.7 723.2 298.5C729.2 305.2 735.0 312.2 740.5 319.5C746.0 326.7 751.1 334.3 756.0 342.0C760.8 349.7 765.3 357.6 769.4 365.7C773.5 373.8 777.3 382.1 780.7 390.5C784.1 399.0 787.1 407.6 789.7 416.3C792.4 425.0 794.6 433.9 796.4 442.8C798.2 451.8 799.6 460.8 800.6 469.9C801.5 478.9 802.0 488.1 802.1 497.2C802.2 506.3 801.8 515.5 801.0 524.6C800.2 533.6 799.0 542.7 797.3 551.7C795.6 560.6 793.5 569.5 791.0 578.3C788.5 587.0 785.5 595.7 782.2 604.1C778.9 612.6 775.1 620.9 771.1 629.0C767.0 637.1 762.6 645.0 757.9 652.7C753.1 660.4 748.0 668.0 742.7 675.2C737.3 682.5 731.6 689.6 725.7 696.3C719.7 703.1 713.5 709.7 707.0 716.0C700.5 722.3 693.7 728.3 686.8 734.1C679.8 739.8 672.5 745.3 665.1 750.4C657.6 755.6 649.9 760.4 642.0 764.9C634.1 769.4 626.0 773.6 617.7 777.4C609.5 781.1 601.0 784.6 592.4 787.6C583.8 790.6 575.0 793.2 566.1 795.4C557.2 797.6 548.2 799.3 539.1 800.7C530.1 802.0 520.9 802.9 511.8 803.3C502.6 803.8 493.4 803.8 484.2 803.4C475.1 802.9 465.9 802.1 456.8 800.8C447.8 799.5 438.7 797.7 429.8 795.6C420.9 793.5 412.0 790.9 403.3 788.0C394.6 785.1 386.1 781.7 377.7 778.0C369.3 774.3 361.1 770.2 353.0 765.7C345.0 761.3 337.2 756.4 329.6 751.3C322.0 746.1 314.7 740.6 307.6 734.8C300.5 729.0 293.7 722.8 287.2 716.3C280.7 709.9 274.5 703.1 268.6 696.1C262.7 689.1 257.2 681.7 252.0 674.2C246.8 666.6 242.0 658.8 237.6 650.8C233.1 642.9 229.1 634.6 225.4 626.3C221.7 617.9 218.4 609.4 215.6 600.7C212.7 592.1 210.2 583.3 208.1 574.4C206.0 565.6 204.3 556.6 203.0 547.6C201.7 538.6 200.8 529.6 200.2 520.5C199.7 511.5 199.5 502.4 199.7 493.3C199.9 484.2 200.5 475.2 201.4 466.1C202.4 457.1 203.7 448.1 205.4 439.2C207.1 430.2 209.1 421.4 211.6 412.6C214.0 403.8 216.9 395.1 220.1 386.6C223.3 378.0 226.9 369.6 230.8 361.4C234.8 353.1 239.2 345.0 243.9 337.2C248.6 329.3 253.7 321.7 259.2 314.3C264.7 306.9 270.5 299.8 276.7 293.0C282.9 286.2 289.4 279.6 296.2 273.4C303.0 267.3 310.2 261.4 317.5 255.9C324.9 250.4 332.6 245.3 340.5 240.5C348.3 235.7 356.5 231.4 364.7 227.4C373.0 223.4 381.5 219.8 390.1 216.5C398.7 213.3 411.9 209.4 416.3 208.0"/><path d="M664.3 637.9C662.1 640.2 655.8 647.5 651.2 651.9C646.6 656.4 641.8 660.7 636.8 664.7C631.8 668.7 626.7 672.5 621.3 676.0C616.0 679.5 610.5 682.8 604.9 685.8C599.3 688.8 593.5 691.6 587.6 694.0C581.8 696.5 575.8 698.8 569.8 700.8C563.7 702.7 557.6 704.5 551.4 705.9C545.3 707.4 539.0 708.6 532.8 709.6C526.5 710.5 520.2 711.3 513.9 711.7C507.6 712.2 501.2 712.4 494.9 712.4C488.5 712.3 482.1 712.1 475.8 711.5C469.5 711.0 463.1 710.2 456.8 709.1C450.5 708.0 444.3 706.6 438.1 705.0C431.9 703.4 425.7 701.5 419.7 699.3C413.7 697.1 407.7 694.6 401.9 691.8C396.1 689.1 390.4 686.0 384.8 682.7C379.3 679.4 373.9 675.8 368.7 671.9C363.5 668.1 358.5 664.0 353.7 659.6C349.0 655.3 344.4 650.7 340.0 645.9C335.7 641.1 331.5 636.1 327.7 630.9C323.8 625.7 320.2 620.4 316.8 614.9C313.4 609.3 310.3 603.7 307.4 597.9C304.6 592.1 302.0 586.2 299.7 580.2C297.3 574.1 295.3 568.0 293.5 561.8C291.7 555.7 290.1 549.4 288.9 543.1C287.6 536.7 286.7 530.4 286.0 524.0C285.3 517.6 284.9 511.1 284.8 504.7C284.6 498.3 284.8 491.8 285.3 485.4C285.7 479.0 286.5 472.6 287.5 466.2C288.6 459.9 289.9 453.6 291.6 447.4C293.2 441.2 295.1 435.0 297.3 429.0C299.5 423.0 301.9 417.0 304.6 411.2C307.4 405.4 310.3 399.7 313.6 394.2C316.8 388.6 320.3 383.2 323.9 378.0C327.6 372.7 331.5 367.7 335.6 362.8C339.7 357.9 344.1 353.1 348.6 348.6C353.1 344.0 357.8 339.7 362.6 335.5C367.5 331.3 372.6 327.4 377.8 323.6C383.0 319.9 388.3 316.3 393.9 313.0C399.4 309.7 405.1 306.7 410.8 303.9C416.6 301.1 422.6 298.5 428.6 296.2C434.7 294.0 440.8 292.0 447.1 290.3C453.3 288.6 459.6 287.2 466.0 286.1C472.4 285.0 478.8 284.2 485.3 283.8C491.8 283.3 498.3 283.2 504.7 283.3C511.2 283.5 517.7 284.0 524.1 284.8C530.5 285.6 536.9 286.7 543.2 288.1C549.5 289.5 555.8 291.2 561.9 293.1C568.1 295.1 574.1 297.3 580.1 299.8C586.0 302.3 591.9 305.1 597.6 308.1C603.3 311.1 608.8 314.3 614.3 317.7C619.7 321.2 625.0 324.9 630.1 328.7C635.2 332.6 640.2 336.7 645.0 341.0C649.8 345.3 654.4 349.8 658.8 354.4C663.3 359.1 667.5 364.0 671.5 369.1C675.5 374.1 679.3 379.3 682.9 384.7C686.4 390.1 689.8 395.7 692.8 401.4C695.9 407.1 698.7 413.0 701.2 418.9C703.7 424.9 705.9 431.0 707.9 437.2C709.8 443.4 711.5 449.7 712.8 456.1C714.2 462.4 715.2 468.8 716.0 475.3C716.7 481.7 717.2 488.2 717.3 494.7C717.5 501.2 717.3 507.7 716.9 514.2C716.5 520.7 715.7 527.2 714.7 533.6C713.7 540.0 712.4 546.4 710.8 552.7C709.3 559.0 707.4 565.2 705.3 571.4C703.2 577.5 700.8 583.5 698.1 589.5C695.4 595.4 692.5 601.2 689.3 606.9C686.1 612.5 682.7 618.1 679.0 623.4C675.3 628.7 671.3 633.9 667.2 638.9C663.0 643.9 658.6 648.6 653.9 653.2C649.3 657.7 641.9 664.0 639.4 666.2"/>
+          <g class="cut-fork" transform="translate(150 500)"><path d="M0 278C11 278 16 271 16 258L12 -92C11 -112 8 -120 8 -128C8 -143 30 -150 30 -176L30 -274Q30 -281 25.5 -281Q21 -281 21 -274L21 -198Q21 -192 17 -192Q13 -192 13 -198L13 -274Q13 -281 8.5 -281Q4 -281 4 -274L4 -198Q4 -192 0 -192Q-4 -192 -4 -198L-4 -274Q-4 -281 -8.5 -281Q-13 -281 -13 -274L-13 -198Q-13 -192 -17 -192Q-21 -192 -21 -198L-21 -274Q-21 -281 -25.5 -281Q-30 -281 -30 -274L-30 -176C-30 -150 -8 -143 -8 -128C-8 -120 -11 -112 -12 -92L-16 258C-16 271 -11 278 0 278Z"/></g>
+          <g class="cut-knife" transform="translate(850 500)"><path d="M0 280C10 280 15 272 15 260L15 52L20 42L20 -228C20 -264 10 -282 -2 -282C-14 -282 -22 -258 -22 -198L-22 42L-15 52L-15 260C-15 272 -10 280 0 280Z"/></g>
+        </g>
+        <g class="cut-labels" fill="#D1D45C"><text class="cut-label" data-i="0" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">READY TO START</textPath></text><text class="cut-label" data-i="1" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">PAUSE</textPath></text><text class="cut-label" data-i="2" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">READY FOR THE NEXT COURSE</textPath></text><text class="cut-label" data-i="3" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">EXCELLENT</textPath></text><text class="cut-label" data-i="4" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">FINISHED</textPath></text><text class="cut-label" data-i="5" dy="0.35em"><textPath href="#cut-arc" startOffset="50%" text-anchor="middle">SEE YOU NEXT TIME</textPath></text></g>
+      </svg>
+    </div>
+
+    <main class="case-main">
+      <header class="drum-intro">
+        <h1 class="case-title">Good Food</h1>
+        <p class="drum-lead">
+          One app for every food need: book a table, order delivery or pick
+          up from the same restaurant — instead of three apps for diners and
+          separate tools for restaurants. Allergens on every dish make it safe
+          for people with food allergies.
+        </p>
+        <a class="case-behance" href="https://www.behance.net/gallery/200685645/GOOD-FOOD-table-reservation-and-food-delivery-app" target="_blank" rel="noopener noreferrer"><span class="sr-only">View on Behance</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="V">V</span></span><span class="roll-char"><span style="--i: 1" data-c="i">i</span></span><span class="roll-char"><span style="--i: 2" data-c="e">e</span></span><span class="roll-char"><span style="--i: 3" data-c="w">w</span></span><span class="roll-char"><span style="--i: 4" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 5" data-c="o">o</span></span><span class="roll-char"><span style="--i: 6" data-c="n">n</span></span><span class="roll-char"><span style="--i: 7" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 8" data-c="B">B</span></span><span class="roll-char"><span style="--i: 9" data-c="e">e</span></span><span class="roll-char"><span style="--i: 10" data-c="h">h</span></span><span class="roll-char"><span style="--i: 11" data-c="a">a</span></span><span class="roll-char"><span style="--i: 12" data-c="n">n</span></span><span class="roll-char"><span style="--i: 13" data-c="c">c</span></span><span class="roll-char"><span style="--i: 14" data-c="e">e</span></span></span><span class="case-arrow" aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="drum" data-spread="1.15" aria-label="Good Food screens" style="--count: 6">
+        <div class="drum-stage">
+          <div class="drum-counter" aria-hidden="true">
+            <span class="drum-counter-window"><span class="drum-counter-strip"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span></span></span></span></span>
+            <span class="drum-counter-total">/06</span>
+          </div>
+          <div class="drum-wheel">
+        <figure class="drum-item drum-item--split" data-index="0">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" id="first-screen" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/onboarding-poster.webp?v=5" width="720" height="1470"
+              aria-label="Onboarding: intro screens, welcome, sign-up with password rules, log in with inline validation and the notifications request">
+              <source src="./media/good-food-screens/onboarding.mp4?v=5" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Onboarding — one app for every food plan</span>
+            <ul class="drum-caption-list">
+              <li>From the first screen users see what makes Good Food different: booking a table, delivery and pick-up live in one app</li>
+              <li>Sign-up takes one tap with Apple, Google or Facebook, or an email</li>
+              <li>Password rules are shown before users type, and fields confirm themselves as soon as they’re valid</li>
+              <li>Notifications are asked for with a clear reason — bookings, orders and offers — all from one app instead of three</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="1">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/discover-poster.webp?v=5" width="720" height="1470"
+              aria-label="Home feed, notifications, filters for booking, delivery or pick-up, cuisines, preferences, rating, price and distance, then the home feed collections">
+              <source src="./media/good-food-screens/discover.mp4?v=5" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Discovery — one search for a table, delivery or pick-up</span>
+            <ul class="drum-caption-list">
+              <li>Filters start with how users want to eat — a table, delivery or pick-up — so one search covers every plan</li>
+              <li>Dietary preferences like vegan, vegetarian, halal or kosher sit next to cuisines, so everyone finds food that fits them</li>
+              <li>Accessibility needs — wheelchair access, gender-neutral restrooms — are filters, not afterthoughts</li>
+              <li>Notifications bring bookings and orders from every restaurant into one feed</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="2">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/booking-poster.webp?v=5" width="720" height="1470"
+              aria-label="Restaurant page, booking a table with guests, date and time, preorder from the menu, occasion, confirmation with payment, success screen and the bookings tab">
+              <source src="./media/good-food-screens/booking.mp4?v=5" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Booking — reserve a table and order ahead in one flow</span>
+            <ul class="drum-caption-list">
+              <li>The restaurant page brings menu, facilities and reviews together, with “Book a table” right under the description</li>
+              <li>The table illustration adds a chair for every guest — a small, friendly touch that makes the party size visible</li>
+              <li>Guests can preorder dishes from the same menu, with allergens shown on every card, so food is ready when they arrive</li>
+              <li>One confirmation screen and one payment cover both the table and the food</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="3">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/delivery-poster.webp?v=5" width="720" height="1470"
+              aria-label="Delivery menu, dish page with allergens, delivery cart with cutlery and tips, group order by link, group checkout with address, choosing who pays, payment, orders and live delivery tracking, then the support center">
+              <source src="./media/good-food-screens/delivery.mp4?v=5" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Delivery — safe for every diet, easy for groups</span>
+            <ul class="drum-caption-list">
+              <li>Every dish shows its allergens, and the legend explains each icon — more and more people live with food allergies and intolerances, and they shouldn’t have to guess</li>
+              <li>A group order starts with one shared link: everyone adds their own dishes to the same cart</li>
+              <li>The organizer chooses whether to pay for everyone or let each person pay for themselves, and tips and delivery are split fairly</li>
+              <li>After payment the order is tracked live on the map, with the courier one tap away</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="4">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/pickup-poster.webp?v=5" width="720" height="1470"
+              aria-label="Map search with restaurant pins, the Terrasse menu switched to pick-up, two dishes added, pick-up cart with tips, pick-up checkout, payment, pick-up number and the order in Orders">
+              <source src="./media/good-food-screens/pickup.mp4?v=5" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Pick-up — same restaurant, same menu, no extra app</span>
+            <ul class="drum-caption-list">
+              <li>One switch turns the same menu into preorder, delivery or pick-up — diners don’t need a separate app for each way of eating</li>
+              <li>For restaurants it means one place to take table bookings, delivery and pick-up orders instead of juggling separate tools</li>
+              <li>The map shows restaurants nearby, and pick-up checkout shows where and when to collect the order</li>
+              <li>After payment users get a pick-up number and a ready time, and the order appears in Orders as “Preparing”</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="5">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none"
+              poster="./media/good-food-screens/account-poster.webp?v=5" width="720" height="1470"
+              aria-label="Profile: editing personal details, payment info with card and transaction history, adding a card, favorites, achievements with rewards, my reviews and settings">
+              <source src="./media/good-food-screens/account.mp4?v=6" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Profile — every booking and order in one place</span>
+            <ul class="drum-caption-list">
+              <li>Payment info keeps one transaction history for restaurant visits, deliveries and pick-ups</li>
+              <li>Favorites keep saved venues grouped by cuisine, ready for the next booking or order</li>
+              <li>Achievements turn every visit and order into points that unlock rewards at partner restaurants</li>
+              <li>Reviews separate the places still to review from those already reviewed</li>
+            </ul>
+          </figcaption>
+        </figure>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="case-foot" aria-label="Project navigation">
+      <a href="./index.html#projects" class="case-back"><span class="case-arrow" aria-hidden="true">←</span><span class="sr-only">All projects</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="A">A</span></span><span class="roll-char"><span style="--i: 1" data-c="l">l</span></span><span class="roll-char"><span style="--i: 2" data-c="l">l</span></span><span class="roll-char"><span style="--i: 3" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 4" data-c="p">p</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="o">o</span></span><span class="roll-char"><span style="--i: 7" data-c="j">j</span></span><span class="roll-char"><span style="--i: 8" data-c="e">e</span></span><span class="roll-char"><span style="--i: 9" data-c="c">c</span></span><span class="roll-char"><span style="--i: 10" data-c="t">t</span></span><span class="roll-char"><span style="--i: 11" data-c="s">s</span></span></span></a>
+      <a href="./factora.html" class="case-next">
+        <span class="case-next-label">Next project</span>
+        <span class="case-next-title"><span class="sr-only">Factora</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="F">F</span></span><span class="roll-char"><span style="--i: 1" data-c="a">a</span></span><span class="roll-char"><span style="--i: 2" data-c="c">c</span></span><span class="roll-char"><span style="--i: 3" data-c="t">t</span></span><span class="roll-char"><span style="--i: 4" data-c="o">o</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="a">a</span></span></span><span class="case-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </nav>
+
+    <dialog class="lightbox" aria-label="Full-size screen">
+      <button class="lightbox-close" type="button" aria-label="Close">×</button>
+      <img class="lightbox-img" alt="" />
+    </dialog>
+
+    <script src="./cursor.js"></script>
+    <script src="./case.js"></script>
+    <script src="./transition.js"></script>
+  </body>
+</html>

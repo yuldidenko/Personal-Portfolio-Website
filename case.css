@@ -1,0 +1,772 @@
+/* Factora project page. Builds on main.css (fonts, tokens, cursor,
+   rolling-letter links). The screens turn on a drum - the same "roll"
+   idea as the rolling letters on every link of the site: the current
+   screen faces you, the previous one rolls away over the top, the next
+   one comes up from below. The drum is driven by the normal page scroll
+   (never hijacked). Without JS, on small screens and for reduced motion
+   the screens are a plain vertical list. */
+
+.case-page {
+  /* Same side margins as the home page (5rem, 2rem from 1200px down). */
+  --case-gutter: 5rem;
+  /* Same dark as the home page hero, with white text. */
+  --case-line: 1px solid #ffffff;
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+/* ---------- Intro ---------- */
+
+.drum-intro {
+  padding: 7rem var(--case-gutter) 3rem;
+  text-align: center;
+}
+
+.case-title {
+  margin: 0;
+  color: inherit;
+  font-family: "tan-pearl";
+  font-weight: 400;
+  font-size: 7.5rem;
+  line-height: 1.1;
+}
+
+/* Names whose letters hang far below the line (y, g in Tan Pearl) need
+   room before the description. */
+.case-title--tails {
+  margin-bottom: 0.45em;
+}
+
+.drum-lead {
+  /* case.js sets --lead-w to the first screen's width. Pages that open
+     with a phone use the width a desktop screen gets on Factora (the
+     carousel width, capped by a 4:3 screen at the available height). */
+  max-width: var(--lead-w, min(70vw, 1240px, calc((100svh - 15rem) * 4 / 3)));
+  margin: 1.5rem auto 0;
+  font-family: "MabryPro-Light", sans-serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.case-team {
+  margin: 1rem 0 0;
+  opacity: 0.7;
+}
+
+.case-team + .case-behance {
+  margin-top: 1.25rem;
+}
+
+/* Same size as the home page menu items. */
+.case-behance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 1.5rem;
+  color: #ffffff;
+  font-family: "tan-pearl";
+  font-size: 1rem;
+  -webkit-text-stroke: 1px currentColor;
+  text-decoration: none;
+}
+
+.case-behance span {
+  font: inherit;
+}
+
+.case-behance .case-arrow {
+  font-family: "MabryPro-Regular", sans-serif;
+}
+
+.case-behance:hover .case-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ---------- Screens: flat list (default) ---------- */
+
+.drum {
+  padding: 2rem var(--case-gutter) 4rem;
+}
+
+.drum-counter {
+  display: none;
+}
+
+.drum-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0 auto 4rem;
+  max-width: 1100px;
+}
+
+.drum-media {
+  width: 100%;
+}
+
+.drum-zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: none;
+}
+
+.drum-screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 28px 56px -24px rgba(0, 0, 0, 0.6);
+}
+
+.drum-caption {
+  /* As wide as the screens (case.js sets --lead-w from the first one). */
+  max-width: var(--lead-w, 62ch);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.drum-caption-title {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: "tan-pearl";
+  -webkit-text-stroke: 1px currentColor;
+}
+
+.drum-caption-text {
+  display: block;
+}
+
+.drum-caption-text + .drum-caption-text {
+  margin-top: 0.5rem;
+}
+
+/* ---------- Screens: the drum (added by case.js) ---------- */
+
+.drum.is-3d {
+  position: relative;
+  padding: 0;
+  /* height is set by case.js: one viewport + one scroll step per screen */
+}
+
+.drum.is-3d .drum-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.drum.is-3d .drum-wheel {
+  position: absolute;
+  inset: 0;
+  perspective: 1200px;
+}
+
+.drum.is-3d .drum-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 1240px);
+  margin: 0;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  /* transform, opacity, filter, z-index: written per frame by case.js */
+}
+
+.drum.is-3d .drum-item:not(.is-current) {
+  pointer-events: none;
+}
+
+.drum.is-3d .drum-caption {
+  opacity: var(--caption, 1);
+}
+
+.drum.is-3d .drum-media {
+  display: flex;
+  justify-content: center;
+}
+
+/* Every screen fits the stage whatever its proportions; tall ones get
+   narrower rather than taller. */
+.drum.is-3d .drum-zoom,
+.drum.is-3d .drum-media > video {
+  width: auto;
+  max-width: 100%;
+}
+
+.drum.is-3d .drum-screen {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100svh - 15rem);
+}
+
+/* Counter in the bottom-left corner of the stage: the digits roll like a
+   drum too. */
+.drum.is-3d .drum-counter {
+  position: absolute;
+  bottom: 1.5rem;
+  left: var(--case-gutter);
+  z-index: 200;
+  display: flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-family: "tan-pearl";
+  font-size: 2rem;
+  line-height: 1.4;
+}
+
+.drum-counter span {
+  font: inherit;
+}
+
+.drum-counter-window {
+  display: inline-block;
+  height: 1.4em;
+  overflow: hidden;
+}
+
+.drum-counter-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  transform: translateY(calc(-1.4em * var(--active, 0)));
+  transition: transform 600ms var(--ease-out);
+}
+
+.drum-counter-strip span {
+  height: 1.4em;
+  line-height: 1.4;
+}
+
+/* ---------- Phone slides (mobile projects) ----------
+   A recorded phone next to its text: the phone on the left, the title
+   and key points on the right, so a tall phone still uses the width. */
+.drum-phone {
+  /* The recording is cropped to the phone's outline; round the corners
+     to match the device. */
+  border-radius: 13% / 6.3%;
+  box-shadow: none;
+}
+
+.drum-item--split {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.drum-item--split .drum-media {
+  width: auto;
+  flex: none;
+}
+
+.drum-item--split .drum-phone {
+  width: auto;
+  height: min(calc(100svh - 10rem), 900px);
+  max-width: none;
+}
+
+.drum.is-3d .drum-item--split .drum-phone {
+  max-height: none;
+}
+
+.drum-item--split .drum-caption {
+  max-width: 28rem;
+  text-align: left;
+}
+
+.drum-item--split .drum-caption-title {
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  line-height: 1.38;
+  letter-spacing: 0.012em;
+  -webkit-text-stroke: 0;
+}
+
+.drum-caption-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drum-caption-list li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.drum-caption-list li + li {
+  margin-top: 0.5rem;
+}
+
+.drum-caption-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+@media (max-width: 767px) {
+  .drum-item--split {
+    flex-direction: column;
+  }
+
+  .drum-item--split .drum-phone {
+    height: auto;
+    width: min(100%, 22rem);
+  }
+
+  .drum-item--split .drum-caption-title {
+    font-size: 1.5rem;
+  }
+}
+
+.drum-sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.drum-sound:active {
+  transform: scale(var(--press-scale));
+}
+
+.drum-sound[aria-pressed="true"] {
+  background-color: #ffffff;
+  color: #1f1f1f;
+}
+
+/* Three bars: still when off, gently bouncing while the sound plays. */
+.drum-sound-icon {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 14px;
+  height: 12px;
+  background:
+    linear-gradient(currentColor, currentColor) 0 100% / 3px 40% no-repeat,
+    linear-gradient(currentColor, currentColor) 50% 100% / 3px 70% no-repeat,
+    linear-gradient(currentColor, currentColor) 100% 100% / 3px 50% no-repeat;
+}
+
+.drum-sound[aria-pressed="true"] .drum-sound-icon {
+  animation: sound-bars 900ms var(--ease-in-out) infinite alternate;
+}
+
+@keyframes sound-bars {
+  to {
+    background-size: 3px 90%, 3px 35%, 3px 80%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drum-sound[aria-pressed="true"] .drum-sound-icon {
+    animation: none;
+  }
+}
+
+/* ---------- Background illustration ----------
+   A large outline shape fixed behind the page (Amygdala's flower). It
+   turns with the scroll - quickly at first, slowing down towards the end
+   (case.js sets --spin). Content sits above it. */
+.case-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.case-bg-spin {
+  /* Centred on the screen even when larger than it (a grid would pin an
+     oversized image to the top edge and push it off the bottom). */
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(120vmin, 1100px);
+  height: min(120vmin, 1100px);
+  opacity: 0.14;
+  transform: rotate(var(--spin, 0deg));
+  will-change: transform;
+}
+
+.case-bg ~ .case-main,
+.case-bg ~ .case-foot {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Footer: back + next ---------- */
+
+.case-foot {
+  display: flex;
+  justify-content: space-between;
+  /* "All projects" on the same line as "Next project". */
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin: 0 var(--case-gutter);
+  padding: 1.5rem 0 3rem;
+  border-top: var(--case-line);
+}
+
+.case-foot a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.case-foot span {
+  font: inherit;
+}
+
+/* Tan Pearl has no arrow glyphs - arrows are drawn in Mabry. */
+.case-arrow {
+  font-family: "MabryPro-Regular", sans-serif;
+  line-height: 1;
+  -webkit-text-stroke: 0;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+/* Same size and height as the home page menu items. */
+.case-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: "tan-pearl";
+  font-size: 1rem;
+  -webkit-text-stroke: 1px currentColor;
+}
+
+.case-back .case-arrow {
+  font-family: "MabryPro-Regular", sans-serif;
+  font-size: 1.1em;
+}
+
+.case-back:hover .case-arrow {
+  transform: translateX(-3px);
+}
+
+.case-next {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.case-foot .case-next-label {
+  font-family: "tan-pearl";
+  -webkit-text-stroke: 1px currentColor;
+}
+
+.case-foot .case-next-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-family: "tan-pearl";
+  font-size: 5rem;
+  line-height: 1.1;
+}
+
+.case-foot .case-next-title .case-arrow {
+  font-family: "MabryPro-Light", sans-serif;
+  font-size: 0.7em;
+}
+
+.case-next:hover .case-arrow {
+  transform: translateX(6px);
+}
+
+/* `font: inherit` above also resets line-height; give each rolling
+   letter back its window. */
+.case-page .roll-char {
+  line-height: 1.5;
+}
+
+/* Tan Pearl's y and g hang far below the line at this size, so the big
+   name gets a taller rolling window (and a matching offset for the copy)
+   - otherwise their tails are clipped after the roll and peek out above. */
+.case-next-title .roll-char {
+  --roll-h: 2em;
+  height: var(--roll-h);
+  line-height: var(--roll-h);
+}
+
+.case-next-title .roll-char > span::after {
+  top: var(--roll-h);
+}
+
+.case-next:hover .case-next-title .roll-char > span,
+.case-next:focus-visible .case-next-title .roll-char > span {
+  transform: translateY(calc(-1 * var(--roll-h)));
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  margin: 0;
+  padding: 4rem var(--case-gutter);
+  border: 0;
+  overflow: auto;
+  background: rgba(20, 20, 26, 0.94);
+  cursor: zoom-out;
+}
+
+.lightbox::backdrop {
+  background: transparent;
+}
+
+.lightbox[open] {
+  animation: lightbox-in var(--dur-slow) var(--ease-out);
+}
+
+.lightbox-img {
+  display: block;
+  width: 100%;
+  max-width: 2200px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: none;
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* ---------- Arrival from the home page ----------
+   While the cover morphs into the first screen, the rest of the page
+   draws itself in, one piece after another. Only `translate` and
+   opacity animate (the carousel owns `transform`). */
+.vt-enter .case-title,
+.vt-enter .drum-lead,
+.vt-enter .drum-counter,
+.vt-enter .drum-item:first-child .drum-caption,
+.vt-enter .drum-item:not(:first-child),
+.vt-enter .case-foot {
+  animation: vt-draw-in 700ms var(--ease-out) both;
+}
+
+/* The name and the line under it come out of a soft blur, slowly. */
+.vt-enter .case-title,
+.vt-enter .drum-lead,
+.vt-enter .case-behance {
+  animation: vt-title-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vt-enter .case-title {
+  animation-delay: 300ms;
+}
+
+.vt-enter .drum-lead {
+  animation-delay: 500ms;
+}
+
+.vt-enter .case-behance {
+  animation-delay: 650ms;
+}
+
+@keyframes vt-title-in {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    translate: 0 0.75rem;
+  }
+}
+
+.vt-enter .drum-item:first-child .drum-caption,
+.vt-enter .drum-counter {
+  animation-delay: 750ms;
+}
+
+.vt-enter .drum-item:not(:first-child),
+.vt-enter .case-foot {
+  animation-delay: 850ms;
+}
+
+@keyframes vt-draw-in {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1200px) {
+  .case-page {
+    --case-gutter: 2rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .case-title {
+    font-size: 5rem;
+  }
+
+  .drum-lead {
+    font-size: 1.25rem;
+  }
+
+  .case-foot .case-next-title {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .drum-intro {
+    padding-top: 4rem;
+  }
+
+  .case-title {
+    font-size: 3.5rem;
+  }
+
+  .drum-lead {
+    font-size: 1.1rem;
+  }
+
+  .drum-item {
+    margin-bottom: 3rem;
+  }
+
+  .case-foot {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .case-next {
+    align-items: flex-start;
+  }
+
+  .case-foot .case-next-title {
+    /* Long names (Cultural Planet) must still fit the phone width. */
+    font-size: min(2.75rem, 8vw);
+  }
+
+  .lightbox {
+    padding: 4rem 0 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drum-counter-strip,
+  .lightbox[open] {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* A recording that already shows the whole phone with its dark-matched
+   surroundings: no extra rounding, which would clip the device frame. */
+.drum-phone--framed {
+  border-radius: 0;
+  /* Cut the video exactly to the device's outline, so the page (and the
+     background illustration) shows round the phone's corners. The mask
+     is inlined, so it also works when the page is opened as a local file. */
+  -webkit-mask: url("data:image/png;base64,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oAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEQaACBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgAgXYJAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgAQQa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") center / 100% 100% no-repeat;
+  mask: url("data:image/png;base64,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oAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEQaACBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAAQaQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBoAgQYQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBkCgAQQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgAQQaAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgAgXYJAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABEGgAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaAAEGkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaAIEGEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQZAoAEEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgARBoAIEGQKABBBoAgQYQaAAEGgCBBhBoAAQaQKABEGgABBpAoAEQaACBBkCgAQQa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") center / 100% 100% no-repeat;
+}
+
+/* Cultural Planet's solar system, seen from above, in the manner of a
+   printed chart: a solid sun, small planets, dotted orbit arcs and
+   labels set along the orbits (each planet's figures). The whole drawing doesn't spin; each orbit turns at its
+   own speed with the scroll (case.js), inner ones faster, so the planets
+   travel round the sun. */
+.case-bg-system {
+  opacity: 0.34;
+  transform: none;
+}
+
+/* Labels along the orbits, as on a printed solar-system chart. */
+.case-bg-system .sys-text {
+  font-family: "MabryPro-Medium", "MabryPro-Regular", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+/* The description after each name is quieter than the name, so it never
+   competes with the captions. */
+.case-bg-system .sys-rest {
+  opacity: 0.6;
+}
+
+
+/* Amygdala's double flower: its outer petals are a deep violet, so the
+   drawing needs a little more presence than a white line to read. */
+.case-bg-spin--flower {
+  opacity: 0.55;
+}
+
+/* Good Food: a plate seen from above, drawn in one loose line, with a
+   fork and knife that take the positions of table etiquette - the silent
+   language between guest and waiter - one for each flow as the visitor
+   scrolls (case.js). The current position is named under the plate. */
+.case-bg-cutlery {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(120vmin, 1100px);
+  height: min(120vmin, 1100px);
+  /* The thread running through the drawing leaves the screen on both
+     sides; the fixed layer behind it clips it at the window edge. */
+  overflow: visible;
+}
+
+.case-bg-cutlery .cut-line {
+  opacity: 0.34;
+}
+
+.case-bg-cutlery .cut-label {
+  font-family: "MabryPro-Medium", "MabryPro-Regular", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  opacity: 0;
+}
+
+.case-bg-cutlery .cut-label[data-i="0"] {
+  opacity: 0.55;
+}
+
+/* Behance links hidden for now - delete this rule to show them again */
+.case-behance {
+  display: none;
+}

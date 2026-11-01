@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amygdala — mood tracker app · Yuliia Didenko</title>
+    <meta
+      name="description"
+      content="Amygdala: a mood tracker app that turns daily emotions into actionable insights for self-understanding and intentional emotional care. UX/UI design by Yuliia Didenko."
+    />
+    <meta name="theme-color" content="#1f1f1f" />
+    <link rel="icon" href="./media/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./media/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./media/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Amygdala — mood tracker app" />
+    <meta property="og:description" content="Turning daily emotions into actionable insights." />
+    <meta property="og:image" content="./media/amygdala-cover.webp" />
+    <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="case.css" />
+    <script>
+      // Arriving through the page curtain (transition.js): start covered.
+      try {
+        if (sessionStorage.getItem("curtain") === "1") {
+          sessionStorage.removeItem("curtain");
+          document.documentElement.classList.add("curtain-in", "vt-enter");
+          // Keep the curtain closed until the page is really ready - its
+          // fonts loaded and every script run - so it never opens on a
+          // half-built page (fallback serif, covers without their curtain).
+          var root = document.documentElement;
+          root.classList.add("curtain-hold");
+          var done = false;
+          var release = function () {
+            if (done) return;
+            done = true;
+            root.classList.remove("curtain-hold");
+            document.dispatchEvent(new Event("curtain:release"));
+          };
+          var dom = new Promise(function (r) {
+            document.addEventListener("DOMContentLoaded", r);
+          });
+          var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+          Promise.all([dom, fonts]).then(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(release); });
+          });
+          setTimeout(release, 2500); // never keep anyone waiting longer
+        }
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body class="case-page">
+    <div class="cursor-dot">
+      <!-- "View" eye, shown while the cursor is over a project cover. The
+           iris group follows the pointer's direction (cursor.js). -->
+      <svg class="cursor-eye" viewBox="0 0 26 26" width="32" height="32" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cursor-eye-shape">
+            <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" />
+          </clipPath>
+        </defs>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="#fff8ec" />
+        <g clip-path="url(#cursor-eye-shape)">
+          <g class="cursor-eye-iris">
+            <circle cx="13" cy="13" r="4.6" fill="#31a0cd" />
+            <circle cx="13" cy="13" r="2.1" fill="#1f1f1f" />
+            <circle cx="14.4" cy="11.6" r="0.9" fill="#fff8ec" />
+          </g>
+        </g>
+        <path d="M2.5 13C6.6 6.6 19.4 6.6 23.5 13C19.4 19.4 6.6 19.4 2.5 13Z" fill="none" stroke="#1f1f1f" stroke-width="1" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="cursor-outline"></div>
+
+    <div class="case-bg" aria-hidden="true">
+      <img class="case-bg-spin case-bg-spin--flower" src="./media/amygdala-flower.svg?v=4" alt="" width="272" height="272" />
+    </div>
+
+    <main class="case-main">
+      <header class="drum-intro">
+        <h1 class="case-title case-title--tails">Amygdala</h1>
+        <p class="drum-lead">
+          This is a mobile app that turns daily emotions into actionable
+          insights that support deeper self-understanding and intentional
+          emotional care.
+        </p>
+        <p class="case-team">Team project · Yuliia Didenko &amp; Aida Dauletova</p>
+        <a class="case-behance" href="https://www.behance.net/gallery/232259027/Amygdala-Mood-Tracker-App-UXUI-Design" target="_blank" rel="noopener noreferrer"><span class="sr-only">View on Behance</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="V">V</span></span><span class="roll-char"><span style="--i: 1" data-c="i">i</span></span><span class="roll-char"><span style="--i: 2" data-c="e">e</span></span><span class="roll-char"><span style="--i: 3" data-c="w">w</span></span><span class="roll-char"><span style="--i: 4" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 5" data-c="o">o</span></span><span class="roll-char"><span style="--i: 6" data-c="n">n</span></span><span class="roll-char"><span style="--i: 7" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 8" data-c="B">B</span></span><span class="roll-char"><span style="--i: 9" data-c="e">e</span></span><span class="roll-char"><span style="--i: 10" data-c="h">h</span></span><span class="roll-char"><span style="--i: 11" data-c="a">a</span></span><span class="roll-char"><span style="--i: 12" data-c="n">n</span></span><span class="roll-char"><span style="--i: 13" data-c="c">c</span></span><span class="roll-char"><span style="--i: 14" data-c="e">e</span></span></span><span class="case-arrow" aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="drum" data-spread="1.15" aria-label="Amygdala screens" style="--count: 5">
+        <div class="drum-stage">
+          <div class="drum-counter" aria-hidden="true">
+            <span class="drum-counter-window"><span class="drum-counter-strip"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span></span></span>
+            <span class="drum-counter-total">/05</span>
+          </div>
+          <div class="drum-wheel">
+        <figure class="drum-item drum-item--split" data-index="onboarding">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone" id="first-screen" muted loop playsinline preload="none"
+              poster="./media/amygdala-screens/onboarding-poster.webp" width="478" height="996"
+              aria-label="Onboarding: intro screens, sign-up, the Mirror Within temperament test and its Flame result">
+              <source src="./media/amygdala-screens/onboarding.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Onboarding — meeting yourself through metaphor</span>
+            <ul class="drum-caption-list">
+              <li>We kept the intro to three calm screens, so users understand the value before signing up</li>
+              <li>Sign-up errors appear inline and in a gentle tone, so a mistake doesn’t feel like failure</li>
+              <li>We added a gamified temperament test to make the first self-reflection feel like play, not a form</li>
+              <li>Four elemental archetypes — Flame, Moon, Wind and Earth — personalise insights from day one</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="2">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone" muted loop playsinline preload="none"
+              poster="./media/amygdala-screens/mood-log-poster.webp" width="478" height="996"
+              aria-label="Logging a mood: the flower turns, changes colour and shape with the slider">
+              <source src="./media/amygdala-screens/mood-log.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Mood Log — tracking how you feel, day by day</span>
+            <ul class="drum-caption-list">
+              <li>We turned logging a mood into one gesture: a slider that changes the flower’s colour and shape</li>
+              <li>Users pick from a wide range of emotions or create their own, because feelings rarely fit a list</li>
+              <li>Trends by day, week and month turn single entries into insights</li>
+              <li>Apple Health integration puts mood next to sleep and activity</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="0">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone" muted loop playsinline preload="none" data-sound-start="7.6"
+              poster="./media/amygdala-screens/meditation-poster.webp" width="478" height="996"
+              aria-label="Meditations: browsing categories and playing a guided session">
+              <source src="./media/amygdala-screens/meditation.mp4?v=3" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Meditations — short sessions for every mood</span>
+            <button class="drum-sound" type="button" aria-pressed="false">
+              <span class="drum-sound-icon" aria-hidden="true"></span>
+              <span class="drum-sound-label">Play with sound</span>
+            </button>
+            <ul class="drum-caption-list">
+              <li>We grouped meditations by intention — morning boost, self-love, healing, sleep — rather than by length</li>
+              <li>Each track shows its mood and duration upfront, so users can choose in seconds</li>
+              <li>The player stays minimal, with nothing to distract from relaxing</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="4">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone drum-phone--framed" muted loop playsinline preload="none" data-sound-start="10.5" data-sound-end="24.6"
+              poster="./media/amygdala-screens/affirmations-poster.webp?v=2" width="720" height="1470"
+              aria-label="Affirmations: swiping through daily affirmations, the Echo journal, then talking to Echo, the AI companion">
+              <source src="./media/amygdala-screens/affirmations.mp4?v=4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Affirmations &amp; Talk to Echo — support in your own words</span>
+            <button class="drum-sound" type="button" aria-pressed="false">
+              <span class="drum-sound-icon" aria-hidden="true"></span>
+              <span class="drum-sound-label">Play with sound</span>
+            </button>
+            <ul class="drum-caption-list">
+              <li>We curated affirmations for self-love, confidence and calm, so users can start the day with one</li>
+              <li>A short guide shows how to practise affirmations, so the habit feels natural from the first try</li>
+              <li>Users can reflect with Echo AI and receive kind, thoughtful responses</li>
+              <li>We built Echo for emotional safety and support — it listens and reflects without judgment</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="drum-item drum-item--split" data-index="1">
+          <div class="drum-media">
+            <video class="drum-screen drum-phone" muted loop playsinline preload="none"
+              poster="./media/amygdala-screens/breathing-poster.webp" width="478" height="996"
+              aria-label="Breathing exercise: the circle grows and shrinks through inhale, hold and exhale">
+              <source src="./media/amygdala-screens/breathing.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <figcaption class="drum-caption">
+            <span class="drum-caption-title">Just breathe — guided sessions to reset the nervous system</span>
+            <ul class="drum-caption-list">
+              <li>We offered four breathing patterns for different needs: sleep, stress relief or focus</li>
+              <li>The circle grows and shrinks with each phase, so users can breathe without reading instructions</li>
+              <li>Inhale, Hold and Exhale labels change in sync with the animation, supporting users who prefer text cues</li>
+            </ul>
+          </figcaption>
+        </figure>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="case-foot" aria-label="Project navigation">
+      <a href="./index.html#projects" class="case-back"><span class="case-arrow" aria-hidden="true">←</span><span class="sr-only">All projects</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="A">A</span></span><span class="roll-char"><span style="--i: 1" data-c="l">l</span></span><span class="roll-char"><span style="--i: 2" data-c="l">l</span></span><span class="roll-char"><span style="--i: 3" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 4" data-c="p">p</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="o">o</span></span><span class="roll-char"><span style="--i: 7" data-c="j">j</span></span><span class="roll-char"><span style="--i: 8" data-c="e">e</span></span><span class="roll-char"><span style="--i: 9" data-c="c">c</span></span><span class="roll-char"><span style="--i: 10" data-c="t">t</span></span><span class="roll-char"><span style="--i: 11" data-c="s">s</span></span></span></a>
+      <a href="./cultural-planet.html" class="case-next">
+        <span class="case-next-label">Next project</span>
+        <span class="case-next-title"><span class="sr-only">Cultural Planet</span><span class="roll" aria-hidden="true"><span class="roll-char"><span style="--i: 0" data-c="C">C</span></span><span class="roll-char"><span style="--i: 1" data-c="u">u</span></span><span class="roll-char"><span style="--i: 2" data-c="l">l</span></span><span class="roll-char"><span style="--i: 3" data-c="t">t</span></span><span class="roll-char"><span style="--i: 4" data-c="u">u</span></span><span class="roll-char"><span style="--i: 5" data-c="r">r</span></span><span class="roll-char"><span style="--i: 6" data-c="a">a</span></span><span class="roll-char"><span style="--i: 7" data-c="l">l</span></span><span class="roll-char"><span style="--i: 8" data-c="&nbsp;">&nbsp;</span></span><span class="roll-char"><span style="--i: 9" data-c="P">P</span></span><span class="roll-char"><span style="--i: 10" data-c="l">l</span></span><span class="roll-char"><span style="--i: 11" data-c="a">a</span></span><span class="roll-char"><span style="--i: 12" data-c="n">n</span></span><span class="roll-char"><span style="--i: 13" data-c="e">e</span></span><span class="roll-char"><span style="--i: 14" data-c="t">t</span></span></span><span class="case-arrow" aria-hidden="true">→</span></span>
+      </a>
+    </nav>
+
+    <dialog class="lightbox" aria-label="Full-size screen">
+      <button class="lightbox-close" type="button" aria-label="Close">×</button>
+      <img class="lightbox-img" alt="" />
+    </dialog>
+
+    <script src="./cursor.js"></script>
+    <script src="./case.js"></script>
+    <script src="./transition.js"></script>
+  </body>
+</html>

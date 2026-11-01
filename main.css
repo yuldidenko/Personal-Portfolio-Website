@@ -554,13 +554,9 @@ a:focus-visible .roll-char > span,
   position: relative;
 }
 
-.navigation ul li a {
-  transition: color var(--dur-fast) ease;
-}
-
+/* Hover = the letter roll only; the color stays put (no yellow). */
 .navigation ul li a:hover {
   text-decoration: none;
-  color: #f0d42d;
 }
 
 .navigation ul li a:focus-visible {
@@ -796,6 +792,8 @@ video {
 }
 
 .project-card {
+  /* Breathing room above a card opened by link (#amygdala). */
+  scroll-margin-top: 2rem;
   grid-column: 1 / 13;
   display: flex;
   gap: 1.5rem;
@@ -814,6 +812,31 @@ video {
 
 .text {
   flex: 1 1 50%;
+}
+
+/* A cover shown as a dark stage behind a bead curtain (curtain.js). */
+.image--stage {
+  background-color: #1f1f1f;
+}
+
+/* Show the whole stage picture; the leftover space is the same dark. */
+.image.image--contain img {
+  object-fit: contain;
+}
+
+
+.image .bead-curtain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .image img {
@@ -1361,13 +1384,6 @@ button:focus-visible {
   overflow: hidden;
 }
 
-.top-message a {
-  transition: color var(--dur-fast) ease;
-}
-
-.top-message a:hover {
-  color: #f0d42d;
-}
 
 
 .form-container {
@@ -1948,5 +1964,94 @@ button:focus-visible {
   .floaty,
   .hair-sway {
     animation: none !important;
+  }
+}
+
+/* ---------- Page transitions: the curtain ----------
+   Moving between the home page and a project (and from one project to
+   the next), a dark curtain with rounded edges sweeps in from the right
+   and covers the page; the next page opens with the same curtain carrying
+   on out to the left. The curtain is wider than the screen with fully
+   rounded ends, so its leading edge reads as a soft curve. Driven by
+   transition.js; the arriving page sets html.curtain-in in <head> so it
+   is already covered on its first paint. */
+.page-curtain,
+html.curtain-in::after {
+  --curtain-r: 70vh;
+  content: "";
+  position: fixed;
+  top: -25vh;
+  left: 0;
+  z-index: 2147483000;
+  width: calc(100vw + 2 * var(--curtain-r));
+  height: 150vh;
+  border-radius: var(--curtain-r) / 50%;
+  background-color: #1f1f1f;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Going back to the home page the curtain takes the home page's own
+   cream and runs the other way - in from the left, out to the right - so
+   it reads as stepping back. */
+.page-curtain--light,
+html.curtain-in.curtain-light::after {
+  background-color: #fffaed;
+}
+
+.page-curtain.page-curtain--light {
+  transform: translateX(calc(-100vw - 2 * var(--curtain-r)));
+}
+
+html.curtain-in.curtain-light::after {
+  animation-name: curtain-uncover-back;
+}
+
+@keyframes curtain-uncover-back {
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+/* In: from just off the right edge to fully covering. */
+.page-curtain {
+  transform: translateX(100vw);
+  animation: curtain-cover 700ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes curtain-cover {
+  to {
+    transform: translateX(calc(-1 * var(--curtain-r)));
+  }
+}
+
+/* Out (on the new page): carries on off the left edge. */
+html.curtain-in::after {
+  transform: translateX(calc(-1 * var(--curtain-r)));
+  animation: curtain-uncover 800ms cubic-bezier(0.76, 0, 0.24, 1) 80ms forwards;
+}
+
+/* Arriving at #projects etc.: jump straight there under the curtain
+   instead of visibly gliding down from the top of the page. */
+html.curtain-in {
+  scroll-behavior: auto;
+}
+
+/* Held shut while the arriving page is still loading (its <head> adds
+   curtain-hold and drops it once fonts and scripts are in). */
+html.curtain-in.curtain-hold::after {
+  animation-play-state: paused;
+}
+
+@keyframes curtain-uncover {
+  to {
+    transform: translateX(calc(-100vw - 2 * var(--curtain-r)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-curtain,
+  html.curtain-in::after {
+    display: none;
   }
 }

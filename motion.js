@@ -14,8 +14,14 @@
     document.querySelectorAll("#approach [class^='wrapper-']"),
   ];
   const items = [];
+  // A card opened by link (index.html#amygdala, from a project page's
+  // "Next project") is shown in place at once: a card still offset by
+  // its reveal transform would make the browser scroll to the wrong spot.
+  const hashId = decodeURIComponent(location.hash.slice(1));
+  const hashTarget = hashId ? document.getElementById(hashId) : null;
   groups.forEach((group) => {
     group.forEach((el, i) => {
+      if (el === hashTarget) return;
       el.setAttribute("data-reveal", "");
       // Approach columns sit side by side, so they stagger; project cards
       // are stacked and each enters on its own as it's reached.

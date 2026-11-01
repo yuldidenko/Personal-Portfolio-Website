@@ -27,6 +27,47 @@
     <link rel="preload" href="./fonts/tan-pearl.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./fonts/MabryPro-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="main.css" />
+    <script>
+      // Opened at a section (#projects, #amygdala...): land there in one
+      // jump - no visible glide down from the top while the page loads.
+      if (location.hash) {
+        document.documentElement.style.scrollBehavior = "auto";
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            document.documentElement.style.scrollBehavior = "";
+          }, 300);
+        });
+      }
+    </script>
+    <script>
+      // Arriving through the page curtain (transition.js): start covered.
+      try {
+        if (sessionStorage.getItem("curtain") === "1") {
+          sessionStorage.removeItem("curtain");
+          document.documentElement.classList.add("curtain-in", "curtain-light");
+          // Keep the curtain closed until the page is really ready - its
+          // fonts loaded and every script run - so it never opens on a
+          // half-built page (fallback serif, covers without their curtain).
+          var root = document.documentElement;
+          root.classList.add("curtain-hold");
+          var done = false;
+          var release = function () {
+            if (done) return;
+            done = true;
+            root.classList.remove("curtain-hold");
+            document.dispatchEvent(new Event("curtain:release"));
+          };
+          var dom = new Promise(function (r) {
+            document.addEventListener("DOMContentLoaded", r);
+          });
+          var fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+          Promise.all([dom, fonts]).then(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(release); });
+          });
+          setTimeout(release, 2500); // never keep anyone waiting longer
+        }
+      } catch (e) {}
+    </script>
   </head>
 
   <body>
@@ -2426,22 +2467,18 @@
             <p>Financial analytics</p>
           </div>
         </div>
-        <div class="image">
+        <div class="image image--stage image--contain" data-curtain data-curtain-palette="morning">
           <a
-            href="https://www.behance.net/gallery/256661201/Factora-invoice-factoring-platform"
-            target="_blank"
-            ><img src="./media/factora-cover.webp" alt="Factora dashboard — invoices, revenue structure and top partners" width="1600" height="1246"
+            href="./factora.html"
+            ><img src="./media/factora-stage.webp" alt="Factora dashboard — invoices, revenue structure and top partners" width="1600" height="1200"
           /></a>
         </div>
       </div>
 
-      <div class="project-card">
-        <div class="image">
-          <a
-            href="https://www.behance.net/gallery/232259027/Amygdala-Mood-Tracker-App-UXUI-Design"
-            target="_blank"
-          >
-            <img src="./media/amygdala-cover.webp" alt="Amygdala project cover" width="1600" height="951"
+      <div class="project-card" id="amygdala">
+        <div class="image image--stage" data-curtain data-curtain-palette="morning">
+          <a href="./amygdala.html">
+            <img src="./media/amygdala-stage.webp" alt="Amygdala app screens: onboarding, mood log and meditations" width="1600" height="1200"
           /></a>
         </div>
 
@@ -2487,7 +2524,7 @@
         </div>
       </div>
 
-      <div class="project-card">
+      <div class="project-card" id="cultural-planet">
         <div class="text">
           <div class="numbers">
             <p>03</p>
@@ -2526,22 +2563,19 @@
             <p>Built-in online wallet</p>
           </div>
         </div>
-        <div class="image">
+        <div class="image image--stage" data-curtain data-curtain-palette="morning">
           <a
-            href="https://www.behance.net/gallery/193502999/Open-the-Door-to-the-World-of-Events"
-            target="_blank"
-            ><img src="./media/cultural-planet-cover.webp" alt="Cultural Planet project cover" width="1600" height="900"
+            href="./cultural-planet.html"
+            ><img src="./media/cultural-planet-stage.webp" alt="Cultural Planet app screens: find events, home with last-minute discounts and rewards" width="1600" height="1200"
           /></a>
         </div>
       </div>
 
-      <div class="project-card">
-        <div class="image">
+      <div class="project-card" id="good-food">
+        <div class="image image--stage" data-curtain data-curtain-palette="morning">
           <a
-            href="https://www.behance.net/gallery/200685645/GOOD-FOOD-table-reservation-and-food-delivery-app"
-            target="_blank"
-          >
-            <img src="./media/good-food-cover.webp" alt="Good Food project cover" width="1600" height="1331"
+            href="./good-food.html"
+            ><img src="./media/good-food-stage.webp?v=5" alt="Good Food app welcome screen on a phone, surrounded by three scattered polaroids with the app’s illustrations" width="1600" height="1200"
           /></a>
         </div>
 
@@ -2766,7 +2800,9 @@
     </div>
     <p class="form-status"></p>
 
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- The e-mail library comes from a CDN: async, so a slow network never
+         holds up the rest of the page (canvas-submit.js waits for it). -->
+    <script async src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="canvas.js"></script>
     <script src="canvas-submit.js"></script>
     <script src="navigation.js"></script>
@@ -2775,7 +2811,10 @@
     <script src="hero-scroll.js"></script>
     <script src="hair-wind.js"></script>
     <script src="project-cover-shatter.js"></script>
+    <script src="cover-height.js"></script>
+    <script src="curtain.js"></script>
     <script src="video-autoplay.js"></script>
     <script src="motion.js"></script>
+    <script src="transition.js"></script>
   </footer>
 </html>

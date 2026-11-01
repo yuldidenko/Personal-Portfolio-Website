@@ -49,7 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return [x, y];
   }
 
-  document.querySelectorAll(".project-card .image").forEach((wrapper) => {
+  // Covers with a bead curtain (curtain.js) keep their plain image.
+  document.querySelectorAll(".project-card .image:not([data-curtain])").forEach((wrapper) => {
     const imgEl = wrapper.querySelector("img");
     if (!imgEl) return;
 
