@@ -428,8 +428,25 @@
       let f;
       if (on) f = carouselAt(window.scrollY) * (last / Math.max(1, items.length - 1));
       else {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        f = max > 0 ? (window.scrollY / max) * last : 0;
+        // Plain list (narrow screens): follow the flow nearest the middle
+        // of the window, so the position always matches the caption read.
+        const mid = window.innerHeight / 2;
+        const cs = items.map((it) => {
+          const r = it.getBoundingClientRect();
+          return r.top + r.height / 2;
+        });
+        f = 0;
+        if (mid >= cs[cs.length - 1]) f = cs.length - 1;
+        else
+          for (let k = 0; k < cs.length - 1; k++) {
+            if (mid >= cs[k] && mid < cs[k + 1]) {
+              const t = (mid - cs[k]) / (cs[k + 1] - cs[k]);
+              const h = Math.min(1, Math.max(0, (t - 0.3) / 0.4));
+              f = k + h * h * (3 - 2 * h);
+              break;
+            }
+          }
+        f *= last / Math.max(1, items.length - 1);
       }
       f = Math.min(last, Math.max(0, f));
       if (reduceMotion.matches) f = Math.round(f);
