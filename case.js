@@ -13,6 +13,16 @@
   const items = [...drum.querySelectorAll(".drum-item")];
   const strip = drum.querySelector(".drum-counter-strip");
   const videos = drum.querySelectorAll("video");
+  // iPhone Safari keeps only a few videos decoded at a time: while the page
+  // scrolls it lets go of the picture of paused ones, which then show
+  // nothing - the whole phone blinks out and back. The poster painted as
+  // the video's own background stays visible underneath in that moment.
+  videos.forEach((v) => {
+    const poster = v.getAttribute("poster");
+    if (poster) {
+      v.style.background = `url("${poster}") center / 100% 100% no-repeat`;
+    }
+  });
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const wide = window.matchMedia("(min-width: 768px)");
