@@ -710,7 +710,29 @@ h3 {
   flex: 1;
 }
 
-/* "Download CV" row in Work experience - the full history lives in the
+/* CV block - its own section after Work experience, in the education
+   beige so the column keeps alternating colours. */
+.cv {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  padding-top: 0;
+  background-color: #edebdb;
+}
+
+.cv h3 {
+  background-color: #edebdb;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 0;
+}
+
+.cv p {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+/* "Download CV" link - the full history lives in the
    PDF. Same roll-on-hover language as every other text link; the
    underline and the arrow say "this is a file" without a button. */
 .cv-link {
@@ -1955,6 +1977,10 @@ button:focus-visible {
   }
 
   .work .autolayout .date p {
+    margin: 0 0 8px 0;
+  }
+
+  .cv .autolayout .date p {
     margin: 0 0 8px 0;
   }
 
