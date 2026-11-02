@@ -2270,6 +2270,21 @@ html.curtain-in.curtain-hold::after {
   transition-delay: var(--d, 0ms);
 }
 
+/* ---------- My way (tablet + phone): Spotify placement ----------
+   With two columns (wide tablets) the player sits under the artwork in
+   the media column. Once the columns stack, it moves to the top of the
+   media column so it follows the CV: text, then music, then video and
+   painting. */
+@media (max-width: 1023px) {
+  .my-way-tablet .column-2-tablet .iframe {
+    order: -1;
+    /* Same width as the video and painting below it, centred. */
+    align-self: center;
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
 /* ---------- My way (tablet + phone): tile frieze ----------
    On narrower layouts the CV is the last block, so instead of the two
    tall desktop groups the section ends with a low frieze of the same
