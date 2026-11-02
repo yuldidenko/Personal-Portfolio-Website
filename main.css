@@ -608,9 +608,12 @@ h3 {
   background-color: #edebdb;
 }
 
-.work h3,
-.hobbies h3 {
+.work h3 {
   background-color: #bcd4e1;
+}
+
+.hobbies h3 {
+  background-color: #ebbf6a;
 }
 
 .education,
@@ -629,9 +632,12 @@ h3 {
   background-color: #edebdb;
 }
 
-.work,
-.hobbies {
+.work {
   background-color: #bcd4e1;
+}
+
+.hobbies {
+  background-color: #ebbf6a;
 }
 
 .column-1,
@@ -710,18 +716,18 @@ h3 {
   flex: 1;
 }
 
-/* CV block - its own section after Work experience, in the education
-   beige so the column keeps alternating colours. */
+/* CV block - its own section after Work experience, in the same blue
+   so the two read as one pair. */
 .cv {
   display: flex;
   flex-direction: column;
   padding: 16px;
   padding-top: 0;
-  background-color: #edebdb;
+  background-color: #bcd4e1;
 }
 
 .cv h3 {
-  background-color: #edebdb;
+  background-color: #bcd4e1;
   padding-top: 16px;
   padding-bottom: 16px;
   margin-bottom: 0;
