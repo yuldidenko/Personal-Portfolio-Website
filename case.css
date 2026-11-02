@@ -322,9 +322,17 @@
     flex-direction: column;
   }
 
+  /* The phone's width must not depend on the video itself: Safari sizes
+     an auto-width box from the video's natural size, which it forgets
+     while it re-loads a paused video - the box shrank to Safari's default
+     300px and grew back as you scrolled. A fixed width keeps it steady. */
+  .drum-item--split .drum-media {
+    width: min(100%, 22rem);
+  }
+
   .drum-item--split .drum-phone {
     height: auto;
-    width: min(100%, 22rem);
+    width: 100%;
   }
 
   .drum-item--split .drum-caption-title {
