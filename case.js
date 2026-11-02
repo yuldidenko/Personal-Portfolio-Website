@@ -24,6 +24,15 @@
   };
   const snap = document.createElement("canvas");
   videos.forEach((v) => {
+    // Hold the box at the recording's own proportions. Otherwise, when
+    // Safari lets go of a paused video, the element falls back to a
+    // default size for a moment and the phone shrinks and grows again.
+    const w = parseFloat(v.getAttribute("width"));
+    const h = parseFloat(v.getAttribute("height"));
+    if (w && h) {
+      v.style.aspectRatio = `${w} / ${h}`;
+      v.style.objectFit = "cover";
+    }
     const poster = v.getAttribute("poster");
     if (poster) paintBackdrop(v, poster);
     v.addEventListener("pause", () => {
