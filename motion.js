@@ -1,6 +1,7 @@
 // Site-wide motion helpers.
 //  1. Scroll reveal: project cards and Approach columns ease up into
-//     place as they enter the viewport, one after another.
+//     place as they enter the viewport, one after another; the My way
+//     tile mosaic is laid tile by tile from the bottom row up.
 //  2. Offscreen pause: looping CSS decorations (floating shapes, hair
 //     wind) stop animating while scrolled out of view.
 // Both are skipped for visitors who prefer reduced motion.
@@ -12,6 +13,7 @@
   const groups = [
     document.querySelectorAll("#projects .project-card"),
     document.querySelectorAll("#approach [class^='wrapper-']"),
+    document.querySelectorAll("#my-way .mosaic"),
   ];
   const items = [];
   // A card opened by link (index.html#amygdala, from a project page's

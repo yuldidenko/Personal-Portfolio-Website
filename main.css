@@ -704,6 +704,13 @@ h3 {
   display: block;
 }
 
+/* Inside the gilded frame the player sits square, like the video and
+   the artwork (overrides Spotify's inline 12px radius). */
+.my-way .iframe iframe,
+.my-way-tablet .iframe iframe {
+  border-radius: 0 !important;
+}
+
 .gif img {
   width: 100%;
   /* width/height attributes in the markup reserve the space before the
@@ -800,7 +807,9 @@ video {
 .my-way video,
 .my-way-tablet video,
 .my-way .gif img,
-.my-way-tablet .gif img {
+.my-way-tablet .gif img,
+.my-way .iframe,
+.my-way-tablet .iframe {
   display: block;
   box-sizing: border-box;
   border-style: solid;
@@ -2144,4 +2153,138 @@ html.curtain-in.curtain-hold::after {
   html.curtain-in::after {
     display: none;
   }
+}
+
+/* ---------- My way: text carved into the wall ----------
+   The info blocks lose their coloured cards and sit directly on the
+   cream wall, as if the letters were cut into the plaster: a warm,
+   darker tone of the wall for the letters, a thin shadow on their upper
+   edge and a light catch on the lower edge (light falls from above, so
+   the top inner wall of a cut is in shade and the bottom one is lit).
+   Dividers are carved grooves made the same way. Contrast of the text
+   on the wall stays around 10:1. */
+.my-way,
+.my-way-tablet {
+  --carve-ink: #3d3a36;
+  --carve-shade: rgba(40, 34, 28, 0.32);
+  --carve-light: rgba(255, 255, 255, 0.9);
+  /* Same flat cream as the Approach section, no texture. */
+  background-color: #fffaed;
+}
+
+:is(.my-way, .my-way-tablet) :is(.education, .cont-education, .work, .cv, .hobbies, .languages) {
+  background: none;
+  padding: 0;
+}
+
+:is(.my-way, .my-way-tablet) :is(.education, .cont-education, .work, .cv, .hobbies, .languages) h3 {
+  background: none;
+  padding: 0 0 12px;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  color: var(--carve-ink);
+  -webkit-text-stroke: 0.6px var(--carve-ink);
+  text-shadow: 0 -1px 0 var(--carve-shade), 0 1px 0 var(--carve-light);
+}
+
+:is(.my-way, .my-way-tablet) :is(.education, .cont-education, .work, .cv, .hobbies, .languages) :is(p, a) {
+  color: var(--carve-ink);
+  text-shadow: 0 -1px 0 var(--carve-shade), 0 1px 0 var(--carve-light);
+}
+
+:is(.my-way, .my-way-tablet) :is(.cont-education, .education, .work, .cv) .autolayout,
+:is(.my-way, .my-way-tablet) :is(.hobbies, .languages) p {
+  border-bottom: 1px solid var(--carve-shade);
+  box-shadow: 0 1px 0 var(--carve-light);
+}
+
+:is(.my-way, .my-way-tablet) :is(.cont-education, .education, .work, .cv) .autolayout:last-child,
+:is(.my-way, .my-way-tablet) :is(.hobbies, .languages) p:last-child {
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+/* The CV link keeps its underline as a carved groove too. */
+:is(.my-way, .my-way-tablet) .cv-link .roll {
+  border-bottom-color: var(--carve-ink);
+}
+
+/* Without cards, blocks need more air between them to read as
+   separate inscriptions. */
+:is(.my-way, .my-way-tablet) :is(.column-1, .column-2, .column-3, .column-1-tablet, .column-2-tablet) {
+  gap: 2.5rem;
+}
+
+/* ---------- My way: tile mosaic ----------
+   Line-drawn tiles in the wall's cream with a 1px ink outline (the same
+   weight as the My way dividers, in the hero's #1f1f1f), a few shapes
+   tinted in pastel. Two groups of 6 rows x 4 columns placed exactly as
+   in Yuliia's sketch: one under Hobbies + Languages, one under the CV.
+   The side columns stretch to the height of the video column and each
+   group sits at its foot, so the bottoms line up with the artwork frame.
+   mosaic.js sizes the tiles (a quarter of the column, smaller only if
+   six rows wouldn't fit); without it they still fill the column. */
+.my-way .column-1,
+.my-way .column-3 {
+  align-self: stretch;
+}
+
+.my-way .mosaic {
+  --tile-line: #1f1f1f;
+  position: relative;
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(4, var(--tile, 1fr));
+  grid-template-rows: repeat(6, var(--tile, auto));
+  width: max-content;
+  min-width: 0;
+}
+
+.my-way .mosaic-left {
+  align-self: flex-start;
+}
+
+.my-way .mosaic-right {
+  align-self: flex-end;
+}
+
+/* Every tile draws its square edge as an outline centred on the edge,
+   so where two tiles meet their lines coincide into one 1px line. */
+.my-way .mosaic img {
+  display: block;
+  width: var(--tile, 100%);
+  height: auto;
+  aspect-ratio: 1;
+  outline: 1px solid var(--tile-line);
+  outline-offset: -0.5px;
+}
+
+/* The stray tile in front of the right group, one column to the left,
+   half hidden under the Spotify and artwork frames. */
+.my-way .mosaic-stray {
+  position: absolute;
+  z-index: 0;
+  top: calc(100% / 6);
+  right: 100%;
+  width: 25%;
+}
+
+.my-way .column-2 .iframe,
+.my-way .column-2 .gif {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tiles are laid row by row from the bottom up as the mosaic scrolls
+   into view: each settles in with a short fade and a slight scale. */
+.reveal-ready .my-way .mosaic[data-reveal] img {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.reveal-ready .my-way .mosaic[data-reveal].is-revealed img {
+  opacity: 1;
+  transform: none;
+  transition: opacity 400ms var(--ease-out), transform 500ms var(--ease-out);
+  transition-delay: var(--d, 0ms);
 }
