@@ -2155,19 +2155,13 @@ html.curtain-in.curtain-hold::after {
   }
 }
 
-/* ---------- My way: text carved into the wall ----------
+/* ---------- My way: text straight on the wall ----------
    The info blocks lose their coloured cards and sit directly on the
-   cream wall, as if the letters were cut into the plaster: a warm,
-   darker tone of the wall for the letters, a thin shadow on their upper
-   edge and a light catch on the lower edge (light falls from above, so
-   the top inner wall of a cut is in shade and the bottom one is lit).
-   Dividers are carved grooves made the same way. Contrast of the text
-   on the wall stays around 10:1. */
+   cream wall in the site's usual text colour; rows are split by thin
+   1px dividers. */
 .my-way,
 .my-way-tablet {
-  --carve-ink: #3d3a36;
-  --carve-shade: rgba(40, 34, 28, 0.32);
-  --carve-light: rgba(255, 255, 255, 0.9);
+  --divider: rgba(31, 31, 31, 0.25);
   /* Same flat cream as the Approach section, no texture. */
   background-color: #fffaed;
 }
@@ -2182,35 +2176,20 @@ html.curtain-in.curtain-hold::after {
   padding: 0 0 12px;
   margin-bottom: 0;
   font-size: 1.5rem;
-  color: var(--carve-ink);
-  -webkit-text-stroke: 0.6px var(--carve-ink);
-  text-shadow: 0 -1px 0 var(--carve-shade), 0 1px 0 var(--carve-light);
-}
-
-:is(.my-way, .my-way-tablet) :is(.education, .cont-education, .work, .cv, .hobbies, .languages) :is(p, a) {
-  color: var(--carve-ink);
-  text-shadow: 0 -1px 0 var(--carve-shade), 0 1px 0 var(--carve-light);
 }
 
 :is(.my-way, .my-way-tablet) :is(.cont-education, .education, .work, .cv) .autolayout,
 :is(.my-way, .my-way-tablet) :is(.hobbies, .languages) p {
-  border-bottom: 1px solid var(--carve-shade);
-  box-shadow: 0 1px 0 var(--carve-light);
+  border-bottom: 1px solid var(--divider);
 }
 
 :is(.my-way, .my-way-tablet) :is(.cont-education, .education, .work, .cv) .autolayout:last-child,
 :is(.my-way, .my-way-tablet) :is(.hobbies, .languages) p:last-child {
   border-bottom: 0;
-  box-shadow: none;
-}
-
-/* The CV link keeps its underline as a carved groove too. */
-:is(.my-way, .my-way-tablet) .cv-link .roll {
-  border-bottom-color: var(--carve-ink);
 }
 
 /* Without cards, blocks need more air between them to read as
-   separate inscriptions. */
+   separate blocks. */
 :is(.my-way, .my-way-tablet) :is(.column-1, .column-2, .column-3, .column-1-tablet, .column-2-tablet) {
   gap: 2.5rem;
 }
