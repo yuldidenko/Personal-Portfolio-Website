@@ -17,11 +17,27 @@
   // scrolls it lets go of the picture of paused ones, which then show
   // nothing - the whole phone blinks out and back. The poster painted as
   // the video's own background stays visible underneath in that moment.
+  // When a video pauses, the frame it stopped on is painted there instead,
+  // so the stand-in is exactly what the visitor last saw.
+  const paintBackdrop = (v, url) => {
+    v.style.background = `url("${url}") center / 100% 100% no-repeat`;
+  };
+  const snap = document.createElement("canvas");
   videos.forEach((v) => {
     const poster = v.getAttribute("poster");
-    if (poster) {
-      v.style.background = `url("${poster}") center / 100% 100% no-repeat`;
-    }
+    if (poster) paintBackdrop(v, poster);
+    v.addEventListener("pause", () => {
+      if (!v.videoWidth || v.readyState < 2) return;
+      try {
+        // Half size is plenty for a moment's stand-in and keeps it light.
+        snap.width = Math.round(v.videoWidth / 2);
+        snap.height = Math.round(v.videoHeight / 2);
+        snap.getContext("2d").drawImage(v, 0, 0, snap.width, snap.height);
+        paintBackdrop(v, snap.toDataURL("image/jpeg", 0.8));
+      } catch (e) {
+        // Keep the poster if the frame can't be read.
+      }
+    });
   });
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
