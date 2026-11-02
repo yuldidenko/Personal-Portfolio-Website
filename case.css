@@ -407,14 +407,21 @@
   pointer-events: none;
 }
 
+.case-bg {
+  --bg-size: min(120vmin, 1100px);
+}
+
 .case-bg-spin {
-  /* Centred on the screen even when larger than it (a grid would pin an
-     oversized image to the top edge and push it off the bottom). */
+  /* Centred on the screen even when it is larger than the screen (on a
+     phone it is wider than the window). "inset: 0; margin: auto" can't do
+     that - an over-wide box keeps its left edge and spills to the right -
+     so the centre is placed at 50% / 50% and pulled back by half its size. */
   position: absolute;
-  inset: 0;
-  margin: auto;
-  width: min(120vmin, 1100px);
-  height: min(120vmin, 1100px);
+  top: 50%;
+  left: 50%;
+  margin: calc(var(--bg-size) / -2) 0 0 calc(var(--bg-size) / -2);
+  width: var(--bg-size);
+  height: var(--bg-size);
   opacity: 0.14;
   transform: rotate(var(--spin, 0deg));
   will-change: transform;
@@ -760,11 +767,13 @@
    language between guest and waiter - one for each flow as the visitor
    scrolls (case.js). The current position is named under the plate. */
 .case-bg-cutlery {
+  /* Centred the same way as .case-bg-spin. */
   position: absolute;
-  inset: 0;
-  margin: auto;
-  width: min(120vmin, 1100px);
-  height: min(120vmin, 1100px);
+  top: 50%;
+  left: 50%;
+  margin: calc(var(--bg-size) / -2) 0 0 calc(var(--bg-size) / -2);
+  width: var(--bg-size);
+  height: var(--bg-size);
   /* The thread running through the drawing leaves the screen on both
      sides; the fixed layer behind it clips it at the window edge. */
   overflow: visible;
