@@ -2256,14 +2256,64 @@ html.curtain-in.curtain-hold::after {
 
 /* Tiles are laid row by row from the bottom up as the mosaic scrolls
    into view: each settles in with a short fade and a slight scale. */
-.reveal-ready .my-way .mosaic[data-reveal] img {
+.reveal-ready .my-way .mosaic[data-reveal] img,
+.reveal-ready .my-way-tablet .mosaic-band[data-reveal] img {
   opacity: 0;
   transform: scale(0.9);
 }
 
-.reveal-ready .my-way .mosaic[data-reveal].is-revealed img {
+.reveal-ready .my-way .mosaic[data-reveal].is-revealed img,
+.reveal-ready .my-way-tablet .mosaic-band[data-reveal].is-revealed img {
   opacity: 1;
   transform: none;
   transition: opacity 400ms var(--ease-out), transform 500ms var(--ease-out);
   transition-delay: var(--d, 0ms);
+}
+
+/* ---------- My way (tablet + phone): tile frieze ----------
+   On narrower layouts the CV is the last block, so instead of the two
+   tall desktop groups the section ends with a low frieze of the same
+   line tiles, laid in a two-row checkerboard. Wide tablets show all 12
+   columns of the pattern, small tablets the middle 8, phones 6 (about
+   55px tiles), so it stays two rows high everywhere. */
+.my-way-tablet .mosaic-band {
+  --cols: 12;
+  --off: 0;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  margin-top: 1rem;
+}
+
+.my-way-tablet .mosaic-band img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  grid-column: calc(var(--c) + 1 - var(--off));
+  grid-row: calc(var(--r) + 1);
+  outline: 1px solid #1f1f1f;
+  outline-offset: -0.5px;
+}
+
+@media (max-width: 1023px) {
+  .my-way-tablet .mosaic-band {
+    --cols: 8;
+    --off: 2;
+  }
+
+  .my-way-tablet .mosaic-band img:not(.in-8) {
+    display: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .my-way-tablet .mosaic-band {
+    --cols: 6;
+    --off: 4;
+  }
+
+  .my-way-tablet .mosaic-band img:not(.in-6) {
+    display: none;
+  }
 }

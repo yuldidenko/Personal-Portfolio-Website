@@ -14,6 +14,7 @@
     document.querySelectorAll("#projects .project-card"),
     document.querySelectorAll("#approach [class^='wrapper-']"),
     document.querySelectorAll("#my-way .mosaic"),
+    document.querySelectorAll("#my-way-mobile .mosaic-band"),
   ];
   const items = [];
   // A card opened by link (index.html#amygdala, from a project page's
