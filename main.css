@@ -800,6 +800,14 @@ video {
   border-left: 1px solid #1f1f1f;
 }
 
+/* The Approach drawings load lazily. Their width/height attributes let the
+   browser reserve their space before they arrive; without it the section
+   grew as they loaded and a menu jump to Projects (below) stopped short. */
+.approach img {
+  width: 100%;
+  height: auto;
+}
+
 .project-card {
   /* Breathing room above a card opened by link (#amygdala). */
   scroll-margin-top: 2rem;
