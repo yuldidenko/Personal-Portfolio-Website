@@ -284,7 +284,12 @@
       (entries) => {
         entries.forEach(({ target, intersectionRatio }) => {
           if (on) return;
-          if (intersectionRatio >= 0.95 && !reduceMotion.matches) startVideo(target);
+          // Resume where it stopped: rewinding a paused video makes iOS
+          // show an empty frame until it has seeked, so it blinks.
+          if (intersectionRatio >= 0.95 && !reduceMotion.matches) {
+            if (target.currentTime > 0) target.dataset.resume = "1";
+            startVideo(target);
+          }
           else if (intersectionRatio < 0.5 && !target.paused) target.pause();
         });
       },

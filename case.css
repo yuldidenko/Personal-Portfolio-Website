@@ -79,8 +79,10 @@
   font-family: "MabryPro-Regular", sans-serif;
 }
 
-.case-behance:hover .case-arrow {
-  transform: translate(3px, -3px);
+@media (hover: hover) and (pointer: fine) {
+  .case-behance:hover .case-arrow {
+    transform: translate(3px, -3px);
+  }
 }
 
 /* ---------- Screens: flat list (default) ---------- */
@@ -461,8 +463,10 @@
   font-size: 1.1em;
 }
 
-.case-back:hover .case-arrow {
-  transform: translateX(-3px);
+@media (hover: hover) and (pointer: fine) {
+  .case-back:hover .case-arrow {
+    transform: translateX(-3px);
+  }
 }
 
 .case-next {
@@ -491,8 +495,10 @@
   font-size: 0.7em;
 }
 
-.case-next:hover .case-arrow {
-  transform: translateX(6px);
+@media (hover: hover) and (pointer: fine) {
+  .case-next:hover .case-arrow {
+    transform: translateX(6px);
+  }
 }
 
 /* `font: inherit` above also resets line-height; give each rolling
@@ -514,9 +520,14 @@
   top: var(--roll-h);
 }
 
-.case-next:hover .case-next-title .roll-char > span,
 .case-next:focus-visible .case-next-title .roll-char > span {
   transform: translateY(calc(-1 * var(--roll-h)));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .case-next:hover .case-next-title .roll-char > span {
+    transform: translateY(calc(-1 * var(--roll-h)));
+  }
 }
 
 /* ---------- Lightbox ---------- */
@@ -769,4 +780,16 @@
 /* Behance links hidden for now - delete this rule to show them again */
 .case-behance {
   display: none;
+}
+
+/* Touch phones: Safari can drop a CSS-masked <video> from the screen for a
+   moment while the page scrolls (it re-composites the mask), so the
+   recordings blink. There the phone's outline is cut with a plain rounded
+   corner instead - same shape, no mask. */
+@media (hover: none), (max-width: 767px) {
+  .drum-phone--framed {
+    -webkit-mask: none;
+    mask: none;
+    border-radius: 16.7% / 8.2%;
+  }
 }

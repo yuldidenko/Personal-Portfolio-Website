@@ -469,11 +469,18 @@ footer {
   top: 1.5em;
 }
 
-a:hover .roll-char > span,
 a:focus-visible .roll-char > span,
-.send-button:hover:not(:disabled) .roll-char > span,
 .send-button:focus-visible:not(:disabled) .roll-char > span {
   transform: translateY(-1.5em);
+}
+
+/* Hover effects only where a real pointer can hover - on touch screens a
+   tap would otherwise leave the effect "stuck" until the next tap. */
+@media (hover: hover) and (pointer: fine) {
+  a:hover .roll-char > span,
+  .send-button:hover:not(:disabled) .roll-char > span {
+    transform: translateY(-1.5em);
+  }
 }
 
 .sr-only {
@@ -502,9 +509,11 @@ a:focus-visible .roll-char > span,
   transform: scale(var(--press-scale));
 }
 
-.button:hover {
-  text-decoration: none;
-  color: rgb(31, 31, 31);
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    text-decoration: none;
+    color: rgb(31, 31, 31);
+  }
 }
 
 .navigation {
@@ -1449,9 +1458,11 @@ button:focus-visible {
   opacity: 1;
 }
 
-.send-button:hover {
-  text-decoration: none;
-  color: #1f1f1f;
+@media (hover: hover) and (pointer: fine) {
+  .send-button:hover {
+    text-decoration: none;
+    color: #1f1f1f;
+  }
 }
 
 .form-status {

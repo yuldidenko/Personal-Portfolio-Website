@@ -493,15 +493,13 @@
       auto = { t0: performance.now(), dur };
     };
 
-    const coarse = window.matchMedia("(hover: none)");
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((en) => {
           visible = en.isIntersecting;
           if (visible) start();
-          // On desktop the curtain simply hangs down and waits for the
-          // pointer; only touch screens (no hover) get a gentle parting.
-          if (coarse.matches && en.intersectionRatio > 0.6) part(2600);
+          // The curtain simply hangs down and waits - on touch screens too
+          // (no automatic parting when a card scrolls into view).
         });
       },
       { threshold: [0, 0.6] }
