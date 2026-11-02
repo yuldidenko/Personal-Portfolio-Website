@@ -710,6 +710,45 @@ h3 {
   flex: 1;
 }
 
+/* "Download CV" row in Work experience - the full history lives in the
+   PDF. Same roll-on-hover language as every other text link; the
+   underline and the arrow say "this is a file" without a button. */
+.cv-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #1f1f1f;
+  font-family: "MabryPro-Bold", sans-serif;
+  text-decoration: none;
+}
+
+.cv-link span {
+  font: inherit;
+}
+
+/* The letters are inline-blocks, which a text underline does not reach,
+   so the line is a border on the word itself. */
+.cv-link .roll {
+  border-bottom: 1px solid currentColor;
+}
+
+.cv-link-arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cv-link:hover .cv-link-arrow {
+    transform: translateY(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-link:hover .cv-link-arrow {
+    transform: none;
+  }
+}
+
 .hobbies {
   flex: 1;
 }
