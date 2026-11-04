@@ -1,9 +1,14 @@
 let cursorDot = document.querySelector(".cursor-dot");
 let cursorOutline = document.querySelector(".cursor-outline");
 
-function isTouchDevice() {
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
+// The custom cursor runs whenever the device has a mouse or trackpad -
+// not "whenever it has no touch screen". Touchscreen laptops (and
+// Firefox on Windows, which reports touch support even without a touch
+// screen) have both: the old touch test switched the custom cursor off
+// there while the stylesheet still hid the native one, so the pointer
+// vanished. The native cursor is now hidden only once this script has
+// switched the custom one on (html.has-custom-cursor).
+const hasMouse = window.matchMedia("(any-hover: hover) and (any-pointer: fine)").matches;
 // The dot sits exactly on the pointer; the outline trails behind it with
 // frame-rate-independent smoothing (lerp in a rAF loop) instead of the
 // old per-event 500ms Web Animation, which re-started on every mousemove
@@ -63,6 +68,12 @@ function followLoop(now) {
 }
 
 function moveCursor(e) {
+  // A mousemove here means the pointer is back in this document, so undo
+  // the iframe hiding below even if that iframe's mouseleave got lost.
+  if (cursorDot.style.display === "none") {
+    cursorDot.style.display = "";
+    cursorOutline.style.display = "";
+  }
   pointerX = e.clientX;
   pointerY = e.clientY;
 
@@ -91,7 +102,8 @@ function moveCursor(e) {
   }
 }
 
-if (!isTouchDevice()) {
+if (hasMouse) {
+  document.documentElement.classList.add("has-custom-cursor");
   window.addEventListener("mousemove", moveCursor, { passive: true });
 
   document.documentElement.addEventListener("mouseleave", () => {
@@ -135,5 +147,4 @@ if (!isTouchDevice()) {
 } else {
   cursorDot.style.display = "none";
   cursorOutline.style.display = "none";
-  document.body.style.cursor = "auto";
 }

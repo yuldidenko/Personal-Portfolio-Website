@@ -114,6 +114,11 @@
   padding: 0;
   border: 0;
   background: none;
+}
+
+/* The zoom button keeps the custom cursor instead of the generic button
+   pointer (only while the custom cursor is running - see main.css). */
+.has-custom-cursor .drum-zoom {
   cursor: none;
 }
 

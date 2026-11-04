@@ -18,8 +18,17 @@
   box-sizing: border-box;
   font-family: "MabryPro-Regular";
   font-size: 16px;
-  cursor: none;
   scroll-behavior: smooth;
+}
+
+/* The native cursor is hidden only while cursor.js draws the custom one
+   (it sets html.has-custom-cursor on devices with a mouse or trackpad),
+   so it can never disappear with nothing in its place. :where() keeps
+   this as weak as the old "* { cursor: none }", so the pointer / move /
+   text cursors declared further down still win. */
+:where(.has-custom-cursor),
+:where(.has-custom-cursor) * {
+  cursor: none;
 }
 
 body {
@@ -900,7 +909,6 @@ video {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   position: relative;
-  cursor: none;
 }
 
 .text {
