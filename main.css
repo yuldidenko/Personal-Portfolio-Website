@@ -755,8 +755,8 @@ h3 {
 }
 
 /* "Download CV" link - the full history lives in the
-   PDF. Same roll-on-hover language as every other text link; the
-   underline and the arrow say "this is a file" without a button. */
+   PDF. Same roll-on-hover language as every other text link; the bold
+   weight and the arrow say "this is a file" without a button. */
 .cv-link {
   display: inline-flex;
   align-items: center;
@@ -768,12 +768,6 @@ h3 {
 
 .cv-link span {
   font: inherit;
-}
-
-/* The letters are inline-blocks, which a text underline does not reach,
-   so the line is a border on the word itself. */
-.cv-link .roll {
-  border-bottom: 1px solid currentColor;
 }
 
 .cv-link-arrow {
@@ -789,6 +783,23 @@ h3 {
 
 @media (prefers-reduced-motion: reduce) {
   .cv-link:hover .cv-link-arrow {
+    transform: none;
+  }
+}
+
+/* "Writing movie reviews" in Hobbies links out to Yuliia's reviews on
+   Threads with the same .cv-link look (bold, no underline - the rows
+   already sit on dividers); its arrow points out of the page (new tab)
+   instead of down (download). */
+
+@media (hover: hover) and (pointer: fine) {
+  .hobby-link:hover .cv-link-arrow {
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hobby-link:hover .cv-link-arrow {
     transform: none;
   }
 }
