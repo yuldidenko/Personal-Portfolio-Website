@@ -2698,3 +2698,18 @@ html.curtain-in.curtain-hold::after {
 #my-way .column-2 {
   gap: 64px;
 }
+
+/* Project tags: chips hug their text and sit in a row, wrapping onto the
+   next line when they run out of room - the same 8px between chips in
+   both directions on every screen (they used to stretch full width,
+   stacked, on phones). The 16px the chips' own margin gave under the
+   last row now comes from the group itself. */
+#projects .tags {
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#projects .tags p {
+  margin: 0;
+}
