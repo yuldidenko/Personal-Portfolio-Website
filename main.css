@@ -2454,3 +2454,125 @@ html.curtain-in.curtain-hold::after {
     display: none;
   }
 }
+
+/* ---------- Spacing scale (home page) ----------
+   The same proximity scale as My way: 8px inside a pair (title +
+   description), 16px between an element and the thing it belongs to
+   (image + its text, paragraphs), 32px between a big heading and its
+   text and between groups, 64px from a section heading to its content
+   and between cards, 128px between projects. Distances are measured
+   between what you see (letters, image edges, lines), so each margin
+   subtracts the font's own line spacing: 0.5 * (1lh - k * 1em), where k
+   is the height of the font's letters per em (tan-pearl 1.27, Mabry 1). */
+
+/* Who am I + Let's talk: big name → description 32px. */
+:is(#who-am-i, #lets-talk) .name {
+  margin-bottom: calc(-0.5 * (1lh - 1.27em));
+}
+
+:is(#who-am-i, #lets-talk) .description {
+  /* 24px is the section grid's own gap. */
+  margin-top: calc(32px - 24px - 0.5 * (1lh - 1em));
+}
+
+/* Approach: heading → cards 64px; illustration → its text 16px; cards
+   64px apart, the divider in the middle. */
+#approach .name-2 {
+  padding-bottom: 0;
+  /* 64 - 24px grid gap - 8px card top padding. */
+  margin-bottom: calc(32px - 0.5 * (1lh - 1.27em));
+}
+
+#approach :is(.wrapper-1, .wrapper-2, .wrapper-3, .wrapper-4) {
+  padding-top: 8px;
+  gap: 0;
+}
+
+/* The four illustrations share an 766x888 canvas with empty bands above
+   and below the art; showing only the band the art actually uses
+   (y 54-757, the same crop for all four so they stay aligned) lets the
+   16px / 64px distances read as real gaps instead of hidden whitespace. */
+#approach :is(.wrapper-1, .wrapper-2, .wrapper-3, .wrapper-4) img {
+  aspect-ratio: 766 / 703;
+  object-fit: cover;
+  object-position: 50% 29.2%;
+}
+
+/* Stacked one per row, the cards don't need to line up, so each
+   illustration is cropped to its own art. */
+@media (max-width: 768px) {
+  #approach .wrapper-1 img { aspect-ratio: 766 / 398; object-position: 50% 50%; }
+  #approach .wrapper-2 img { aspect-ratio: 766 / 504; object-position: 50% 50%; }
+  #approach .wrapper-3 img { aspect-ratio: 766 / 628; object-position: 50% 50%; }
+  #approach .wrapper-4 img { aspect-ratio: 766 / 698; object-position: 50% 28.4%; }
+}
+
+#approach :is(.wrapper-1, .wrapper-2, .wrapper-3, .wrapper-4) p {
+  margin-top: calc(16px - 0.5 * (1lh - 1em));
+  /* + 16px card bottom padding = 32px to the divider. */
+  margin-bottom: calc(16px - 0.5 * (1lh - 1em));
+}
+
+/* Projects: heading → first project 64px; cover → numbers 16px; numbers
+   → divider → title 16px + 16px (8px each side crowded the big
+   numerals); title → description 8px;
+   paragraphs 16px; description → tags 32px; projects 128px apart. */
+#projects {
+  --card-pad: 24px;
+}
+
+@media (max-width: 1200px) {
+  #projects {
+    --card-pad: 16px;
+  }
+}
+
+#projects .name-2 {
+  padding-bottom: 0;
+  /* 64 - 24px grid gap - the card's top line and padding. */
+  margin-bottom: calc(64px - 24px - 1px - var(--card-pad) - 0.5 * (1lh - 1.27em));
+}
+
+#projects .project-card {
+  padding-top: var(--card-pad);
+  padding-bottom: var(--card-pad);
+  /* 128 - 24px grid gap - both cards' lines and paddings. */
+  margin-bottom: calc(102px - 2 * var(--card-pad));
+}
+
+@media (max-width: 1200px) {
+  #projects .project-card {
+    gap: 0;
+    /* Stacked cards end on the tags row, which adds 16px of its own. */
+    margin-bottom: calc(86px - 2 * var(--card-pad));
+  }
+
+  #projects .numbers p {
+    margin-top: calc(17px - 0.5 * (1lh - 1.28em));
+  }
+}
+
+#projects .numbers {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+#projects .numbers p {
+  margin-bottom: calc(15px - 0.5 * (1lh - 1.28em));
+}
+
+#projects .subheader {
+  margin-top: calc(17px - 0.5 * (1lh - 1.25em));
+  /* + the description's own 4px line spacing = 8px. */
+  margin-bottom: calc(3px - 0.5 * (1lh - 1.25em));
+}
+
+#projects .text > p:not(.subheader) {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+#projects .tags {
+  /* Collapses with the last paragraph's 8px; + 4px line spacing = 32px. */
+  margin-top: 28px;
+}

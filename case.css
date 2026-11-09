@@ -794,3 +794,61 @@
 .case-behance {
   display: none;
 }
+
+/* ---------- Spacing scale (case pages) ----------
+   Same proximity scale as the home page: screen → its caption 32px,
+   caption title → its points 16px, points 8px apart, project name →
+   lead 24px. Distances are between what you see, so margins subtract
+   the font's own line spacing: 0.5 * (1lh - k * 1em) (tan-pearl k 1.27,
+   Mabry k 1). Amygdala's title keeps its extra room for the y/g tails. */
+.drum-caption .drum-caption-title {
+  margin-top: calc(-0.5 * (1lh - 1.27em));
+  margin-bottom: calc(11px - 0.5 * (1lh - 1.27em));
+}
+
+/* With a "Play with sound" button between them: title → button 16px,
+   button → points 16px. */
+.drum-caption .drum-caption-title:has(+ .drum-sound) {
+  margin-bottom: calc(15px - 0.5 * (1lh - 1.27em));
+}
+
+.drum-caption .drum-sound {
+  margin-bottom: 12px;
+}
+
+@media (min-width: 501px) {
+  .drum-caption .drum-caption-title {
+    margin-bottom: calc(12px - 0.5 * (1lh - 1.27em));
+  }
+}
+
+.drum-caption .drum-caption-list li + li {
+  margin-top: 0;
+}
+
+/* Screen → its caption 32px wherever the caption sits under the screen
+   (split slides put it beside the screen instead). */
+.drum-item:not(.drum-item--split) {
+  gap: 32px;
+}
+
+/* Caption paragraphs (Factora) 16px apart, like the home page. */
+.drum-caption .drum-caption-text + .drum-caption-text {
+  margin-top: 8px;
+}
+
+.case-title:not(.case-title--tails) + .drum-lead {
+  margin-top: 28px;
+}
+
+@media (max-width: 1023px) {
+  .case-title:not(.case-title--tails) + .drum-lead {
+    margin-top: 26px;
+  }
+}
+
+@media (max-width: 500px) {
+  .case-title:not(.case-title--tails) + .drum-lead {
+    margin-top: 24px;
+  }
+}
