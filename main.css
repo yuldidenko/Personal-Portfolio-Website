@@ -2515,7 +2515,7 @@ html.curtain-in.curtain-hold::after {
 
 /* Projects: heading → first project 64px; cover → numbers 16px; numbers
    → divider → title 16px + 16px (8px each side crowded the big
-   numerals); title → description 8px;
+   numerals); title → description 16px;
    paragraphs 16px; description → tags 32px; projects 128px apart. */
 #projects {
   --card-pad: 24px;
@@ -2563,8 +2563,9 @@ html.curtain-in.curtain-hold::after {
 
 #projects .subheader {
   margin-top: calc(17px - 0.5 * (1lh - 1.25em));
-  /* + the description's own 4px line spacing = 8px. */
-  margin-bottom: calc(3px - 0.5 * (1lh - 1.25em));
+  /* + the description's own 4px line spacing = 16px, the same heading →
+     content step as in My way. */
+  margin-bottom: calc(11px - 0.5 * (1lh - 1.25em));
 }
 
 #projects .text > p:not(.subheader) {
