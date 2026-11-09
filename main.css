@@ -1030,7 +1030,9 @@ h3,
 .subheader {
   font-family: "tan-pearl";
   font-weight: 400;
-  font-size: 1rem;
+  /* Same size as the My way subheadings (Education, Hobbies…): one
+     heading level for every subsection on the site. */
+  font-size: 1.5rem;
   line-height: 1.2;
   /* Matches the gap the Education section gets between its own header and
      content, via .cont-education/.education h3's padding-bottom: 16px. */
@@ -2562,10 +2564,10 @@ html.curtain-in.curtain-hold::after {
 }
 
 #projects .subheader {
-  margin-top: calc(17px - 0.5 * (1lh - 1.25em));
+  margin-top: calc(16px - 0.5 * (1lh - 1.25em));
   /* + the description's own 4px line spacing = 16px, the same heading →
      content step as in My way. */
-  margin-bottom: calc(11px - 0.5 * (1lh - 1.25em));
+  margin-bottom: calc(12px - 0.5 * (1lh - 1.25em));
 }
 
 #projects .text > p:not(.subheader) {
