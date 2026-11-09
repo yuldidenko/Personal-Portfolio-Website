@@ -2612,3 +2612,61 @@ html.curtain-in.curtain-hold::after {
     padding-bottom: calc(5rem + 32px);
   }
 }
+
+/* ---------- Let's talk: proximity spacing ----------
+   description → "Draw me a picture…" 64px (new block), that line → the
+   drawing widget 16px (caption → its content), toolbar ↔ canvas 16px and
+   between the form fields 16px (parts of one control), canvas → form 32px. */
+#lets-talk .description {
+  padding-bottom: 0;
+  margin-bottom: calc(-0.5 * (1lh - 1em));
+}
+
+#lets-talk .top-message {
+  /* Mabry's glyphs sit ~4px inside a 1em box at this size, hence +4. */
+  margin-top: calc(68px - 24px - 0.5 * (1lh - 1em));
+  margin-bottom: calc(20px - 24px - 0.5 * (1lh - 1em));
+}
+
+#lets-talk .form-container {
+  gap: 16px;
+}
+
+/* The error line only takes space when there is an error, so the fields
+   sit 16px apart; it appears on Send, under the field it belongs to. */
+#lets-talk .field-error:empty {
+  display: none;
+}
+
+@media (min-width: 1201px) {
+  /* Toolbar and canvas keep their grid columns; the canvas (and the form,
+     which lines up under it) reach 8px further left → 16px gap. */
+  #lets-talk #drawingCanvas,
+  #lets-talk .form-container {
+    margin-left: -8px;
+  }
+  #lets-talk #drawingCanvas {
+    width: calc(100% + 8px);
+  }
+}
+
+@media (max-width: 1200px) {
+  #lets-talk .canvas {
+    gap: 16px;
+  }
+  /* Six 40px tools did not fit the row on narrow phones, so the last one
+     ran into the edge; spread them evenly with the same 8px padding on
+     both ends. */
+  #lets-talk .controls {
+    gap: 0;
+    justify-content: space-between;
+  }
+  #lets-talk #delete-button {
+    margin-left: 0;
+  }
+}
+@media (max-width: 1023px) {
+  #lets-talk .top-message {
+    margin-top: calc(67px - 24px - 0.5 * (1lh - 1em));
+  }
+}
