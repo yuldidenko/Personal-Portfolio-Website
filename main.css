@@ -2083,46 +2083,47 @@ button:focus-visible {
   margin: 0;
 }
 
-#my-way-mobile :is(.hobbies, .languages) p {
+:is(#my-way, #my-way-mobile) :is(.hobbies, .languages) p {
   margin: 0;
   padding: 12px 0;
   border-bottom: 1px solid var(--divider);
 }
 
-#my-way-mobile :is(.hobbies, .languages) h3 + p {
+:is(#my-way, #my-way-mobile) :is(.hobbies, .languages) h3 + p {
   padding-top: 0;
 }
 
-#my-way-mobile :is(.hobbies, .languages) p:last-child {
+:is(#my-way, #my-way-mobile) :is(.hobbies, .languages) p:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
-/* My way lists on tablets (the two-column and stacked tablet layouts):
+/* My way lists on tablets and desktop (desktop used to put 24px under
+   each heading and centre the dates; now one rhythm everywhere):
    each entry and its date share one row, so the row is the group; rows
    are kept apart by the same 32px as on phones, with the divider in the
    middle. The date lines up with the entry's first line instead of
    floating in the middle of a two-line entry. */
 @media (min-width: 501px) {
-  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout {
+  :is(#my-way, #my-way-mobile) :is(.education, .cont-education, .work, .cv) .autolayout {
     margin: 0;
     padding: 12px 0;
     align-items: start;
   }
 
-  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:first-of-type {
+  :is(#my-way, #my-way-mobile) :is(.education, .cont-education, .work, .cv) .autolayout:first-of-type {
     padding-top: 0;
   }
 
-  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:last-child {
+  :is(#my-way, #my-way-mobile) :is(.education, .cont-education, .work, .cv) .autolayout:last-child {
     padding-bottom: 0;
   }
 
-  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout :is(.event, .date) p {
+  :is(#my-way, #my-way-mobile) :is(.education, .cont-education, .work, .cv) .autolayout :is(.event, .date) p {
     margin: 0;
   }
 
-  #my-way-mobile :is(.education, .cont-education, .work, .cv) .date {
+  :is(#my-way, #my-way-mobile) :is(.education, .cont-education, .work, .cv) .date {
     align-self: start;
   }
 }
@@ -2684,4 +2685,14 @@ html.curtain-in.curtain-hold::after {
     clamp(4rem, 8.43vw + 2.1rem, 7.5rem),
     calc((100vw - 4rem) / var(--fit, 0.01))
   );
+}
+
+/* Desktop My way: same section rhythm as tablets - 64px from the last
+   line of one block to the next heading, 64px between framed media. */
+#my-way :is(.column-1, .column-3) {
+  gap: 61px;
+}
+
+#my-way .column-2 {
+  gap: 64px;
 }

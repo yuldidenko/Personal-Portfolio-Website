@@ -391,6 +391,12 @@
     measure();
     render();
   });
+  // tails.js changed the room under a heading → re-place the carousel.
+  window.addEventListener("tails:applied", () => {
+    if (!on) return;
+    measure();
+    render();
+  });
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       if (on) {

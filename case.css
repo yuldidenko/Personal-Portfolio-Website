@@ -840,21 +840,21 @@
 
 /* The title is fluid, so the step is worked out from both fonts' own
    line spacing rather than fixed per breakpoint. */
-.case-title:not(.case-title--tails) {
+.case-title {
   /* Measured: the glyphs end 0.085em above the line box's bottom edge.
      Padding, not margin, so it adds to the lead's margin (block margins
      would collapse). */
   padding-bottom: 0.085em;
 }
 
-.case-title:not(.case-title--tails) + .drum-lead {
+.case-title + .drum-lead {
   margin-top: calc(32px - 0.5 * (1lh - 1em));
 }
 
-/* Amygdala: its y/g tails hang into the gap, so it gets 24px more to
-   leave the same visible space under the letters as the other titles. */
+/* Amygdala's y/g tails: tails.js adds the room they need (like every
+   heading with descenders), so its title follows the same rule. */
 .case-title--tails {
-  margin-bottom: calc(0.45em + 32px);
+  margin-bottom: 0;
 }
 
 .case-team {
@@ -921,8 +921,3 @@
   );
 }
 
-@media (max-width: 500px) {
-  .case-title--tails {
-    margin-bottom: calc(0.45em + 29px);
-  }
-}
