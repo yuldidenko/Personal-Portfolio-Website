@@ -2715,3 +2715,12 @@ html.curtain-in.curtain-hold::after {
 #projects .tags p {
   margin: 0;
 }
+
+/* Card numbers the same size and weight as the project title under them
+   (24px with the 1px outline), no longer outweighing it. */
+#projects .numbers p {
+  font-size: 1.5rem;
+  -webkit-text-stroke: 1px currentColor;
+  /* 32px from the digits to the divider at this size. */
+  margin-bottom: calc(27px - 0.5 * (1lh - 1.28em));
+}
