@@ -2562,7 +2562,9 @@ html.curtain-in.curtain-hold::after {
 }
 
 #projects .numbers p {
-  margin-bottom: calc(15px - 0.5 * (1lh - 1.28em));
+  /* Numbers → divider 32px between the letters, the same as divider →
+     title, so the line sits in the middle. */
+  margin-bottom: calc(25px - 0.5 * (1lh - 1.28em));
 }
 
 #projects .subheader {
