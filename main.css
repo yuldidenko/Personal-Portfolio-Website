@@ -2052,12 +2052,28 @@ button:focus-visible {
 
 /* My way on tablets and phones: one spacing scale for the whole section,
    built on proximity - 8px inside an entry (text + date), 16px from a
-   heading to its list, 32px between entries, 64px between sections.
+   heading to its list, 32px between entries, 64px between sections and
+   between the framed media.
    Hobbies and Languages follow the same row rhythm as the other lists. */
-#my-way-mobile :is(.column-1-tablet, .column-2-tablet) {
+#my-way-mobile .column-1-tablet {
   /* 61px of gap reads as 64px between the last line of one section and
      the next heading once the type's own line spacing is added. */
   gap: 61px;
+}
+
+/* The media (Spotify, video, painting) are framed exhibits: 64px between
+   frames, which have no line spacing to add. */
+#my-way-mobile .column-2-tablet {
+  gap: 64px;
+}
+
+/* Once the columns stack, the media start a new section under the text:
+   64px from the last Languages line to the first frame (24px grid gap +
+   36px + the text's 4px line spacing). */
+@media (max-width: 1023px) {
+  #my-way-mobile .column-2-tablet {
+    margin-top: 36px;
+  }
 }
 
 #my-way-mobile :is(.education, .cont-education, .work, .cv, .hobbies, .languages) {
