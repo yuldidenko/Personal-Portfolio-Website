@@ -98,7 +98,37 @@
     // with text beside them, so neighbours don't reach the text.
     radiusX = window.innerWidth * (parseFloat(drum.dataset.spread) || 0.52);
     drum.style.height = `${vh + step * (items.length - 1)}px`;
+    alignFirst();
     top = drum.getBoundingClientRect().top + window.scrollY;
+  };
+
+  // The first screen sits in the middle of the pinned stage, so how far it
+  // is from the intro used to depend on the window height (118-300px).
+  // Shift the drum so it is always 128px - the site's largest spacing step
+  // - below the last line of the intro. Layout sizes only (offsetHeight /
+  // offsetTop), so it works at any scroll position.
+  const INTRO_GAP = 128;
+  const alignFirst = () => {
+    drum.style.marginTop = "0px";
+    const intro = document.querySelector(".drum-intro");
+    const first = items[0];
+    const screen = first && first.querySelector(".drum-screen");
+    if (!intro || !screen) return;
+    const texts = [...intro.children].filter((el) => el.getClientRects().length);
+    const last = texts[texts.length - 1];
+    if (!last) return;
+    const range = document.createRange();
+    range.selectNodeContents(last);
+    const rects = [...range.getClientRects()].filter((r) => r.height > 0);
+    const introEnd = Math.max(...rects.map((r) => r.bottom)) + window.scrollY;
+    let inItem = 0;
+    for (let el = screen; el && el !== first; el = el.offsetParent) inItem += el.offsetTop;
+    const stage = drum.querySelector(".drum-stage");
+    const stageH = stage ? stage.offsetHeight : window.innerHeight;
+    const screenInStage = stageH / 2 - first.offsetHeight / 2 + inItem;
+    const drumTop = drum.getBoundingClientRect().top + window.scrollY;
+    const shift = introEnd + INTRO_GAP - (drumTop + screenInStage);
+    drum.style.marginTop = `${Math.round(shift)}px`;
   };
 
   // Carousel position for a scroll position: still - smooth move - still.
@@ -302,6 +332,7 @@
     drum.classList.remove("is-3d");
     window.removeEventListener("scroll", onScroll);
     drum.style.height = "";
+    drum.style.marginTop = "";
     items.forEach((item) => {
       item.removeAttribute("style");
       const media = item.querySelector(".drum-media");
