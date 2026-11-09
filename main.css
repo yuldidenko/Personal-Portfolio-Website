@@ -1008,7 +1008,8 @@ video {
 .numbers {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #1f1f1f;
+  /* Same soft grey as the My way dividers. */
+  border-bottom: 1px solid rgba(31, 31, 31, 0.25);
   margin-bottom: 1.5rem;
 }
 
@@ -2578,4 +2579,36 @@ html.curtain-in.curtain-hold::after {
 #projects .tags {
   /* Collapses with the last paragraph's 8px; + 4px line spacing = 32px. */
   margin-top: 28px;
+}
+
+/* ---------- Hero: description → button, shards ----------
+   The button is the description's call to action, so it sits 32px under
+   the last line (the same step as name → description), not 96px away. */
+#who-am-i .description {
+  padding-bottom: calc(8px - 0.5 * (1lh - 1em));
+}
+
+/* The left shards share the description's row and start 32px below its
+   top (≈64px under the name), so they never crowd the name at any width.
+   Blue shard tip = 14 of the 340 viewBox units → translateY(-4.12%). The
+   big negative bottom margin (340/180 of the width) keeps the tall drawing
+   from stretching the row and pushing the button down. */
+@media (min-width: 1024px) {
+  #who-am-i svg:first-of-type {
+    grid-row: 2;
+    margin-top: 32px;
+    margin-bottom: -189%;
+    transform: translateY(-4.12%);
+    /* Past ~1700px two columns get so wide the drawing would run into
+       My way; keep it the size it has on a laptop. */
+    max-width: 220px;
+  }
+}
+
+/* Short description on wide screens → leave the shards room to drift
+   without touching My way. */
+@media (min-width: 1600px) {
+  #who-am-i {
+    padding-bottom: calc(5rem + 32px);
+  }
 }

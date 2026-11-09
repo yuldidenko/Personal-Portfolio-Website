@@ -1979,18 +1979,23 @@
         viewBox="90 20 180 340"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          class="floaty"
-          style="--float-amp: 10px; --rock-amp: 3deg; --float-dur: 5.2s; --float-delay: 0.6s"
-          d="M260.5 212.5L199.385 303.856L176.5 383.5L236.054 345.5C250.014 294.965 255.361 265.842 260.5 212.5Z"
-          fill="#BCD4E0"
-        />
-        <path
-          class="floaty"
-          style="--float-amp: 7px; --rock-amp: 5deg; --float-dur: 3.8s; --float-delay: 1.1s"
-          d="M150.996 257.5C128.078 244.575 120.125 232.014 104.496 211C95.0651 254.381 92.2481 282.862 141.496 301C148.556 286.84 150.983 277.662 150.996 257.5Z"
-          fill="#FFAE00"
-        />
+        <!-- Pulled up 48 units so the three shards read as one cluster. -->
+        <g transform="translate(0 -48)">
+          <g transform="translate(-18 -12)">
+            <path
+              class="floaty"
+              style="--float-amp: 10px; --rock-amp: 3deg; --float-dur: 5.2s; --float-delay: 0.6s"
+              d="M260.5 212.5L199.385 303.856L176.5 383.5L236.054 345.5C250.014 294.965 255.361 265.842 260.5 212.5Z"
+              fill="#BCD4E0"
+            />
+          </g>
+          <path
+            class="floaty"
+            style="--float-amp: 7px; --rock-amp: 5deg; --float-dur: 3.8s; --float-delay: 1.1s"
+            d="M150.996 257.5C128.078 244.575 120.125 232.014 104.496 211C95.0651 254.381 92.2481 282.862 141.496 301C148.556 286.84 150.983 277.662 150.996 257.5Z"
+            fill="#FFAE00"
+          />
+        </g>
         <path
           class="floaty"
           style="--float-amp: 9px; --rock-amp: 4deg; --float-dur: 4.9s; --float-delay: 1.7s"
