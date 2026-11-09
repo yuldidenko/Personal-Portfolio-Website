@@ -2566,10 +2566,12 @@ html.curtain-in.curtain-hold::after {
 }
 
 #projects .subheader {
-  margin-top: calc(16px - 0.5 * (1lh - 1.25em));
-  /* + the description's own 4px line spacing = 16px, the same heading →
-     content step as in My way. */
-  margin-bottom: calc(12px - 0.5 * (1lh - 1.25em));
+  /* Measured on screen, between the letters: line → title 32px (a new
+     group), lowest letter (the g/p/y tails tails.js makes room for) →
+     description 16px (the title's own content), so the title clearly
+     belongs to its text. */
+  margin-top: calc(33px - 0.5 * (1lh - 1.25em));
+  margin-bottom: calc(6px - 0.5 * (1lh - 1.25em));
 }
 
 #projects .text > p:not(.subheader) {
