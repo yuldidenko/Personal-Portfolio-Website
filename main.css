@@ -2670,3 +2670,18 @@ html.curtain-in.curtain-hold::after {
     margin-top: calc(67px - 24px - 0.5 * (1lh - 1em));
   }
 }
+
+/* ---------- Main titles: one fluid size ----------
+   The name, "Let's talk" (and the project page titles, case.css) grow
+   smoothly from 64px on a small phone to 120px from 1024px up - always
+   clearly above the 48px section headings, never jumping at breakpoints. */
+.name,
+.name.name {
+  /* --fit = the longest word's width in em (set on the title): on narrow
+     phones a long word shrinks just enough to fit the column instead of
+     running off the screen. */
+  font-size: min(
+    clamp(4rem, 8.43vw + 2.1rem, 7.5rem),
+    calc((100vw - 4rem) / var(--fit, 0.01))
+  );
+}

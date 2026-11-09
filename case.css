@@ -838,25 +838,23 @@
   margin-top: 8px;
 }
 
+/* The title is fluid, so the step is worked out from both fonts' own
+   line spacing rather than fixed per breakpoint. */
+.case-title:not(.case-title--tails) {
+  /* Measured: the glyphs end 0.085em above the line box's bottom edge.
+     Padding, not margin, so it adds to the lead's margin (block margins
+     would collapse). */
+  padding-bottom: 0.085em;
+}
+
 .case-title:not(.case-title--tails) + .drum-lead {
-  margin-top: 36px;
+  margin-top: calc(32px - 0.5 * (1lh - 1em));
 }
 
-@media (max-width: 1023px) {
-  .case-title:not(.case-title--tails) + .drum-lead {
-    margin-top: 34px;
-  }
-}
-
-@media (max-width: 500px) {
-  .case-title:not(.case-title--tails) + .drum-lead {
-    margin-top: 32px;
-  }
-}
-
-/* Amygdala: same +8px on top of the room its y/g tails need. */
+/* Amygdala: its y/g tails hang into the gap, so it gets 24px more to
+   leave the same visible space under the letters as the other titles. */
 .case-title--tails {
-  margin-bottom: calc(0.45em + 8px);
+  margin-bottom: calc(0.45em + 32px);
 }
 
 .case-team {
@@ -905,5 +903,26 @@
   }
   .case-back {
     margin-top: 0;
+  }
+}
+
+/* Same fluid size as the home page name (main.css). Every project title
+   gets the same size at every width, set by the widest one (Amygdala,
+   6.4em), so the names don't jump as you go from project to project. */
+.case-title,
+.case-title.case-title {
+  --fit: 6.4;
+  /* --fit = the longest word's width in em (set on the title): on narrow
+     phones a long word shrinks just enough to fit the column instead of
+     running off the screen. */
+  font-size: min(
+    clamp(4rem, 8.43vw + 2.1rem, 7.5rem),
+    calc((100vw - 4rem) / var(--fit, 0.01))
+  );
+}
+
+@media (max-width: 500px) {
+  .case-title--tails {
+    margin-bottom: calc(0.45em + 29px);
   }
 }
