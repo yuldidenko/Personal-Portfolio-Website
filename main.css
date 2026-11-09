@@ -2018,8 +2018,95 @@ button:focus-visible {
     margin: 0 0 8px 0;
   }
 
+  /* My way lists on phones, built on proximity: an entry and its date are
+     one group (tight 8px between them, date left-aligned under the text
+     it belongs to), and groups are kept apart by a clearly bigger 32px
+     with the divider in the middle. One rhythm for Education, Continuous
+     education, Work experience and CV - the per-section rules above had
+     drifted apart. */
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout {
+    gap: 0;
+    margin: 0;
+    padding: 12px 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:first-of-type {
+    padding-top: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:last-child {
+    padding-bottom: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout :is(.event, .date) p {
+    margin: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .date {
+    align-self: stretch;
+    text-align: left;
+  }
+
   
   }
+
+/* My way on tablets and phones: one spacing scale for the whole section,
+   built on proximity - 8px inside an entry (text + date), 16px from a
+   heading to its list, 32px between entries, 64px between sections.
+   Hobbies and Languages follow the same row rhythm as the other lists. */
+#my-way-mobile :is(.column-1-tablet, .column-2-tablet) {
+  /* 61px of gap reads as 64px between the last line of one section and
+     the next heading once the type's own line spacing is added. */
+  gap: 61px;
+}
+
+#my-way-mobile :is(.education, .cont-education, .work, .cv, .hobbies, .languages) {
+  margin: 0;
+}
+
+#my-way-mobile :is(.hobbies, .languages) p {
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--divider);
+}
+
+#my-way-mobile :is(.hobbies, .languages) h3 + p {
+  padding-top: 0;
+}
+
+#my-way-mobile :is(.hobbies, .languages) p:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* My way lists on tablets (the two-column and stacked tablet layouts):
+   each entry and its date share one row, so the row is the group; rows
+   are kept apart by the same 32px as on phones, with the divider in the
+   middle. The date lines up with the entry's first line instead of
+   floating in the middle of a two-line entry. */
+@media (min-width: 501px) {
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout {
+    margin: 0;
+    padding: 12px 0;
+    align-items: start;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:first-of-type {
+    padding-top: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout:last-child {
+    padding-bottom: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .autolayout :is(.event, .date) p {
+    margin: 0;
+  }
+
+  #my-way-mobile :is(.education, .cont-education, .work, .cv) .date {
+    align-self: start;
+  }
+}
 
 /* ---------- Scroll reveal ----------
    Sections ease up into place as they enter the viewport (motion.js adds
