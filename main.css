@@ -2724,3 +2724,50 @@ html.curtain-in.curtain-hold::after {
   /* 32px from the digits to the divider at this size. */
   margin-bottom: calc(27px - 0.5 * (1lh - 1.28em));
 }
+
+/* Mobile/tablet menu button in the top-right corner (where people look
+   for it on the web, and easier to reach with the right thumb). One fixed
+   44x44 tap target (Apple / WCAG AAA size) that never moves or resizes;
+   inside it the three lines morph between a 28x24 burger and a 24x24
+   cross - the same height and visual weight, so the icon doesn't shrink
+   on open.
+   The icon still sits 32px from the top and right edges. The full-screen
+   menu items stay centred. */
+.burger-icon {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin: 22px 24px 0 auto;
+}
+
+.burger-icon span {
+  position: absolute;
+  left: 8px;
+  top: 21.5px;
+  width: 28px;
+}
+
+.burger-icon span:nth-child(1) {
+  transform: translateY(-11.5px);
+}
+
+.burger-icon span:nth-child(3) {
+  transform: translateY(11.5px);
+}
+
+/* 23px diagonals + the 1px line = 24px, like the burger: 23 x 1.414 =
+   32.5px lines (scaleX 32.5/28). */
+.burger-icon.active span:nth-child(1) {
+  transform: rotate(45deg) scaleX(1.161);
+}
+
+.burger-icon.active span:nth-child(3) {
+  transform: rotate(-45deg) scaleX(1.161);
+}
+
+@media screen and (max-width: 1200px) {
+  .burger-icon.active {
+    top: 0;
+    right: 0;
+  }
+}
